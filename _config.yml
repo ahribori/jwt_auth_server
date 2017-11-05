@@ -1,6 +1,11 @@
-# Server configuration
+# Server Configuration
 server:
+  # Server Port
   port:
+  # MongoDB URI
+  mongo_uri:
+  # Secret Key
+  secret:
 
 # Client configuration
 client:
