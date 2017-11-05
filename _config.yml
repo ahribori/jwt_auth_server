@@ -1,0 +1,9 @@
+# Server configuration
+server:
+  port:
+
+# Client configuration
+client:
+
+# SDK configuration
+sdk:
