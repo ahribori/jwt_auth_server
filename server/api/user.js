@@ -1,8 +1,12 @@
 import express from 'express';
 import logger from '../logger';
 import User from '../mongodb/models/user';
+import conf from '../conf';
+import crypto from 'crypto';
 
 const router = express.Router();
+
+const secret_key = conf.server.secret || 'AbCdEfG!2#4%6&';
 
 const field = {
     username: {
@@ -166,6 +170,38 @@ router.put('/:id', async (req, res) => {
         }
         const updateResult = await User.update({_id: req.params.id}, updateObject);
         res.json(updateResult);
+    } catch (e) {
+        logger.error(e);
+        res.status(500).json("Something broke!")
+    }
+});
+
+/* =========================================
+ PUT /user/changePassword/:username
+  {
+ prevPassword,
+ newPassword
+ }
+ ============================================*/
+router.put('/changePassword/:username', async (req, res) => {
+    try {
+        const {prevPassword, newPassword} = req.body;
+        const user = await User.findOneByUsername(req.params.username);
+        if (crypto.createHmac('sha1', secret_key).update(prevPassword).digest('base64') === user.password) {
+            if (newPassword === undefined ||
+                newPassword === null ||
+                !field.password.regex.test(newPassword)) {
+                return res.status(400).json(field.password.errorResponse);
+            } else {
+                const updateResult = await user.changePassword(newPassword);
+                return res.json(updateResult);
+            }
+        } else {
+            return res.status(400).json({
+                message: 'incorrect previous password',
+                errorCode: 'USER_E0444'
+            });
+        }
     } catch (e) {
         logger.error(e);
         res.status(500).json("Something broke!")

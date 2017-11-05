@@ -52,6 +52,12 @@ User.methods.verify = function (password) {
     return this.password === encrypted;
 };
 
+User.methods.changePassword = function (newPassword) {
+    if (typeof newPassword === 'number') newPassword = newPassword.toString();
+    this.password = crypto.createHmac('sha1', secret_key).update(newPassword).digest('base64');
+    return this.save();
+};
+
 User.methods.assignAdmin = function () {
     this.admin = true;
     return this.save()
