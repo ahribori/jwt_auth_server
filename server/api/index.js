@@ -3,10 +3,11 @@ import cors from 'cors';
 import user from './user';
 import application from './application';
 import auth from './auth';
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
-	res.json('API');
+    res.json('API');
 });
 
 router.use('/', cors());
