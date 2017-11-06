@@ -3,8 +3,11 @@ import logger from '../logger';
 import User from '../mongodb/models/user';
 import conf from '../conf';
 import crypto from 'crypto';
+import i18n from '../i18n';
 
 const router = express.Router();
+
+const __ = i18n.__;
 
 const secret_key = conf.server.secret || 'AbCdEfG!2#4%6&';
 
@@ -13,7 +16,7 @@ const field = {
         regex: /^[a-z0-9_-]{4,18}$/,
         errorResponse: {
             field: 'username',
-            message: 'username should be 4-18 character',
+            message: __('error.USER_E0001'),
             errorCode: 'USER_E0001'
         }
     },
@@ -21,7 +24,7 @@ const field = {
         regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
         errorResponse: {
             field: 'password',
-            message: 'password should be more stronger',
+            message: __('error.USER_E0002'),
             errorCode: 'USER_E0002'
         }
     },
@@ -29,7 +32,7 @@ const field = {
         regex: /[a-zA-Z가-힣]{2,16}/,
         errorResponse: {
             field: 'nickname',
-            message: 'nickname should be 2-16 character',
+            message: __('error.USER_E0003'),
             errorCode: 'USER_E0003'
         }
     },
@@ -37,7 +40,7 @@ const field = {
         regex: /[a-z0-9]+[_a-z0-9\.-]*[a-z0-9]+@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})/,
         errorResponse: {
             field: 'email',
-            message: 'email should be an email',
+            message: __('error.USER_E0004'),
             errorCode: 'USER_E0004'
         }
     }
@@ -78,8 +81,8 @@ router.post('/', async (req, res) => {
         if (user) {
             return res.status(409).json({
                 field: 'username',
-                message: 'username already exist',
-                errorCode: 'USER_E0409'
+                message:  __('error.USER_E0401'),
+                errorCode: 'USER_E0401'
             });
         }
 
@@ -104,8 +107,8 @@ router.post('/', async (req, res) => {
 router.get('/list', async (req, res) => {
     if (!req.decoded || !req.decoded.admin) {
         return res.status(403).json({
-            message: 'you are not an admin',
-            errorCode: 'USER_E0403'
+            message:  __('error.USER_E0402'),
+            errorCode: 'USER_E0402'
         });
     }
     try {
@@ -198,7 +201,7 @@ router.put('/changePassword/:username', async (req, res) => {
             }
         } else {
             return res.status(400).json({
-                message: 'incorrect previous password',
+                message: __('error.USER_E0444'),
                 errorCode: 'USER_E0444'
             });
         }
