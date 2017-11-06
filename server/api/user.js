@@ -56,7 +56,7 @@ const field = {
  ============================================*/
 router.post('/', async (req, res) => {
     try {
-        const {username, password, nickname} = req.body;
+        const {username, password, nickname, email} = req.body;
 
         if (username === undefined ||
             username === null ||
@@ -76,6 +76,12 @@ router.post('/', async (req, res) => {
             return res.status(400).json(field.nickname.errorResponse);
         }
 
+        if (email !== undefined && email !== null) {
+            if (!field.email.regex.test(email)) {
+                return res.status(400).json(field.email.errorResponse);
+            }
+        }
+
         const user = await User.findOneByUsername(username);
 
         if (user) {
@@ -86,7 +92,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const newUser = await User.create(username, password, nickname);
+        const newUser = await User.create(username, password, nickname, email);
 
         const userCount = await User.count().exec();
 
