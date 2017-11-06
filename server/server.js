@@ -26,7 +26,7 @@ const port = conf.server.port || process.env.PORT || 8088;
 const app = express();
 
 // parse JSON and url-encoded query
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -41,7 +41,6 @@ app.use('/', express.static(path.resolve(__dirname, '../build')));
 
 // set api router
 app.use('/api', api);
-
 
 app.use('*', function (req, res) {
     res.sendFile(path.resolve(__dirname, '../build/index.html'));

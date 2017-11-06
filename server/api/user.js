@@ -4,9 +4,9 @@ import User from '../mongodb/models/user';
 import conf from '../conf';
 import crypto from 'crypto';
 import i18n from '../i18n';
+import verifyTokenMiddleware from '../middlewares/verify';
 
 const router = express.Router();
-
 const __ = i18n.__;
 
 const secret_key = conf.server.secret || 'AbCdEfG!2#4%6&';
@@ -104,8 +104,9 @@ router.post('/', async (req, res) => {
 /* =========================================
 		 	GET /user/list
  ============================================*/
+router.get('/list', verifyTokenMiddleware); // JWT Token Check Middleware
 router.get('/list', async (req, res) => {
-    if (!req.decoded || !req.decoded.admin) {
+    if (!req.payload || !req.payload.admin) {
         return res.status(403).json({
             message:  __('error.USER_E0402'),
             errorCode: 'USER_E0402'
@@ -124,13 +125,19 @@ router.get('/list', async (req, res) => {
 /* =========================================
  GET /user/:id
  ============================================*/
+router.get('/:id', verifyTokenMiddleware); // JWT Token Check Middleware
 router.get('/:id', async (req, res) => {
     try {
-        const id = req.params.id;
-        const user = await User.findById(id, {
-            nickname: true,
-        });
-        res.json(user);
+        if ((req.payload._id === req.params.id) || req.payload.admin === true) {
+            const id = req.params.id;
+            const user = await User.findById(id);
+            res.json(user);
+        } else {
+            return res.status(403).json({
+                errorCode: 'AUTH_E4300',
+                message: __('error.AUTH_E4300')
+            });
+        }
     } catch (e) {
         logger.error(e);
         res.status(500).json("Something broke!")
@@ -149,6 +156,7 @@ router.get('/:id', async (req, res) => {
  level
  }
  ============================================*/
+router.put('/:id', verifyTokenMiddleware); // JWT Token Check Middleware
 router.put('/:id', async (req, res) => {
     try {
         const {
@@ -186,6 +194,7 @@ router.put('/:id', async (req, res) => {
  newPassword
  }
  ============================================*/
+router.put('/changePassword/:username', verifyTokenMiddleware);
 router.put('/changePassword/:username', async (req, res) => {
     try {
         const {prevPassword, newPassword} = req.body;
