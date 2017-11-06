@@ -49,9 +49,10 @@ const field = {
 /* =========================================
  POST /user (Register User)
  {
- username,
- password,
- nickname
+ username, (require)
+ password, (require)
+ nickname, (require)
+ email,
  }
  ============================================*/
 router.post('/', async (req, res) => {
@@ -136,7 +137,19 @@ router.get('/:id', async (req, res) => {
     try {
         if ((req.payload._id === req.params.id) || req.payload.admin === true) {
             const id = req.params.id;
-            const user = await User.findById(id);
+            const user = await User.findById(id, {
+                "username": true,
+                "nickname": true,
+                "email": true,
+                "blocked": true,
+                "last_login": true,
+                "reg_date": true,
+                "admin": true,
+                "point": true,
+                "cash": true,
+                "level": true,
+                "email_verified": true,
+            });
             res.json(user);
         } else {
             return res.status(403).json({
