@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import * as auth from '../ducks/Auth';
 
 class Login extends React.Component {
 
@@ -8,6 +10,38 @@ class Login extends React.Component {
             username: '',
             password: '',
         };
+    }
+
+    handleLoginRequest = () => {
+        this.props.loginRequest(
+            this.state.username,
+            this.state.password,
+        ).then(() => {
+            const success = this.props.login.success;
+            const token = this.props.login.response.data;
+            if (success) {
+                this.setToken(token);
+            }
+        })
+    };
+
+    setToken = (token) => {
+        document.cookie = `access_token=${token};`;
+        if (window.localStorage) {
+            window.localStorage.setItem('access_token', token);
+        }
+    };
+
+    getToken = () => {
+
+    };
+
+    clearToken = () => {
+        console.log(document.cookie);
+    };
+
+    componentDidMount() {
+        this.clearToken();
     }
 
     handleChange = e => {
@@ -21,7 +55,13 @@ class Login extends React.Component {
     };
 
     handleSubmit = e => {
-        console.log(this.state)
+        this.handleLoginRequest();
+    };
+
+    handleKeyPress = e => {
+        if (e.charCode === 13) {
+            this.handleLoginRequest();
+        }
     };
 
     _renderLoginForm = () => {
@@ -38,10 +78,18 @@ class Login extends React.Component {
         return (
             <div style={containerStyle}>
                 <label>username</label>
-                <input type="text" name="username" value={this.state.username} onChange={this.handleChange}
+                <input type="text"
+                       name="username"
+                       value={this.state.username}
+                       onChange={this.handleChange}
+                       onKeyPress={this.handleKeyPress}
                        style={inputStyle} />
                 <label>password</label>
-                <input type="password" name="password" value={this.state.password} onChange={this.handleChange}
+                <input type="password"
+                       name="password"
+                       value={this.state.password}
+                       onChange={this.handleChange}
+                       onKeyPress={this.handleKeyPress}
                        style={inputStyle} />
                 <button onClick={this.handleSubmit}>Login</button>
             </div>
@@ -53,4 +101,18 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        login: state.auth.get('login')
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginRequest: (username, password) => {
+            return dispatch(auth.login(username, password))
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

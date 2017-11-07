@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import * as auth from '../ducks/Auth';
 
 class Join extends React.Component {
 
@@ -27,7 +29,12 @@ class Join extends React.Component {
     };
 
     handleSubmit = e => {
-        console.log(this.state)
+        this.props.joinRequest(
+            this.state.username,
+            this.state.password,
+            this.state.nickname,
+            this.state.email,
+        )
     };
 
     _renderJoinForm = () => {
@@ -65,4 +72,18 @@ class Join extends React.Component {
     }
 }
 
-export default Join;
+const mapStateToProps = (state) => {
+    return {
+        join: state.auth.get('join')
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        joinRequest: (username, password, nickname, email) => {
+            return dispatch(auth.join(username, password, nickname, email))
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Join);

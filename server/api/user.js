@@ -56,27 +56,27 @@ const field = {
  ============================================*/
 router.post('/', async (req, res) => {
     try {
-        const {username, password, nickname, email} = req.body;
+        const { username, password, nickname, email } = req.body;
 
-        if (username === undefined ||
+        if (username === '' || username === undefined ||
             username === null ||
             !field.username.regex.test(username)) {
             return res.status(400).json(field.username.errorResponse);
         }
 
-        if (password === undefined ||
+        if (password === '' || password === undefined ||
             password === null ||
             !field.password.regex.test(password)) {
             return res.status(400).json(field.password.errorResponse);
         }
 
-        if (nickname === undefined ||
+        if (nickname === '' || nickname === undefined ||
             nickname === null ||
             !field.nickname.regex.test(nickname)) {
             return res.status(400).json(field.nickname.errorResponse);
         }
 
-        if (email !== undefined && email !== null) {
+        if (email !== '' && email !== undefined && email !== null) {
             if (!field.email.regex.test(email)) {
                 return res.status(400).json(field.email.errorResponse);
             }
@@ -87,7 +87,7 @@ router.post('/', async (req, res) => {
         if (user) {
             return res.status(409).json({
                 field: 'username',
-                message:  __('error.USER_E0401'),
+                message: __('error.USER_E0401'),
                 errorCode: 'USER_E0401'
             });
         }
@@ -114,7 +114,7 @@ router.get('/list', verifyTokenMiddleware); // JWT Token Check Middleware
 router.get('/list', async (req, res) => {
     if (!req.payload || !req.payload.admin) {
         return res.status(403).json({
-            message:  __('error.USER_E0402'),
+            message: __('error.USER_E0402'),
             errorCode: 'USER_E0402'
         });
     }
@@ -185,7 +185,7 @@ router.put('/:id', async (req, res) => {
                 updateObject.email = email;
             }
         }
-        const updateResult = await User.update({_id: req.params.id}, updateObject);
+        const updateResult = await User.update({ _id: req.params.id }, updateObject);
         res.json(updateResult);
     } catch (e) {
         logger.error(e);
@@ -203,7 +203,7 @@ router.put('/:id', async (req, res) => {
 router.put('/changePassword/:username', verifyTokenMiddleware);
 router.put('/changePassword/:username', async (req, res) => {
     try {
-        const {prevPassword, newPassword} = req.body;
+        const { prevPassword, newPassword } = req.body;
         const user = await User.findOneByUsername(req.params.username);
         if (crypto.createHmac('sha1', secret_key).update(prevPassword).digest('base64') === user.password) {
             if (newPassword === undefined ||
