@@ -1,9 +1,9 @@
 import asyncRoute from '../lib/asyncRoute';
 
-const Home = asyncRoute(() => import('./Home'))
-const About = asyncRoute(() => import('./About'))
+const Login = asyncRoute(() => import('./Login'));
+const Join = asyncRoute(() => import('./Join'));
 
 export {
-    Home,
-    About
+    Login,
+    Join
 }

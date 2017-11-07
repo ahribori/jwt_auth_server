@@ -4,13 +4,13 @@ import {
 } from 'react-router-dom';
 
 import {
-    Home,
-    About
+    Login,
+    Join
 } from './pages';
 
 export default (
     <div>
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/about" component={About} />
+        <Route exact path="/" component={Login} />
+        <Route exact path="/join" component={Join} />
     </div>
 );

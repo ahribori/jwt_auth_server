@@ -11,9 +11,15 @@ export default {
         dispatch(requestAction());
         return axios(axiosOptions)
             .then(response => {
-                dispatch(successAction(response));
+                dispatch(successAction({
+                    success: true,
+                    response: response,
+                }));
             }).catch(error => {
-                dispatch(failureAction(error));
+                dispatch(failureAction({
+                    success: false,
+                    response: error.response,
+                }));
             });
     },
     

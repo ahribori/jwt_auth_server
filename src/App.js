@@ -19,8 +19,8 @@ class App extends Component {
         return (
             <div>
                 <ul>
-                    <li><Link to="/home">Home</Link></li>
-                    <li><Link to="/about">About</Link></li>
+                    <li><Link to="/login">Login</Link></li>
+                    <li><Link to="/join">Join</Link></li>
                 </ul>
             </div>
         )
@@ -39,8 +39,8 @@ class App extends Component {
             <div className="App">
                 <BrowserRouter>
                     <div>
-                        {this._renderMenu()}
-                        <hr/>
+                        {/*{this._renderMenu()}*/}
+                        {/*<hr/>*/}
                         {this._renderContents()}
                     </div>
                 </BrowserRouter>
