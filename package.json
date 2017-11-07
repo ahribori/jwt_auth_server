@@ -64,7 +64,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "boot": "cross-env NODE_ENV=production  ./node_modules/.bin/nodemon --exec babel-node ./server/server.js --presets=env",
+    "boot": "cross-env NODE_ENV=production  ./node_modules/.bin/nodemon --watch server --exec babel-node ./server/server.js --presets=env",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
