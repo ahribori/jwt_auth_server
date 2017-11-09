@@ -145,7 +145,7 @@ class Login extends React.Component {
         };
 
         return (
-            <Card style={containerStyle}>
+            <Card style={containerStyle} className="login container">
                 <CardTitle title="로그인" subtitle="아리보리 계정 사용"/>
                 <CardText>
                     <TextField type="text"
