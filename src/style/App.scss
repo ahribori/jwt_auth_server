@@ -1,3 +1,16 @@
-a:hover {
-    text-decoration: none !important;
+@import 'responsive';
+
+body {
+
+    @include respond-to('large') {
+
+    }
+
+    @include respond-to('medium') {
+
+    }
+
+    @include respond-to('small') {
+
+    }
 }

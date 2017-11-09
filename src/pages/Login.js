@@ -2,6 +2,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as auth from '../ducks/Auth';
 import cookie from 'browser-cookies';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import {Card, CardActions, CardText, CardTitle} from 'material-ui/Card';
 
 class Login extends React.Component {
 
@@ -127,33 +130,49 @@ class Login extends React.Component {
 
     _renderLoginForm = () => {
         const containerStyle = {
-            width: '200px',
-            margin: '0 auto'
+            width: '400px',
+            margin: '0 auto',
+            padding: '48px 40px 36px 40px'
         };
 
         const inputStyle = {
             display: 'block',
-            margin: '0.5rem'
+            margin: '0 auto'
+        };
+
+        const buttonStyle = {
+            marginTop: '2rem'
         };
 
         return (
-            <div style={containerStyle}>
-                <label>username</label>
-                <input type="text"
-                       name="username"
-                       value={this.state.username}
-                       onChange={this.handleChange}
-                       onKeyPress={this.handleKeyPress}
-                       style={inputStyle}/>
-                <label>password</label>
-                <input type="password"
-                       name="password"
-                       value={this.state.password}
-                       onChange={this.handleChange}
-                       onKeyPress={this.handleKeyPress}
-                       style={inputStyle}/>
-                <button onClick={this.handleSubmit}>{this.state.isLoggedIn ? 'Logout' : 'Login'}</button>
-            </div>
+            <Card style={containerStyle}>
+                <CardTitle title="로그인" subtitle="아리보리 계정 사용"/>
+                <CardText>
+                    <TextField type="text"
+                               name="username"
+                               value={this.state.username}
+                               onChange={this.handleChange}
+                               onKeyPress={this.handleKeyPress}
+                               floatingLabelText="계정"
+                               fullWidth
+                               style={inputStyle}/>
+                    <TextField type="password"
+                               name="password"
+                               value={this.state.password}
+                               onChange={this.handleChange}
+                               onKeyPress={this.handleKeyPress}
+                               floatingLabelText="패스워드"
+                               fullWidth
+                               style={inputStyle}/>
+                </CardText>
+                <CardActions>
+                    <RaisedButton onClick={this.handleSubmit}
+                                  fullWidth
+                                  label={this.state.isLoggedIn ? '로그아웃' : '로그인'}
+                                  primary
+                                  style={buttonStyle}/>
+                </CardActions>
+            </Card>
         );
     };
 
