@@ -24,14 +24,14 @@ class Login extends React.Component {
             this.setState({
                 usernameErrorText: '계정을 입력하세요',
             });
-            this.refs.username.focus();
+            this.usernameInput.focus();
             return;
         }
         if (password === '') {
             this.setState({
                 passwordErrorText: '패스워드를 입력하세요',
             });
-            this.refs.password.focus();
+            this.passwordInput.focus();
             return;
         }
         // request login
@@ -50,12 +50,16 @@ class Login extends React.Component {
                 case 'AUTH_E0404':
                     this.setState({
                         usernameErrorText: response.message,
+                        username: '',
                     });
+                    this.usernameInput.focus();
                     break;
                 case 'AUTH_E0403':
                     this.setState({
                         passwordErrorText: response.message,
+                        password: '',
                     });
+                    this.passwordInput.focus();
                     break;
                 default:
             }
@@ -196,7 +200,9 @@ class Login extends React.Component {
                                errorText={this.state.usernameErrorText}
                                fullWidth
                                style={inputStyle}
-                               ref="username"
+                               ref={ref => {
+                                   this.usernameInput = ref;
+                               }}
                     />
                     <TextField type="password"
                                name="password"
@@ -207,7 +213,9 @@ class Login extends React.Component {
                                errorText={this.state.passwordErrorText}
                                fullWidth
                                style={inputStyle}
-                               ref="password"
+                               ref={ref => {
+                                   this.passwordInput = ref;
+                               }}
                     />
                 </CardText>
                 <CardActions>
