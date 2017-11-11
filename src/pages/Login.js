@@ -14,10 +14,26 @@ class Login extends React.Component {
             isLoggedIn: false,
             username: '',
             password: '',
+            usernameErrorText: '',
+            passwordErrorText: '',
         };
     }
 
     login = async (username, password) => {
+        if (username === '') {
+            this.setState({
+                usernameErrorText: '계정을 입력하세요',
+            });
+            this.refs.username.focus();
+            return;
+        }
+        if (password === '') {
+            this.setState({
+                passwordErrorText: '패스워드를 입력하세요',
+            });
+            this.refs.password.focus();
+            return;
+        }
         // request login
         await this.props.loginRequest(username, password);
         // then
@@ -29,7 +45,20 @@ class Login extends React.Component {
                 isLoggedIn: true,
             })
         } else {
-            console.error(this.props.login.response.data.message);
+            const response = this.props.login.response.data;
+            switch (response.errorCode) {
+                case 'AUTH_E0404':
+                    this.setState({
+                        usernameErrorText: response.message,
+                    });
+                    break;
+                case 'AUTH_E0403':
+                    this.setState({
+                        passwordErrorText: response.message,
+                    });
+                    break;
+                default:
+            }
         }
     };
 
@@ -107,8 +136,18 @@ class Login extends React.Component {
     handleChange = e => {
         switch (e.target.name) {
             case 'username':
+                if (this.state.usernameErrorText !== '' && e.target.value !== '') {
+                    this.setState({
+                        usernameErrorText: '',
+                    })
+                }
                 return this.setState({username: e.target.value});
             case 'password':
+                if (this.state.passwordErrorText !== '' && e.target.value !== '') {
+                    this.setState({
+                        passwordErrorText: '',
+                    })
+                }
                 return this.setState({password: e.target.value});
             default:
         }
@@ -154,16 +193,22 @@ class Login extends React.Component {
                                onChange={this.handleChange}
                                onKeyPress={this.handleKeyPress}
                                floatingLabelText="계정"
+                               errorText={this.state.usernameErrorText}
                                fullWidth
-                               style={inputStyle}/>
+                               style={inputStyle}
+                               ref="username"
+                    />
                     <TextField type="password"
                                name="password"
                                value={this.state.password}
                                onChange={this.handleChange}
                                onKeyPress={this.handleKeyPress}
                                floatingLabelText="패스워드"
+                               errorText={this.state.passwordErrorText}
                                fullWidth
-                               style={inputStyle}/>
+                               style={inputStyle}
+                               ref="password"
+                    />
                 </CardText>
                 <CardActions>
                     <RaisedButton onClick={this.handleSubmit}
