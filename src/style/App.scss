@@ -4,44 +4,45 @@ html {
     height: 100vh;
     padding: 2rem;
 
-    @include respond-to('large') {
+    @include responsive(large) {
 
     }
 
-    @include respond-to('medium') {
+    @include responsive(small) {
+
+    }
+
+    @include responsive(medium) {
         padding: 0;
     }
 
-    @include respond-to('small') {
-
-    }
 }
 
 body {
     margin: 0;
     height: 100vh;
 
-    @include respond-to('large') {
+    @include responsive(large) {
 
     }
 
-    @include respond-to('medium') {
+    @include responsive(medium) {
         background: none;
     }
 
-    @include respond-to('small') {
+    @include responsive(small) {
 
     }
 }
 
 .login.container {
-    @include respond-to('medium') {
+    @include responsive('medium') {
         padding: 48px 10px 36px 10px !important;
         width: 60% !important;
         min-width: 200px !important;
         box-shadow: none !important;
     }
-    @include respond-to('small') {
+    @include responsive('small') {
         width: 100% !important;
     }
 }
