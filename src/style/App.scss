@@ -5,17 +5,12 @@ html {
     padding: 2rem;
 
     @include responsive(large) {
-
     }
-
-    @include responsive(small) {
-
-    }
-
     @include responsive(medium) {
+    }
+    @include responsive(small) {
         padding: 0;
     }
-
 }
 
 body {
@@ -23,26 +18,34 @@ body {
     height: 100vh;
 
     @include responsive(large) {
-
     }
-
     @include responsive(medium) {
         background: none;
     }
-
     @include responsive(small) {
-
     }
 }
 
-.login.container {
-    @include responsive('medium') {
+.container {
+    min-width: 300px;
+    @include responsive(medium) {
         padding: 48px 10px 36px 10px !important;
-        width: 60% !important;
+        width: 55% !important;
         min-width: 200px !important;
+    }
+    @include responsive(small) {
+        width: 100% !important;
+        padding: 0 !important;
         box-shadow: none !important;
     }
-    @include responsive('small') {
-        width: 100% !important;
+}
+
+.container .link {
+    padding: 8px;
+    font-size: 0.8rem;
+    a {
+        color: mediumvioletred;
+        text-decoration: none;
     }
 }
+

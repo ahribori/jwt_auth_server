@@ -5,6 +5,7 @@ import cookie from 'browser-cookies';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardText, CardTitle} from 'material-ui/Card';
+import {Link} from 'react-router-dom';
 
 class Login extends React.Component {
 
@@ -173,7 +174,7 @@ class Login extends React.Component {
 
     _renderLoginForm = () => {
         const containerStyle = {
-            width: '400px',
+            width: '500px',
             margin: '0 auto',
             padding: '48px 40px 36px 40px'
         };
@@ -225,6 +226,9 @@ class Login extends React.Component {
                                   primary
                                   style={buttonStyle}/>
                 </CardActions>
+                <div className="login link">
+                    <Link to='/join'>아직 계정이 없으신가요?</Link>
+                </div>
             </Card>
         );
     };

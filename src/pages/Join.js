@@ -4,6 +4,7 @@ import * as auth from '../ducks/Auth';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardText, CardTitle} from 'material-ui/Card';
+import {Link} from 'react-router-dom';
 
 class Join extends React.Component {
 
@@ -45,7 +46,7 @@ class Join extends React.Component {
 
     _renderJoinForm = () => {
         const containerStyle = {
-            width: '400px',
+            width: '500px',
             margin: '0 auto',
             padding: '48px 40px 36px 40px'
         };
@@ -70,6 +71,7 @@ class Join extends React.Component {
                         onChange={this.handleChange}
                         floatingLabelText="계정"
                         style={inputStyle}
+                        fullWidth
                     />
                     <TextField
                         type="password"
@@ -78,6 +80,7 @@ class Join extends React.Component {
                         onChange={this.handleChange}
                         floatingLabelText="패스워드"
                         style={inputStyle}
+                        fullWidth
                     />
                     <TextField
                         type="password"
@@ -86,6 +89,7 @@ class Join extends React.Component {
                         onChange={this.handleChange}
                         floatingLabelText="패스워드 확인"
                         style={inputStyle}
+                        fullWidth
                     />
                     <TextField
                         type="text"
@@ -94,6 +98,7 @@ class Join extends React.Component {
                         onChange={this.handleChange}
                         floatingLabelText="닉네임"
                         style={inputStyle}
+                        fullWidth
                     />
                     <TextField
                         type="email"
@@ -102,6 +107,7 @@ class Join extends React.Component {
                         onChange={this.handleChange}
                         floatingLabelText="이메일"
                         style={inputStyle}
+                        fullWidth
                     />
                 </CardText>
                 <CardActions>
@@ -113,6 +119,9 @@ class Join extends React.Component {
                         style={buttonStyle}
                     />
                 </CardActions>
+                <div className="join link">
+                    <Link to='/'>이미 계정이 있으신가요?</Link>
+                </div>
             </Card>
         );
     };
