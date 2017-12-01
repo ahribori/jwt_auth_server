@@ -1,10 +1,10 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as auth from '../ducks/Auth';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Card, CardActions, CardText, CardTitle} from 'material-ui/Card';
-import {Link} from 'react-router-dom';
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
+import { Link } from 'react-router-dom';
 
 class Join extends React.Component {
 
@@ -105,22 +105,24 @@ class Join extends React.Component {
                 [`${field}ErrorText`]: message,
                 [`${field}`]: '',
             });
-            this[`${field}Input`].focus();
+            if (this[`${field}Input`]) {
+                this[`${field}Input`].focus();
+            }
         }
     };
 
     handleChange = e => {
         switch (e.target.name) {
             case 'username':
-                return this.setState({username: e.target.value});
+                return this.setState({ username: e.target.value });
             case 'password':
-                return this.setState({password: e.target.value});
+                return this.setState({ password: e.target.value });
             case 'password_confirm':
-                return this.setState({password_confirm: e.target.value});
+                return this.setState({ password_confirm: e.target.value });
             case 'nickname':
-                return this.setState({nickname: e.target.value});
+                return this.setState({ nickname: e.target.value });
             case 'email':
-                return this.setState({email: e.target.value});
+                return this.setState({ email: e.target.value });
             default:
         }
     };

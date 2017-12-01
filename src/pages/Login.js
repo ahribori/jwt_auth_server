@@ -1,11 +1,11 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as auth from '../ducks/Auth';
 import cookie from 'browser-cookies';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Card, CardActions, CardText, CardTitle} from 'material-ui/Card';
-import {Link} from 'react-router-dom';
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
+import { Link } from 'react-router-dom';
 
 class Login extends React.Component {
 
@@ -146,14 +146,14 @@ class Login extends React.Component {
                         usernameErrorText: '',
                     })
                 }
-                return this.setState({username: e.target.value});
+                return this.setState({ username: e.target.value });
             case 'password':
                 if (this.state.passwordErrorText !== '' && e.target.value !== '') {
                     this.setState({
                         passwordErrorText: '',
                     })
                 }
-                return this.setState({password: e.target.value});
+                return this.setState({ password: e.target.value });
             default:
         }
     };
