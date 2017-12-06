@@ -11,7 +11,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import conf from './conf';
 import i18n from './i18n';
-import api from './api';
+import api_v1_0 from './api/v1.0';
 import './mongodb';
 
 require('dotenv').config();
@@ -40,7 +40,7 @@ app.use(morgan('dev'));
 app.use('/', express.static(path.resolve(__dirname, '../build')));
 
 // set api router
-app.use('/api', api);
+app.use('/api/v1.0', api_v1_0);
 
 app.use('*', function (req, res) {
     res.sendFile(path.resolve(__dirname, '../build/index.html'));

@@ -11,7 +11,7 @@ const GET_USER = helper.createThunkTypes('auth/GET_USER');
 // Action creators
 export const login = (username, password) => {
     return helper.createThunk(LOGIN.DEFAULT, {
-        url: '/api/auth/login',
+        url: '/api/v1.0/auth/login',
         method: 'post',
         data: {
             username,
@@ -25,7 +25,7 @@ export const login = (username, password) => {
 
 export const join = (username, password, nickname, email) => {
     return helper.createThunk(JOIN.DEFAULT, {
-        url: '/api/user',
+        url: '/api/v1.0/user',
         method: 'post',
         data: {
             username,
@@ -41,7 +41,7 @@ export const join = (username, password, nickname, email) => {
 
 export const verify = token => {
     return helper.createThunk(VERIFY.DEFAULT, {
-        url: '/api/auth/verify',
+        url: '/api/v1.0/auth/verify',
         method: 'get',
         headers: {
             authorization: token,
@@ -51,7 +51,7 @@ export const verify = token => {
 
 export const getUser = (_id, token) => {
     return helper.createThunk(GET_USER.DEFAULT, {
-        url: '/api/user/' + _id,
+        url: '/api/v1.0/user/' + _id,
         method: 'get',
         headers: {
             authorization: token,

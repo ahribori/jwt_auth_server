@@ -1,18 +1,13 @@
 import express from 'express';
-import conf from '../conf';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import User from '../mongodb/models/user';
-import i18n from '../i18n';
-import verifyTokenMiddleware from '../middlewares/verify';
+import conf from '../../conf';
+import User from '../../mongodb/models/user';
+import i18n from '../../i18n';
+import verifyTokenMiddleware from '../../middlewares/verify';
 
 const router = express.Router();
 const __ = i18n.__;
-
-router.get('/', (req, res) => {
-    console.log(req.payload)
-    res.json('hi')
-});
 
 /* =========================================
  POST /auth/login

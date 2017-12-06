@@ -1,10 +1,10 @@
 import express from 'express';
-import logger from '../logger';
-import User from '../mongodb/models/user';
-import conf from '../conf';
 import crypto from 'crypto';
-import i18n from '../i18n';
-import verifyTokenMiddleware from '../middlewares/verify';
+import logger from '../../logger';
+import User from '../../mongodb/models/user';
+import conf from '../../conf';
+import i18n from '../../i18n';
+import verifyTokenMiddleware from '../../middlewares/verify';
 
 const router = express.Router();
 const __ = i18n.__;
