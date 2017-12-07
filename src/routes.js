@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-    Route
+    Route,
 } from 'react-router-dom';
 
 import {
     Login,
-    Join
+    Join,
 } from './pages';
 
 export default (

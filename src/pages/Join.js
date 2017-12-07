@@ -1,19 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as auth from '../ducks/Auth';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import { Link } from 'react-router-dom';
+import * as auth from '../ducks/Auth';
 
 class Join extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
             username: '',
             password: '',
-            password_confirm: '',
+            passwordConfirm: '',
             nickname: '',
             email: '',
             usernameErrorText: '',
@@ -28,9 +27,9 @@ class Join extends React.Component {
         const {
             username,
             password,
-            password_confirm,
+            passwordConfirm,
             nickname,
-            email
+            email,
         } = this.state;
 
         this.setState({
@@ -65,12 +64,12 @@ class Join extends React.Component {
             this.passwordConfirmInput.focus();
             return;
         }
-        if (password !== password_confirm) {
+        if (password !== passwordConfirm) {
             this.setState({
                 usernameErrorText: '',
                 passwordErrorText: '',
                 passwordConfirmErrorText: '패스워드가 일치하지 않습니다',
-                password_confirm: '',
+                passwordConfirm: '',
             });
             this.passwordConfirmInput.focus();
             return;
@@ -94,8 +93,7 @@ class Join extends React.Component {
         );
 
         if (!this.props.join.success) {
-            const field = this.props.join.response.data.field;
-            const message = this.props.join.response.data.message;
+            const { field, message } = this.props.join.response.data;
             this.setState({
                 usernameErrorText: '',
                 passwordErrorText: '',
@@ -111,27 +109,28 @@ class Join extends React.Component {
         }
     };
 
-    handleChange = e => {
+    handleChange = (e) => {
         switch (e.target.name) {
             case 'username':
                 return this.setState({ username: e.target.value });
             case 'password':
                 return this.setState({ password: e.target.value });
-            case 'password_confirm':
-                return this.setState({ password_confirm: e.target.value });
+            case 'passwordConfirm':
+                return this.setState({ passwordConfirm: e.target.value });
             case 'nickname':
                 return this.setState({ nickname: e.target.value });
             case 'email':
                 return this.setState({ email: e.target.value });
             default:
         }
+        return null;
     };
 
-    handleSubmit = e => {
+    handleSubmit = () => {
         this.join();
     };
 
-    handleKeyPress = e => {
+    handleKeyPress = (e) => {
         if (e.charCode === 13) {
             this.join();
         }
@@ -141,21 +140,21 @@ class Join extends React.Component {
         const containerStyle = {
             width: '500px',
             margin: '0 auto',
-            padding: '48px 40px 36px 40px'
+            padding: '48px 40px 36px 40px',
         };
 
         const inputStyle = {
             display: 'block',
-            margin: '0 auto'
+            margin: '0 auto',
         };
 
         const buttonStyle = {
-            marginTop: '2rem'
+            marginTop: '2rem',
         };
 
         return (
             <Card style={containerStyle} className="join container">
-                <CardTitle title="계정 만들기" subtitle="아리보리 계정 만들기"/>
+                <CardTitle title="계정 만들기" subtitle="아리보리 계정 만들기" />
                 <CardText>
                     <TextField
                         type="text"
@@ -166,7 +165,7 @@ class Join extends React.Component {
                         floatingLabelText="계정"
                         style={inputStyle}
                         fullWidth
-                        ref={ref => {
+                        ref={(ref) => {
                             this.usernameInput = ref;
                         }}
                         errorText={this.state.usernameErrorText}
@@ -180,21 +179,21 @@ class Join extends React.Component {
                         floatingLabelText="패스워드"
                         style={inputStyle}
                         fullWidth
-                        ref={ref => {
+                        ref={(ref) => {
                             this.passwordInput = ref;
                         }}
                         errorText={this.state.passwordErrorText}
                     />
                     <TextField
                         type="password"
-                        name="password_confirm"
-                        value={this.state.password_confirm}
+                        name="passwordConfirm"
+                        value={this.state.passwordConfirm}
                         onChange={this.handleChange}
                         onKeyPress={this.handleKeyPress}
                         floatingLabelText="패스워드 확인"
                         style={inputStyle}
                         fullWidth
-                        ref={ref => {
+                        ref={(ref) => {
                             this.passwordConfirmInput = ref;
                         }}
                         errorText={this.state.passwordConfirmErrorText}
@@ -208,7 +207,7 @@ class Join extends React.Component {
                         floatingLabelText="닉네임"
                         style={inputStyle}
                         fullWidth
-                        ref={ref => {
+                        ref={(ref) => {
                             this.nicknameInput = ref;
                         }}
                         errorText={this.state.nicknameErrorText}
@@ -222,7 +221,7 @@ class Join extends React.Component {
                         floatingLabelText="이메일"
                         style={inputStyle}
                         fullWidth
-                        ref={ref => {
+                        ref={(ref) => {
                             this.emailInput = ref;
                         }}
                         errorText={this.state.emailErrorText}
@@ -233,35 +232,33 @@ class Join extends React.Component {
                         onClick={this.handleSubmit}
                         onKeyPress={this.handleKeyPress}
                         fullWidth
-                        label='계정 만들기'
+                        label="계정 만들기"
                         primary
                         style={buttonStyle}
                     />
                 </CardActions>
                 <div className="join link">
-                    <Link to='/'>이미 계정이 있으신가요?</Link>
+                    <Link to="/">이미 계정이 있으신가요?</Link>
                 </div>
             </Card>
         );
     };
 
     render() {
-        return this._renderJoinForm()
+        return this._renderJoinForm();
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        join: state.auth.get('join')
-    }
+        join: state.auth.get('join'),
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        joinRequest: (username, password, nickname, email) => {
-            return dispatch(auth.join(username, password, nickname, email))
-        }
-    }
+        joinRequest: (username, password, nickname, email) => dispatch(auth.join(username, password, nickname, email)),
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Join);

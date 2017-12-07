@@ -9,55 +9,47 @@ const VERIFY = helper.createThunkTypes('auth/VERIFY');
 const GET_USER = helper.createThunkTypes('auth/GET_USER');
 
 // Action creators
-export const login = (username, password) => {
-    return helper.createThunk(LOGIN.DEFAULT, {
-        url: '/api/v1.0/auth/login',
-        method: 'post',
-        data: {
-            username,
-            password,
-        },
-        headers: {
-            authorization: ''
-        }
-    })();
-};
+export const login = (username, password) => helper.createThunk(LOGIN.DEFAULT, {
+    url: '/api/v1.0/auth/login',
+    method: 'post',
+    data: {
+        username,
+        password,
+    },
+    headers: {
+        authorization: '',
+    },
+})();
 
-export const join = (username, password, nickname, email) => {
-    return helper.createThunk(JOIN.DEFAULT, {
-        url: '/api/v1.0/user',
-        method: 'post',
-        data: {
-            username,
-            password,
-            nickname,
-            email,
-        },
-		headers: {
-			authorization: ''
-		}
-	})();
-};
+export const join = (username, password, nickname, email) => helper.createThunk(JOIN.DEFAULT, {
+    url: '/api/v1.0/user',
+    method: 'post',
+    data: {
+        username,
+        password,
+        nickname,
+        email,
+    },
+    headers: {
+        authorization: '',
+    },
+})();
 
-export const verify = token => {
-    return helper.createThunk(VERIFY.DEFAULT, {
-        url: '/api/v1.0/auth/verify',
-        method: 'get',
-        headers: {
-            authorization: token,
-        }
-    })();
-};
+export const verify = token => helper.createThunk(VERIFY.DEFAULT, {
+    url: '/api/v1.0/auth/verify',
+    method: 'get',
+    headers: {
+        authorization: token,
+    },
+})();
 
-export const getUser = (_id, token) => {
-    return helper.createThunk(GET_USER.DEFAULT, {
-        url: '/api/v1.0/user/' + _id,
-        method: 'get',
-        headers: {
-            authorization: token,
-        }
-    })();
-};
+export const getUser = (_id, token) => helper.createThunk(GET_USER.DEFAULT, {
+    url: `/api/v1.0/user/${_id}`,
+    method: 'get',
+    headers: {
+        authorization: token,
+    },
+})();
 
 // Initial state
 const initialState = fromJS({
@@ -70,44 +62,20 @@ const initialState = fromJS({
 // Reducer
 export default handleActions({
 
-    [LOGIN.REQUEST]: (state, action) => {
-        return state;
-    },
-    [LOGIN.SUCCESS]: (state, action) => {
-        return state.set('login', action.payload);
-    },
-    [LOGIN.FAILURE]: (state, action) => {
-        return state.set('login', action.payload);
-    },
+    [LOGIN.REQUEST]: state => state,
+    [LOGIN.SUCCESS]: (state, action) => state.set('login', action.payload),
+    [LOGIN.FAILURE]: (state, action) => state.set('login', action.payload),
 
-    [JOIN.REQUEST]: (state, action) => {
-        return state;
-    },
-    [JOIN.SUCCESS]: (state, action) => {
-        return state.set('join', action.payload);
-    },
-    [JOIN.FAILURE]: (state, action) => {
-        return state.set('join', action.payload);
-    },
+    [JOIN.REQUEST]: state => state,
+    [JOIN.SUCCESS]: (state, action) => state.set('join', action.payload),
+    [JOIN.FAILURE]: (state, action) => state.set('join', action.payload),
 
-    [VERIFY.REQUEST]: (state, action) => {
-        return state;
-    },
-    [VERIFY.SUCCESS]: (state, action) => {
-        return state.set('verify', action.payload);
-    },
-    [VERIFY.FAILURE]: (state, action) => {
-        return state.set('verify', action.payload);
-    },
+    [VERIFY.REQUEST]: state => state,
+    [VERIFY.SUCCESS]: (state, action) => state.set('verify', action.payload),
+    [VERIFY.FAILURE]: (state, action) => state.set('verify', action.payload),
 
-    [GET_USER.REQUEST]: (state, action) => {
-        return state;
-    },
-    [GET_USER.SUCCESS]: (state, action) => {
-        return state.set('user', action.payload);
-    },
-    [GET_USER.FAILURE]: (state, action) => {
-        return state.set('user', action.payload);
-    },
+    [GET_USER.REQUEST]: state => state,
+    [GET_USER.SUCCESS]: (state, action) => state.set('user', action.payload),
+    [GET_USER.FAILURE]: (state, action) => state.set('user', action.payload),
 
 }, initialState);

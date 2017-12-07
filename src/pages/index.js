@@ -5,5 +5,5 @@ const Join = asyncRoute(() => import('./Join'));
 
 export {
     Login,
-    Join
-}
+    Join,
+};
