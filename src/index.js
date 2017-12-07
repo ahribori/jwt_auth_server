@@ -4,6 +4,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import {
+    BrowserRouter as Router,
+} from 'react-router-dom';
 
 /**
  *  Material-UI
@@ -35,7 +38,9 @@ const muiTheme = getMuiTheme({
 ReactDOM.render(
     <Provider store={store}>
         <MuiThemeProvider muiTheme={muiTheme}>
-            <App />
+            <Router>
+                <App />
+            </Router>
         </MuiThemeProvider>
     </Provider>,
     document.getElementById('root'),

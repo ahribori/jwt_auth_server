@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import {
-    BrowserRouter,
     Link,
+    withRouter,
 } from 'react-router-dom';
+
 import './style/App.scss';
 import routes from './routes';
+import withAuth from './lib/hoc/withAuth';
 
+@withAuth
 class App extends Component {
     renderMenu = () => (
         <div>
@@ -26,24 +28,10 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <BrowserRouter>
-                    <div>
-                        {/* {this._renderMenu()} */}
-                        {/* <hr/> */}
-                        {this.renderContents()}
-                    </div>
-                </BrowserRouter>
+                {this.renderContents()}
             </div>
         );
     }
 }
 
-const mapStateToProps = () => {
-    return {};
-};
-
-const mapDispatchToProps = () => {
-    return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(App);

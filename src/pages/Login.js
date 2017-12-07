@@ -38,7 +38,6 @@ class Login extends React.Component {
         }
     }
 
-
     setToken = (token) => {
         cookie.set('access_token', token);
         if (window.localStorage) {
@@ -57,7 +56,6 @@ class Login extends React.Component {
         return token;
     };
 
-
     getUser = async (_id, token) => {
         await this.props.getUserRequest(_id, token);
         return this.props.user.response.data;
@@ -74,7 +72,6 @@ class Login extends React.Component {
         }
         cookie.erase('access_token');
     };
-
 
     login = async (username, password) => {
         if (username === '') {
