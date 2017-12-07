@@ -24,18 +24,25 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         super(props);
         this.state = {
             isLoggedIn: false,
-            user: null,
+            auth: {
+                user: null,
+                token: null,
+            },
         };
     }
 
     async componentDidMount() {
         const isLoggedIn = await this.isLoggedIn();
+        const token = this.getToken();
         if (isLoggedIn) {
             const { _id } = this.props.verify.response.data;
-            const user = await this.getUser(_id, this.getToken());
+            const user = await this.getUser(_id, token);
             this.setState({
                 isLoggedIn: true,
-                user,
+                auth: {
+                    user,
+                    token,
+                },
             });
         }
     }
@@ -82,7 +89,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         } = this.props;
 
         if (!this.state.isLoggedIn) {
-            return <WrappedComponent {...props} />;
+            return 'Loading...';
         }
         return (
             <WrappedComponent {...this.state} {...props} />

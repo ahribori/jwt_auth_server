@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {
-    Link,
     withRouter,
 } from 'react-router-dom';
+import url from 'url';
 
 import './style/App.scss';
 import routes from './routes';
@@ -10,25 +10,28 @@ import withAuth from './lib/hoc/withAuth';
 
 @withAuth
 class App extends Component {
-    renderMenu = () => (
-        <div>
-            <ul>
-                <li><Link to="/login">Login</Link></li>
-                <li><Link to="/join">Join</Link></li>
-            </ul>
-        </div>
-    );
+    componentWillReceiveProps(nextProps) {
+        const { pathname } = this.props.location;
+        const { query } = url.parse(window.location.href, window.location.search);
+        const redirectURL = query ? query.continue : null;
+        if (redirectURL) {
+            // TODO redirect url + token을 보냈을 때 탈취 위험 고려
+            this.redirectTo(`${redirectURL}?token=${this.props.auth.token}`);
+            return;
+        }
+        if (nextProps.isLoggedIn && pathname !== '/myPage') {
+            this.redirectTo('/myPage');
+        }
+    }
 
-    renderContents = () => (
-        <div>
-            {routes}
-        </div>
-    );
+    redirectTo = (continueURL) => {
+        window.location.replace(continueURL);
+    };
 
     render() {
         return (
             <div className="App">
-                {this.renderContents()}
+                {routes}
             </div>
         );
     }
