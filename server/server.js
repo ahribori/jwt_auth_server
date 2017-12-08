@@ -37,7 +37,23 @@ const accessLogStream = fs.createWriteStream(path.join(appPath.LOG_PATH, 'access
 app.use(morgan('combined', {stream: accessLogStream}));
 app.use(morgan('dev'));
 
-app.use('/', express.static(path.resolve(__dirname, '../build')));
+const buildPath = path.resolve(__dirname, '../build');
+app.use('/', express.static(buildPath));
+
+app.use('/sdk.js', (req, res) => {
+    const buildPathExist = fs.existsSync(buildPath);
+    if (buildPathExist) {
+        const assetManifest = require(`${buildPath}/asset-manifest.json`);
+        const sdkPath = `${buildPath}/${assetManifest['sdk.js']}`;
+        const sdkExist = fs.existsSync(sdkPath);
+        if (!sdkExist) {
+            return res.sendStatus(404);
+        }
+        return res.sendFile(sdkPath);
+    } else {
+        return res.sendStatus(404);
+    }
+});
 
 // set api router
 app.use('/api/v1.0', api_v1_0);
