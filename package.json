@@ -22,7 +22,6 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.5.1",
     "node-sass": "^4.7.2",
-    "nodemon": "^1.12.5",
     "sass-loader": "^6.0.6"
   },
   "dependencies": {
@@ -50,6 +49,7 @@
     "material-ui": "^0.20.0",
     "mongoose": "^4.13.6",
     "morgan": "^1.9.0",
+    "nodemon": "^1.12.5",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.0.0",
     "postcss-loader": "2.0.6",
@@ -65,7 +65,7 @@
     "redux-thunk": "^2.2.0",
     "style-loader": "0.18.2",
     "sw-precache-webpack-plugin": "0.11.3",
-	  "url": "^0.11.0",
+    "url": "^0.11.0",
     "url-loader": "0.5.9",
     "webpack": "2.6.1",
     "webpack-dev-server": "2.5.0",
@@ -76,7 +76,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "boot": "cross-env NODE_ENV=production  ./node_modules/.bin/nodemon --watch server --exec babel-node ./server/server.js --presets=env",
+    "boot": "cross-env NODE_ENV=production ./node_modules/.bin/nodemon --watch server --exec babel-node ./server/server.js --presets=env",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
