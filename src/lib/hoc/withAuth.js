@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import cookie from 'browser-cookies';
 import { Redirect } from 'react-router-dom';
+import CircularProgress from 'material-ui/CircularProgress';
+import { pinkA400 as pink } from 'material-ui/styles/colors';
 import * as auth from '../../ducks/Auth';
 
 const mapStateToProps = (state) => {
@@ -113,7 +115,12 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             return <Redirect to="/login" />;
         }
         if (this.state.pending) {
-            return 'Loading...';
+            return (
+                <div className="loading">
+                    <CircularProgress color={pink} size={150} thickness={10}/>
+                    <p style={{ color: pink }}>Loading</p>
+                </div>
+            );
         }
         return (
             <WrappedComponent logout={this.logout} {...this.state} {...props} />
