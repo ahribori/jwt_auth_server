@@ -1,4 +1,4 @@
-@import 'responsive';
+@import 'index';
 
 html {
     height: 100%;
@@ -82,7 +82,7 @@ body {
     padding: 8px;
     font-size: 0.8rem;
     a {
-        color: rgb(233, 30, 99);
+        color: $pink500;
         text-decoration: none;
     }
 }
