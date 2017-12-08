@@ -31,7 +31,6 @@ class MyPage extends React.Component {
         } = this.props.auth;
 
         const containerStyle = {
-            margin: '0 auto',
             padding: '48px 40px 36px 40px',
         };
 
@@ -94,7 +93,7 @@ class MyPage extends React.Component {
         );
 
         return (
-            <Card style={containerStyle} className="page">
+            <Card style={containerStyle} className="container-large">
                 {renderHeader()}
                 {renderContents()}
             </Card>

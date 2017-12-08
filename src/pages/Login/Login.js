@@ -167,7 +167,6 @@ class Login extends React.Component {
     _renderLoginForm = () => {
         const containerStyle = {
             width: '500px',
-            margin: '0 auto',
             padding: '48px 40px 36px 40px',
         };
 
@@ -181,7 +180,7 @@ class Login extends React.Component {
         };
 
         return (
-            <Card style={containerStyle} className="login container">
+            <Card style={containerStyle} className="container-small">
                 <CardTitle title="로그인" subtitle="아리보리 계정 사용" />
                 <CardText>
                     <TextField
@@ -222,7 +221,7 @@ class Login extends React.Component {
                         style={buttonStyle}
                     />
                 </CardActions>
-                <div className="login link">
+                <div className="link">
                     <Link to="/join">아직 계정이 없으신가요?</Link>
                 </div>
             </Card>

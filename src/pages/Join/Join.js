@@ -139,7 +139,6 @@ class Join extends React.Component {
     _renderJoinForm = () => {
         const containerStyle = {
             width: '500px',
-            margin: '0 auto',
             padding: '48px 40px 36px 40px',
         };
 
@@ -153,7 +152,7 @@ class Join extends React.Component {
         };
 
         return (
-            <Card style={containerStyle} className="join container">
+            <Card style={containerStyle} className="container-small">
                 <CardTitle title="계정 만들기" subtitle="아리보리 계정 만들기" />
                 <CardText>
                     <TextField
@@ -237,7 +236,7 @@ class Join extends React.Component {
                         style={buttonStyle}
                     />
                 </CardActions>
-                <div className="join link">
+                <div className="link">
                     <Link to="/">이미 계정이 있으신가요?</Link>
                 </div>
             </Card>
