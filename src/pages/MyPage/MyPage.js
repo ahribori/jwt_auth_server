@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardActions, CardText, CardHeader, CardTitle } from 'material-ui/Card';
+import { Card, CardActions, CardText, CardHeader } from 'material-ui/Card';
 import Badge from 'material-ui/Badge';
 import Avatar from 'material-ui/Avatar';
 import FaceIcon from 'material-ui/svg-icons/action/face';
@@ -9,6 +9,13 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import AppsIcon from 'material-ui/svg-icons/navigation/apps';
 import ExitToAppIcon from 'material-ui/svg-icons/action/exit-to-app';
+import {
+    Table,
+    TableBody,
+    TableRow,
+    TableRowColumn,
+} from 'material-ui/Table';
+
 import './style/MyPage.scss';
 
 import withAuth from '../../lib/hoc/withAuth';
@@ -30,13 +37,7 @@ class MyPage extends React.Component {
             token,
         } = this.props.auth;
 
-        const containerStyle = {
-            padding: '48px 40px 36px 40px',
-        };
-
         const my = user || {};
-        console.log(this.props);
-
 
         const renderAvatar = () => (
             <Badge
@@ -69,7 +70,7 @@ class MyPage extends React.Component {
 
         const renderHeader = () => (
             <CardHeader
-                className="mypage-card-header"
+                className="MyPage-card-header"
                 title={my.nickname}
                 subtitle={my.email}
                 avatar={renderAvatar()}
@@ -85,15 +86,55 @@ class MyPage extends React.Component {
             </CardHeader>
         );
 
+        const renderUserInfo = () => (
+            <Table
+                selectable={false}
+            >
+                <TableBody displayRowCheckbox={false}>
+                    <TableRow>
+                        <TableRowColumn>계정</TableRowColumn>
+                        <TableRowColumn>{my.username}</TableRowColumn>
+                    </TableRow>
+                    <TableRow>
+                        <TableRowColumn>권한</TableRowColumn>
+                        <TableRowColumn>{my.admin ? '관리자' : '일반'}</TableRowColumn>
+                    </TableRow>
+                    <TableRow>
+                        <TableRowColumn>이메일 인증 여부</TableRowColumn>
+                        <TableRowColumn>{my.email_verified ? '인증됨' : '인증되지 않음'}</TableRowColumn>
+                    </TableRow>
+                    <TableRow>
+                        <TableRowColumn>레벨</TableRowColumn>
+                        <TableRowColumn>{my.level}</TableRowColumn>
+                    </TableRow>
+                    <TableRow>
+                        <TableRowColumn>캐쉬</TableRowColumn>
+                        <TableRowColumn>{my.cash} 캐쉬</TableRowColumn>
+                    </TableRow>
+                    <TableRow>
+                        <TableRowColumn>포인트</TableRowColumn>
+                        <TableRowColumn>{my.point} 포인트</TableRowColumn>
+                    </TableRow>
+                    <TableRow>
+                        <TableRowColumn>엑세스 토큰</TableRowColumn>
+                        <TableRowColumn>
+                            <pre>{token}</pre>
+                        </TableRowColumn>
+                    </TableRow>
+                    <TableRow/>
+                </TableBody>
+            </Table>
+        );
+
+
         const renderContents = () => (
             <CardText>
-                <pre>{token}</pre>
-                <p style={{ width: '500px' }}/>
+                {renderUserInfo()}
             </CardText>
         );
 
         return (
-            <Card style={containerStyle} className="container-large">
+            <Card className="container-large">
                 {renderHeader()}
                 {renderContents()}
             </Card>

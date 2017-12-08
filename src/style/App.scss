@@ -15,7 +15,7 @@ html {
 body {
     margin: 0;
     height: 100%;
-    background: url('./images/poly-bg4.jpg') no-repeat fixed center;
+    background: no-repeat fixed center;
     background-size: cover;
 }
 
@@ -25,6 +25,7 @@ body {
         height: inherit;
         & > div {
             height: inherit;
+            width: 100%;
         }
     }
 }
@@ -34,6 +35,7 @@ body {
     margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
+    padding: 48px 40px 36px 40px;
     background-color: rgba(255, 255, 255, 0.9) !important;
     @include responsive(medium) {
         padding: 48px 10px 36px 10px !important;
@@ -43,10 +45,10 @@ body {
     @include responsive(small) {
         margin-top: 0;
         width: 100% !important;
-        height: 100% !important;
+        min-height: 100%;
         padding: 0 !important;
         box-shadow: none !important;
-        background-color: rgba(255, 255, 255, 0.7) !important;
+        background-color: rgba(255, 255, 255, 0.8) !important;
     }
 }
 
@@ -68,11 +70,11 @@ body {
     }
     @include responsive(small) {
         width: 100% !important;
-        height: 100%;
+        min-height: 100%;
         margin-top: 0;
         padding: 0 !important;
         box-shadow: none !important;
-        background-color: rgba(255, 255, 255, 0.7) !important;
+        background-color: rgba(255, 255, 255, 0.8) !important;
     }
 }
 
@@ -80,7 +82,7 @@ body {
     padding: 8px;
     font-size: 0.8rem;
     a {
-        color: mediumvioletred;
+        color: rgb(233, 30, 99);
         text-decoration: none;
     }
 }
@@ -88,6 +90,12 @@ body {
 pre {
     white-space: pre-wrap;
     word-break: break-all;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    color: rgba(0, 0, 0, 0.9);
+    line-height: 1.5;
+    font-family: inherit;
 }
 
 .particles {

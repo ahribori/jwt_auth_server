@@ -136,7 +136,7 @@ class Join extends React.Component {
         }
     };
 
-    _renderJoinForm = () => {
+    renderJoinForm = () => {
         const containerStyle = {
             width: '500px',
             padding: '48px 40px 36px 40px',
@@ -244,7 +244,7 @@ class Join extends React.Component {
     };
 
     render() {
-        return this._renderJoinForm();
+        return this.renderJoinForm();
     }
 }
 

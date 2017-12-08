@@ -164,7 +164,7 @@ class Login extends React.Component {
         }
     };
 
-    _renderLoginForm = () => {
+    renderLoginForm = () => {
         const containerStyle = {
             width: '500px',
             padding: '48px 40px 36px 40px',
@@ -181,7 +181,7 @@ class Login extends React.Component {
 
         return (
             <Card style={containerStyle} className="container-small">
-                <CardTitle title="로그인" subtitle="아리보리 계정 사용" />
+                <CardTitle title="로그인" subtitle="아리보리 계정 사용"/>
                 <CardText>
                     <TextField
                         type="text"
@@ -230,9 +230,9 @@ class Login extends React.Component {
 
     render() {
         if (this.state.isLoggedIn) {
-            return <Redirect to="/" />;
+            return <Redirect to="/"/>;
         }
-        return this._renderLoginForm();
+        return this.renderLoginForm();
     }
 }
 

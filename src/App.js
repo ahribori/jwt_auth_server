@@ -7,8 +7,13 @@ import Particles from 'react-particles-js';
 
 import './style/App.scss';
 import routes from './routes';
-import particles from './style/particles/particles1.json';
-
+import particlesDefault from './style/particles/default.json';
+import particlesSnow from './style/particles/snow.json';
+import particlesNasa from './style/particles/nasa.json';
+import particlesMove from './style/particles/move.json';
+import bgMountain from './style/images/poly-mountain-dark.jpg';
+import bgStar from './style/images/poly-star.jpg';
+import bgTown from './style/images/poly-mountain-light.jpg';
 
 class App extends Component {
     componentWillReceiveProps(nextProps) {
@@ -29,15 +34,34 @@ class App extends Component {
         window.location.replace(continueURL);
     };
 
-    renderParticles = () => (
-        <Particles
+    renderParticles = () => {
+        const images = [
+            bgStar,
+            bgMountain,
+            bgTown,
+        ];
+        const particles = [
+            particlesDefault,
+            particlesMove,
+            particlesNasa,
+            particlesSnow,
+        ];
+        const randomImageIndex = Math.round(Math.random() * 2);
+        let randomParticleIndex = 0;
+        if (randomImageIndex === 0) { // star
+            randomParticleIndex = Math.round(Math.random());
+        } else { // else
+            randomParticleIndex = Math.round(Math.random()) + 2;
+        }
+        document.body.style.backgroundImage = `url(${images[randomImageIndex]})`;
+        return (<Particles
             className="particles"
             width="100vw"
             height="100vh"
-            params={particles}
+            params={particles[randomParticleIndex]}
             key={2}
-        />
-    );
+        />);
+    };
 
     render() {
         return [

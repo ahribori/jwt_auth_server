@@ -1,4 +1,4 @@
-.mypage-card-header {
+.MyPage-card-header {
     div:first-child {
         margin-right: 0 !important;
     }
@@ -6,3 +6,14 @@
         text-align: right;
     }
 }
+
+table, tr, td {
+    background-color: transparent !important;
+}
+
+tr > td {
+    &:first-child {
+        font-weight: bold;
+    }
+}
+
