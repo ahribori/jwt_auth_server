@@ -84,6 +84,20 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         return verify.success;
     };
 
+    clearToken = () => {
+        if (window.localStorage) {
+            window.localStorage.removeItem('access_token');
+        }
+        cookie.erase('access_token');
+    };
+
+    logout = () => {
+        this.clearToken();
+        this.setState({
+            isLoggedIn: false,
+        });
+    };
+
     render() {
         const {
             login,
@@ -98,8 +112,11 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         if (!this.state.isLoggedIn && !this.state.pending) {
             return <Redirect to="/login" />;
         }
+        if (this.state.pending) {
+            return 'Loading...';
+        }
         return (
-            <WrappedComponent {...this.state} {...props} />
+            <WrappedComponent logout={this.logout} {...this.state} {...props} />
         );
     }
 });

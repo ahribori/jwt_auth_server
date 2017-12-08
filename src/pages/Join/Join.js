@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import { Link } from 'react-router-dom';
-import * as auth from '../ducks/Auth';
+import * as auth from '../../ducks/Auth';
 
 class Join extends React.Component {
     constructor(props) {

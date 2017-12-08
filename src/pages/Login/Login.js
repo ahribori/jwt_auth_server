@@ -5,7 +5,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import { connect } from 'react-redux';
-import * as auth from '../ducks/Auth';
+import * as auth from '../../ducks/Auth';
 
 class Login extends React.Component {
     constructor(props) {
