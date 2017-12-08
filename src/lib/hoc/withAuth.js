@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import cookie from 'browser-cookies';
+import { Redirect } from 'react-router-dom';
 import * as auth from '../../ducks/Auth';
 
 const mapStateToProps = (state) => {
@@ -23,6 +24,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     constructor(props) {
         super(props);
         this.state = {
+            pending: true,
             isLoggedIn: false,
             auth: {
                 user: null,
@@ -38,11 +40,16 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             const { _id } = this.props.verify.response.data;
             const user = await this.getUser(_id, token);
             this.setState({
+                pending: false,
                 isLoggedIn: true,
                 auth: {
                     user,
                     token,
                 },
+            });
+        } else {
+            this.setState({
+                pending: false,
             });
         }
     }
@@ -88,8 +95,8 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             ...props
         } = this.props;
 
-        if (!this.state.isLoggedIn) {
-            return 'Loading...';
+        if (!this.state.isLoggedIn && !this.state.pending) {
+            return <Redirect to="/login" />;
         }
         return (
             <WrappedComponent {...this.state} {...props} />

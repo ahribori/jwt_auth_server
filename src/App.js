@@ -6,9 +6,7 @@ import url from 'url';
 
 import './style/App.scss';
 import routes from './routes';
-import withAuth from './lib/hoc/withAuth';
 
-@withAuth
 class App extends Component {
     componentWillReceiveProps(nextProps) {
         const { pathname } = this.props.location;

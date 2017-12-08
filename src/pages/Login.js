@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import cookie from 'browser-cookies';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -22,19 +22,12 @@ class Login extends React.Component {
     async componentDidMount() {
         const token = this.getToken();
         if (token) {
-            this.setState({
-                isLoggedIn: true,
-            });
-        }
-        const isLogin = await this.isLogin();
-        if (isLogin) {
-            this.setState({
-                isLoggedIn: true,
-            });
-        } else {
-            this.setState({
-                isLoggedIn: false,
-            });
+            const isLogin = await this.isLogin();
+            if (isLogin) {
+                this.setState({
+                    isLoggedIn: true,
+                });
+            }
         }
     }
 
@@ -237,6 +230,9 @@ class Login extends React.Component {
     };
 
     render() {
+        if (this.state.isLoggedIn) {
+            return <Redirect to="/" />;
+        }
         return this._renderLoginForm();
     }
 }

@@ -11,8 +11,8 @@ import {
 
 export default (
     <div>
-        <Route exact path="/" component={Login} />
+        <Route exact path="/login" component={Login} />
         <Route exact path="/join" component={Join} />
-        <Route exact path="/myPage" component={MyPage} />
+        <Route exact path="/" component={MyPage} />
     </div>
 );
