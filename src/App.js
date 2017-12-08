@@ -3,9 +3,12 @@ import {
     withRouter,
 } from 'react-router-dom';
 import url from 'url';
+import Particles from 'react-particles-js';
 
 import './style/App.scss';
 import routes from './routes';
+import particles from './style/particles/particles1.json';
+
 
 class App extends Component {
     componentWillReceiveProps(nextProps) {
@@ -26,12 +29,23 @@ class App extends Component {
         window.location.replace(continueURL);
     };
 
+    renderParticles = () => (
+        <Particles
+            className="particles"
+            width="100vw"
+            height="100vh"
+            params={particles}
+            key={2}
+        />
+    );
+
     render() {
-        return (
-            <div className="App">
+        return [
+            <div className="App" key={1}>
                 {routes}
-            </div>
-        );
+            </div>,
+            this.renderParticles(),
+        ];
     }
 }
 

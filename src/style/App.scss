@@ -16,18 +16,13 @@ html {
 body {
     margin: 0;
     height: 100vh;
-
-    @include responsive(large) {
-    }
-    @include responsive(medium) {
-        background: none;
-    }
-    @include responsive(small) {
-    }
+    background: url('./images/poly-bg4.jpg') no-repeat fixed center;
+    background-size: cover;
 }
 
 .container {
     min-width: 300px;
+    background-color: rgba(255, 255, 255, 0.9) !important;
     @include responsive(medium) {
         padding: 48px 10px 36px 10px !important;
         width: 55% !important;
@@ -42,6 +37,7 @@ body {
 
 .page {
     max-width: 800px;
+    background-color: rgba(255, 255, 255, 0.9) !important;
     @include responsive(large) {
         padding: 48px 10px 36px 10px !important;
         width: 70% !important;
@@ -70,4 +66,11 @@ body {
 pre {
     white-space: pre-wrap;
     word-break: break-all;
+}
+
+.particles {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
 }
