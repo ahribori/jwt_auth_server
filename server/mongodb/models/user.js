@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 import conf from '../../conf';
+import { levelSystem } from '../../helpers';
 
 const { Schema } = mongoose;
 const { secret } = conf.server;
@@ -61,7 +62,9 @@ User.methods.changePassword = function (newPassword) {
 
 User.methods.assignAdmin = function () {
     this.admin = true;
-    this.level = 100;
+    const expTable = levelSystem.getExpTable();
+    this.exp = expTable[expTable.length - 1] + 1;
+    this.level = expTable.length;
     return this.save();
 };
 

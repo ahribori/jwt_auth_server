@@ -1,3 +1,7 @@
 import LevelSystem from './LevelSystem';
 
-export { LevelSystem };
+const levelSystem = new LevelSystem(100);
+
+export {
+    levelSystem,
+};

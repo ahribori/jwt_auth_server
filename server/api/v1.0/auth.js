@@ -5,6 +5,7 @@ import conf from '../../conf';
 import User from '../../mongodb/models/user';
 import i18n from '../../i18n';
 import verifyTokenMiddleware from '../../middlewares/verify';
+import { levelSystem } from '../../helpers';
 
 const router = express.Router();
 const __ = i18n.__;
@@ -45,6 +46,8 @@ router.post('/login', async (req, res) => {
             subject: 'user',
         },
     );
+    const levelInfo = levelSystem.getLevelByExp(user.exp);
+    user.level = levelInfo.level;
     user.last_login = new Date();
     user.save();
     return res.json(token);

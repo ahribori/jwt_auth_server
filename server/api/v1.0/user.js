@@ -5,6 +5,7 @@ import User from '../../mongodb/models/user';
 import conf from '../../conf';
 import i18n from '../../i18n';
 import verifyTokenMiddleware from '../../middlewares/verify';
+import { levelSystem } from '../../helpers';
 
 const router = express.Router();
 const __ = i18n.__;
@@ -154,13 +155,14 @@ router.get('/:id', async (req, res) => {
                 last_login: true,
                 blocked: true,
             });
-            return res.json(user);
-        } else {
-            return res.status(403).json({
-                errorCode: 'AUTH_E4300',
-                message: __('error.AUTH_E4300'),
-            });
+            const userResponse = Object.assign({}, user._doc);
+            userResponse.levelSystem = levelSystem.getLevelByExp(user.exp);
+            return res.json(userResponse);
         }
+        return res.status(403).json({
+            errorCode: 'AUTH_E4300',
+            message: __('error.AUTH_E4300'),
+        });
     } catch (e) {
         logger.error(e);
         res.status(500).json('Something broke!');
