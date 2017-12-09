@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import CircularProgress from 'material-ui/CircularProgress';
 import {
     pinkA200 as loadingProgressColor,
-    pink50 as loadingFontColor,
+    white as loadingFontColor,
 } from 'material-ui/styles/colors';
 import * as auth from '../../ducks/Auth';
 
@@ -115,12 +115,12 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         } = this.props;
 
         if (!this.state.isLoggedIn && !this.state.pending) {
-            return <Redirect to="/login"/>;
+            return <Redirect to="/login" />;
         }
         if (this.state.pending) {
             return (
                 <div className="loading">
-                    <CircularProgress color={loadingProgressColor} size={150} thickness={7}/>
+                    <CircularProgress color={loadingProgressColor} size={150} thickness={7} />
                     <p style={{ color: loadingFontColor }}>로딩중...</p>
                 </div>
             );
