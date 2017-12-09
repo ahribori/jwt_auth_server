@@ -110,7 +110,7 @@ router.post('/', async (req, res) => {
 
 
 /* =========================================
-		 	GET /user/list
+ GET /user/list
  ============================================ */
 router.get('/list', verifyTokenMiddleware); // JWT Token Check Middleware
 router.get('/list', async (req, res) => {
@@ -136,21 +136,25 @@ router.get('/:id', verifyTokenMiddleware); // JWT Token Check Middleware
 router.get('/:id', async (req, res) => {
     try {
         if ((req.payload._id === req.params.id) || req.payload.admin === true) {
-            const id = req.params.id;
+            const { id } = req.params;
             const user = await User.findById(id, {
+                account_type: true,
                 username: true,
                 nickname: true,
                 email: true,
-                blocked: true,
-                last_login: true,
-                reg_date: true,
-                admin: true,
-                point: true,
-                cash: true,
-                level: true,
                 email_verified: true,
+                level: true,
+                exp: true,
+                cash: true,
+                point: true,
+                social_id: true,
+                thumbnail_image: true,
+                admin: true,
+                reg_date: true,
+                last_login: true,
+                blocked: true,
             });
-            res.json(user);
+            return res.json(user);
         } else {
             return res.status(403).json({
                 errorCode: 'AUTH_E4300',

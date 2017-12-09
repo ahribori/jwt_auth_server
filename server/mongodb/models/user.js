@@ -13,6 +13,7 @@ const User = new Schema({
     email: String,
     email_verified: { type: Boolean, default: false },
     level: { type: Number, default: 1 },
+    exp: { type: Number, default: 0 },
     cash: { type: Number, default: 0 },
     point: { type: Number, default: 0 },
     social_id: String,
