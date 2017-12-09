@@ -1,15 +1,17 @@
 import React from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import cookie from 'browser-cookies';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
-import { Link } from 'react-router-dom';
 import * as auth from '../../ducks/Auth';
 
 class Join extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoggedIn: false,
             username: '',
             password: '',
             passwordConfirm: '',
@@ -22,6 +24,50 @@ class Join extends React.Component {
             emailErrorText: '',
         };
     }
+
+    async componentDidMount() {
+        const token = this.getToken();
+        if (token) {
+            const isLogin = await this.isLogin();
+            if (isLogin) {
+                this.setState({
+                    isLoggedIn: true,
+                });
+            }
+        }
+    }
+
+    getToken = () => {
+        let token = null;
+        if (window.localStorage) {
+            token = window.localStorage.getItem('access_token');
+        }
+        if (!token) {
+            token = cookie.get('access_token');
+        }
+        return token;
+    };
+
+    setToken = (token) => {
+        cookie.set('access_token', token);
+        if (window.localStorage) {
+            window.localStorage.setItem('access_token', token);
+        }
+    };
+
+    isLogin = async () => {
+        const token = this.getToken();
+        if (!token) {
+            return false;
+        }
+        const verify = await this.verifyToken(token);
+        return verify.success;
+    };
+
+    verifyToken = async (token) => {
+        await this.props.verifyRequest(token);
+        return this.props.verify;
+    };
 
     join = async () => {
         const {
@@ -107,6 +153,19 @@ class Join extends React.Component {
                 this[`${field}Input`].focus();
             }
         }
+
+        await this.props.loginRequest(username, password);
+        await this.isLogin();
+        const { success } = this.props.login;
+        const token = this.props.login.response.data;
+        if (success) {
+            this.setToken(token);
+            this.setState({
+                isLoggedIn: true,
+            });
+        } else {
+            console.error(this.props.login.response.data.message);
+        }
     };
 
     handleChange = (e) => {
@@ -153,7 +212,7 @@ class Join extends React.Component {
 
         return (
             <Card style={containerStyle} className="container-small">
-                <CardTitle title="계정 만들기" subtitle="아리보리 계정 만들기" />
+                <CardTitle title="계정 만들기" subtitle="아리보리 계정 만들기"/>
                 <CardText>
                     <TextField
                         type="text"
@@ -244,6 +303,9 @@ class Join extends React.Component {
     };
 
     render() {
+        if (this.state.isLoggedIn) {
+            return <Redirect to="/"/>;
+        }
         return this.renderJoinForm();
     }
 }
@@ -251,12 +313,16 @@ class Join extends React.Component {
 const mapStateToProps = (state) => {
     return {
         join: state.auth.get('join'),
+        verify: state.auth.get('verify'),
+        login: state.auth.get('login'),
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         joinRequest: (username, password, nickname, email) => dispatch(auth.join(username, password, nickname, email)),
+        verifyRequest: token => dispatch(auth.verify(token)),
+        loginRequest: (username, password) => dispatch(auth.login(username, password)),
     };
 };
 

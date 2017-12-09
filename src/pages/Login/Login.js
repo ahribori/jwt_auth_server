@@ -113,13 +113,6 @@ class Login extends React.Component {
         }
     };
 
-    logout = () => {
-        this.clearToken();
-        this.setState({
-            isLoggedIn: false,
-        });
-    };
-
     isLogin = async () => {
         const token = this.getToken();
         if (!token) {
