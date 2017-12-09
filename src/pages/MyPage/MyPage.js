@@ -18,9 +18,9 @@ import {
 
 import './style/MyPage.scss';
 
-import withAuth from '../../lib/hoc/withAuth';
+import needLoggedIn from '../../lib/hoc/needLoggedIn';
 
-@withAuth
+@needLoggedIn
 class MyPage extends React.Component {
     static propTypes = {};
 

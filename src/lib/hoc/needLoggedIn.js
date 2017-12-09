@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import cookie from 'browser-cookies';
+import { Redirect } from 'react-router-dom';
 import CircularProgress from 'material-ui/CircularProgress';
 import {
     pinkA200 as loadingProgressColor,
@@ -10,7 +11,6 @@ import * as auth from '../../ducks/Auth';
 
 const mapStateToProps = (state) => {
     return {
-        join: state.auth.get('join'),
         login: state.auth.get('login'),
         verify: state.auth.get('verify'),
         user: state.auth.get('user'),
@@ -19,7 +19,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        joinRequest: (username, password, nickname, email) => dispatch(auth.join(username, password, nickname, email)),
         loginRequest: (username, password) => dispatch(auth.login(username, password)),
         verifyRequest: token => dispatch(auth.verify(token)),
         getUserRequest: (_id, token) => dispatch(auth.getUser(_id, token)),
@@ -30,9 +29,34 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     constructor(props) {
         super(props);
         this.state = {
-            pending: false,
+            pending: true,
             isLoggedIn: false,
+            auth: {
+                user: null,
+                token: null,
+            },
         };
+    }
+
+    async componentDidMount() {
+        const isLoggedIn = await this.isLoggedIn();
+        const token = this.getToken();
+        if (isLoggedIn) {
+            const { _id } = this.props.verify.response.data;
+            const user = await this.getUser(_id, token);
+            this.setState({
+                pending: false,
+                isLoggedIn: true,
+                auth: {
+                    user,
+                    token,
+                },
+            });
+        } else {
+            this.setState({
+                pending: false,
+            });
+        }
     }
 
     getToken = () => {
@@ -44,13 +68,6 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             token = cookie.get('access_token');
         }
         return token;
-    };
-
-    setToken = (token) => {
-        cookie.set('access_token', token);
-        if (window.localStorage) {
-            window.localStorage.setItem('access_token', token);
-        }
     };
 
     getUser = async (_id, token) => {
@@ -87,15 +104,19 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     };
 
     render() {
-        const newProps = {
-            getToken: this.getToken,
-            setToken: this.setToken,
-            getUser: this.getUser,
-            isLoggedIn: this.isLoggedIn,
-            clearToken: this.clearToken,
-            logout: this.logout,
-        };
+        const {
+            login,
+            verify,
+            user,
+            loginRequest,
+            verifyRequest,
+            getUserRequest,
+            ...props
+        } = this.props;
 
+        if (!this.state.isLoggedIn && !this.state.pending) {
+            return <Redirect to="/login"/>;
+        }
         if (this.state.pending) {
             return (
                 <div className="loading">
@@ -105,7 +126,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             );
         }
         return (
-            <WrappedComponent {...newProps} {...this.props} />
+            <WrappedComponent logout={this.logout} {...this.state} {...props} />
         );
     }
 });

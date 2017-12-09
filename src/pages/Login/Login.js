@@ -6,7 +6,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import { connect } from 'react-redux';
 import * as auth from '../../ducks/Auth';
+import withAuth from '../../lib/hoc/withAuth';
 
+@withAuth
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -20,9 +22,9 @@ class Login extends React.Component {
     }
 
     async componentDidMount() {
-        const token = this.getToken();
+        const token = this.props.getToken();
         if (token) {
-            const isLogin = await this.isLogin();
+            const isLogin = await this.props.isLoggedIn();
             if (isLogin) {
                 this.setState({
                     isLoggedIn: true,
@@ -30,41 +32,6 @@ class Login extends React.Component {
             }
         }
     }
-
-    setToken = (token) => {
-        cookie.set('access_token', token);
-        if (window.localStorage) {
-            window.localStorage.setItem('access_token', token);
-        }
-    };
-
-    getToken = () => {
-        let token = null;
-        if (window.localStorage) {
-            token = window.localStorage.getItem('access_token');
-        }
-        if (!token) {
-            token = cookie.get('access_token');
-        }
-        return token;
-    };
-
-    getUser = async (_id, token) => {
-        await this.props.getUserRequest(_id, token);
-        return this.props.user.response.data;
-    };
-
-    verifyToken = async (token) => {
-        await this.props.verifyRequest(token);
-        return this.props.verify;
-    };
-
-    clearToken = () => {
-        if (window.localStorage) {
-            window.localStorage.removeItem('access_token');
-        }
-        cookie.erase('access_token');
-    };
 
     login = async (username, password) => {
         if (username === '') {
@@ -87,7 +54,7 @@ class Login extends React.Component {
         const { success } = this.props.login;
         const token = this.props.login.response.data;
         if (success) {
-            this.setToken(token);
+            this.props.setToken(token);
             this.setState({
                 isLoggedIn: true,
             });
@@ -111,15 +78,6 @@ class Login extends React.Component {
                 default:
             }
         }
-    };
-
-    isLogin = async () => {
-        const token = this.getToken();
-        if (!token) {
-            return false;
-        }
-        const verify = await this.verifyToken(token);
-        return verify.success;
     };
 
     handleChange = (e) => {
@@ -147,7 +105,7 @@ class Login extends React.Component {
         if (!this.state.isLoggedIn) {
             this.login(this.state.username, this.state.password);
         } else {
-            this.logout();
+            this.props.logout();
         }
     };
 
