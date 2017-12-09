@@ -31,7 +31,7 @@ class PageWithProfile extends React.Component {
 
         const renderAvatar = () => (
             <Badge
-                badgeContent={my.level}
+                badgeContent={my.level || 0}
                 primary
                 badgeStyle={{
                     top: 15,
@@ -101,11 +101,11 @@ class PageWithProfile extends React.Component {
             >
                 {renderMenu()}
                 <span className="level-details">
-                    {my.level_details.progress}%
+                    {my.level_details && `${my.level_details.progress}%`}
                 </span>
                 <LinearProgress
                     mode="determinate"
-                    value={my.level_details.progress}
+                    value={my.level_details && my.level_details.progress}
                     style={{
                         height: 4,
                         position: 'absolute',
