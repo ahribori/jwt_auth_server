@@ -155,9 +155,15 @@ router.get('/:id', async (req, res) => {
                 last_login: true,
                 blocked: true,
             });
-            const userResponse = Object.assign({}, user._doc);
-            userResponse.level_details = levelSystem.getLevelByExp(user.exp);
-            return res.json(userResponse);
+            if (user) {
+                const userResponse = Object.assign({}, user._doc);
+                userResponse.level_details = levelSystem.getLevelByExp(user.exp);
+                return res.json(userResponse);
+            }
+            return res.status(404).json({
+                message: __('error.USER_E0404'),
+                errorCode: 'USER_E0404',
+            });
         }
         return res.status(403).json({
             errorCode: 'AUTH_E4300',
