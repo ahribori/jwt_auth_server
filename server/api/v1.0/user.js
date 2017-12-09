@@ -156,7 +156,7 @@ router.get('/:id', async (req, res) => {
                 blocked: true,
             });
             const userResponse = Object.assign({}, user._doc);
-            userResponse.levelSystem = levelSystem.getLevelByExp(user.exp);
+            userResponse.level_details = levelSystem.getLevelByExp(user.exp);
             return res.json(userResponse);
         }
         return res.status(403).json({

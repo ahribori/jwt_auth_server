@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardActions, CardText, CardHeader } from 'material-ui/Card';
+import { Card, CardTitle, CardActions, CardText, CardHeader } from 'material-ui/Card';
 import Badge from 'material-ui/Badge';
 import Avatar from 'material-ui/Avatar';
 import FaceIcon from 'material-ui/svg-icons/action/face';
@@ -9,6 +9,7 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import AppsIcon from 'material-ui/svg-icons/navigation/apps';
 import ExitToAppIcon from 'material-ui/svg-icons/action/exit-to-app';
+import LinearProgress from 'material-ui/LinearProgress';
 import {
     Table,
     TableBody,
@@ -44,13 +45,13 @@ class MyPage extends React.Component {
                 badgeContent={my.level}
                 primary
                 badgeStyle={{
-                    top: 10,
-                    right: 10,
+                    top: 15,
+                    right: 15,
                 }}
             >
                 {my.thumbnail_image ?
-                    <Avatar size={50} src={my.thumbnail_image}/> :
-                    <Avatar size={50} icon={<FaceIcon/>}/>
+                    <Avatar size={65} src={my.thumbnail_image} /> :
+                    <Avatar size={65} icon={<FaceIcon />} />
                 }
             </Badge>
         );
@@ -58,12 +59,12 @@ class MyPage extends React.Component {
         const renderMenu = () => (
             <div style={{ flexGrow: 1 }}>
                 <IconMenu
-                    iconButtonElement={<IconButton><MoreVertIcon/></IconButton>}
+                    iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
                     anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                     targetOrigin={{ horizontal: 'right', vertical: 'top' }}
                 >
-                    <MenuItem primaryText="어플리케이션 관리" leftIcon={<AppsIcon/>}/>
-                    <MenuItem primaryText="로그아웃" onClick={this.props.logout} leftIcon={<ExitToAppIcon/>}/>
+                    <MenuItem primaryText="어플리케이션 관리" leftIcon={<AppsIcon />} />
+                    <MenuItem primaryText="로그아웃" onClick={this.props.logout} leftIcon={<ExitToAppIcon />} />
                 </IconMenu>
             </div>
         );
@@ -83,6 +84,20 @@ class MyPage extends React.Component {
                 }}
             >
                 {renderMenu()}
+                <span className="level-details">
+                    {my.level_details.progress}%
+                </span>
+                <LinearProgress
+                    mode="determinate"
+                    value={my.level_details.progress}
+                    style={{
+                        height: 4,
+                        position: 'absolute',
+                        top: 45,
+                        left: 110,
+                        width: 150,
+                    }}
+                />
             </CardHeader>
         );
 
@@ -121,7 +136,7 @@ class MyPage extends React.Component {
                             <pre>{token}</pre>
                         </TableRowColumn>
                     </TableRow>
-                    <TableRow/>
+                    <TableRow />
                 </TableBody>
             </Table>
         );
@@ -132,7 +147,7 @@ class MyPage extends React.Component {
                 {renderUserInfo()}
             </CardText>
         );
-
+        console.log(my)
         return (
             <Card className="container-large">
                 {renderHeader()}
