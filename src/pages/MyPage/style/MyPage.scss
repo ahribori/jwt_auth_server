@@ -1,26 +1,4 @@
 @import '../../../style/index';
-.MyPage-card-header {
-    div:first-child {
-        margin-right: 0 !important;
-    }
-    div:nth-child(2) {
-        padding-top: 25px;
-        padding-right: 10px !important;
-    }
-    div:nth-child(3) {
-        text-align: right;
-    }
-    .level-details {
-        display: inline-block;
-        position: absolute;
-        top: 29px;
-        left: 112px;
-        width: 150px;
-        font-size: 0.6rem;
-        white-space: pre;
-        color: $grey800;
-    }
-}
 
 table, tr, td {
     background-color: transparent !important;
