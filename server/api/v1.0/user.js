@@ -9,7 +9,7 @@ import verifyTokenMiddleware from '../../middlewares/verify';
 const router = express.Router();
 const __ = i18n.__;
 
-const secret_key = conf.server.secret || 'AbCdEfG!2#4%6&';
+const { secret } = conf.server;
 
 const field = {
     username: {
@@ -17,33 +17,33 @@ const field = {
         errorResponse: {
             field: 'username',
             message: __('error.USER_E0001'),
-            errorCode: 'USER_E0001'
-        }
+            errorCode: 'USER_E0001',
+        },
     },
     password: {
         regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
         errorResponse: {
             field: 'password',
             message: __('error.USER_E0002'),
-            errorCode: 'USER_E0002'
-        }
+            errorCode: 'USER_E0002',
+        },
     },
     nickname: {
         regex: /[a-zA-Z가-힣]{2,16}/,
         errorResponse: {
             field: 'nickname',
             message: __('error.USER_E0003'),
-            errorCode: 'USER_E0003'
-        }
+            errorCode: 'USER_E0003',
+        },
     },
     email: {
         regex: /[a-z0-9]+[_a-z0-9\.-]*[a-z0-9]+@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})/,
         errorResponse: {
             field: 'email',
             message: __('error.USER_E0004'),
-            errorCode: 'USER_E0004'
-        }
-    }
+            errorCode: 'USER_E0004',
+        },
+    },
 };
 
 /* =========================================
@@ -54,10 +54,12 @@ const field = {
  nickname, (require)
  email,
  }
- ============================================*/
+ ============================================ */
 router.post('/', async (req, res) => {
     try {
-        const { username, password, nickname, email } = req.body;
+        const {
+            username, password, nickname, email,
+        } = req.body;
 
         if (username === '' || username === undefined ||
             username === null ||
@@ -89,7 +91,7 @@ router.post('/', async (req, res) => {
             return res.status(409).json({
                 field: 'username',
                 message: __('error.USER_E0401'),
-                errorCode: 'USER_E0401'
+                errorCode: 'USER_E0401',
             });
         }
 
@@ -100,23 +102,22 @@ router.post('/', async (req, res) => {
         if (userCount === 1) await newUser.assignAdmin();
 
         res.json(newUser);
-
     } catch (e) {
         logger.error(e);
-        res.status(500).json("Something broke!")
+        res.status(500).json('Something broke!');
     }
 });
 
 
 /* =========================================
 		 	GET /user/list
- ============================================*/
+ ============================================ */
 router.get('/list', verifyTokenMiddleware); // JWT Token Check Middleware
 router.get('/list', async (req, res) => {
     if (!req.payload || !req.payload.admin) {
         return res.status(403).json({
             message: __('error.USER_E0402'),
-            errorCode: 'USER_E0402'
+            errorCode: 'USER_E0402',
         });
     }
     try {
@@ -124,42 +125,41 @@ router.get('/list', async (req, res) => {
         res.json(users);
     } catch (e) {
         logger.error(e);
-        res.status(500).json("Something broke!")
+        res.status(500).json('Something broke!');
     }
-
 });
 
 /* =========================================
  GET /user/:id
- ============================================*/
+ ============================================ */
 router.get('/:id', verifyTokenMiddleware); // JWT Token Check Middleware
 router.get('/:id', async (req, res) => {
     try {
         if ((req.payload._id === req.params.id) || req.payload.admin === true) {
             const id = req.params.id;
             const user = await User.findById(id, {
-                "username": true,
-                "nickname": true,
-                "email": true,
-                "blocked": true,
-                "last_login": true,
-                "reg_date": true,
-                "admin": true,
-                "point": true,
-                "cash": true,
-                "level": true,
-                "email_verified": true,
+                username: true,
+                nickname: true,
+                email: true,
+                blocked: true,
+                last_login: true,
+                reg_date: true,
+                admin: true,
+                point: true,
+                cash: true,
+                level: true,
+                email_verified: true,
             });
             res.json(user);
         } else {
             return res.status(403).json({
                 errorCode: 'AUTH_E4300',
-                message: __('error.AUTH_E4300')
+                message: __('error.AUTH_E4300'),
             });
         }
     } catch (e) {
         logger.error(e);
-        res.status(500).json("Something broke!")
+        res.status(500).json('Something broke!');
     }
 });
 
@@ -174,35 +174,33 @@ router.get('/:id', async (req, res) => {
  cash,
  level
  }
- ============================================*/
+ ============================================ */
 router.put('/:id', verifyTokenMiddleware); // JWT Token Check Middleware
 router.put('/:id', async (req, res) => {
     try {
         const {
             nickname,
-            email
+            email,
         } = req.body;
         const updateObject = {};
 
         if (nickname !== null && nickname !== undefined) {
             if (!field.nickname.regex.test(nickname)) {
                 return res.status(400).json(field.nickname.errorResponse);
-            } else {
-                updateObject.nickname = nickname;
             }
+            updateObject.nickname = nickname;
         }
         if (email !== null && email !== undefined) {
             if (!field.email.regex.test(email)) {
                 return res.status(400).json(field.email.errorResponse);
-            } else {
-                updateObject.email = email;
             }
+            updateObject.email = email;
         }
         const updateResult = await User.update({ _id: req.params.id }, updateObject);
         res.json(updateResult);
     } catch (e) {
         logger.error(e);
-        res.status(500).json("Something broke!")
+        res.status(500).json('Something broke!');
     }
 });
 
@@ -212,30 +210,28 @@ router.put('/:id', async (req, res) => {
  prevPassword,
  newPassword
  }
- ============================================*/
+ ============================================ */
 router.put('/changePassword/:username', verifyTokenMiddleware);
 router.put('/changePassword/:username', async (req, res) => {
     try {
         const { prevPassword, newPassword } = req.body;
         const user = await User.findOneByUsername(req.params.username);
-        if (crypto.createHmac('sha1', secret_key).update(prevPassword).digest('base64') === user.password) {
+        if (crypto.createHmac('sha1', secret).update(prevPassword).digest('base64') === user.password) {
             if (newPassword === undefined ||
                 newPassword === null ||
                 !field.password.regex.test(newPassword)) {
                 return res.status(400).json(field.password.errorResponse);
-            } else {
-                const updateResult = await user.changePassword(newPassword);
-                return res.json(updateResult);
             }
-        } else {
-            return res.status(400).json({
-                message: __('error.USER_E0444'),
-                errorCode: 'USER_E0444'
-            });
+            const updateResult = await user.changePassword(newPassword);
+            return res.json(updateResult);
         }
+        return res.status(400).json({
+            message: __('error.USER_E0444'),
+            errorCode: 'USER_E0444',
+        });
     } catch (e) {
         logger.error(e);
-        res.status(500).json("Something broke!")
+        res.status(500).json('Something broke!');
     }
 });
 
