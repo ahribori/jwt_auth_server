@@ -26,6 +26,7 @@ body {
         & > div {
             height: inherit;
             width: 100%;
+            overflow: auto; // 마진 겹침 현상 제거
         }
     }
 }
@@ -37,6 +38,7 @@ body {
     margin-right: auto;
     padding: 48px 40px 36px 40px;
     background-color: rgba(255, 255, 255, 0.9) !important;
+    overflow: auto;
     @include responsive(medium) {
         padding: 48px 10px 36px 10px !important;
         width: 55% !important;
