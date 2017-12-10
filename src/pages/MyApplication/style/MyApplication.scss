@@ -1,0 +1,19 @@
+@import '../../../style/responsive';
+
+.flexContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+
+    & > div {
+        @include responsive(small) {
+            flex-basis: 100%;
+        }
+        @include responsive(medium) {
+            flex-basis: 50%;
+        }
+        @include responsive(large) {
+            flex-basis: 33.3333%;
+        }
+    }
+}

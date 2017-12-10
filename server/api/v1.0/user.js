@@ -8,7 +8,7 @@ import verifyTokenMiddleware from '../../middlewares/verify';
 import { levelSystem } from '../../helpers';
 
 const router = express.Router();
-const __ = i18n.__;
+const { __ } = i18n;
 
 const { secret } = conf.server;
 

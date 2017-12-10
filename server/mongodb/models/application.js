@@ -9,7 +9,7 @@ const Application = new Schema({
     callback_url: String,
     thumbnail_image: String,
     reg_date: { type: Date, default: Date.now },
-    blocked: { type: Boolean, default: false }
+    blocked: { type: Boolean, default: false },
 });
 
 export default mongoose.model('Application', Application);
