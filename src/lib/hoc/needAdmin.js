@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(class needLoggedIn extends React.Component {
+export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(class needAdmin extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -123,6 +123,21 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
                 return (
                     <FullScreenNotification>
                         <h2>사용자를 찾을 수 없습니다</h2>
+                        <p
+                            onClick={() => {
+                                this.logout();
+                            }}
+                            style={{ cursor: 'pointer' }}
+                        >로그인 하러 가기
+                        </p>
+                    </FullScreenNotification>
+                );
+            }
+            if (!this.state.auth.user.admin) {
+                return (
+                    <FullScreenNotification>
+                        <h2>관리자 권한이 필요합니다</h2>
+                        <FullScreenNotification.Link text="돌아가기" />
                         <FullScreenNotification.Link text="로그인 하러 가기" onClick={() => {
                             this.logout();
                         }} />

@@ -1,9 +1,9 @@
 import React from 'react';
 import PageWithProfile from '../../templates/PageWithProfile';
 import './style/Users.scss';
-import needLoggedIn from '../../lib/hoc/needLoggedIn';
+import needAdmin from '../../lib/hoc/needAdmin';
 
-@needLoggedIn
+@needAdmin
 class Users extends React.Component {
     render() {
         return (

@@ -10,3 +10,10 @@
     background-color: rgba(0, 0, 0, 0.5);
     text-shadow: rgba(0, 0, 0, .01) 0 0 1px;
 }
+
+.Link {
+    transition: font-size 0.2s;
+    &:hover {
+        font-size: 1.2rem;
+    }
+}

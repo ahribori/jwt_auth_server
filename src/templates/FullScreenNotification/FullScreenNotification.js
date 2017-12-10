@@ -2,13 +2,11 @@ import React from 'react';
 import {
     white as fontColor,
 } from 'material-ui/styles/colors';
+import Link from './Link';
 import './style/FullScreenNotification.scss';
 
 class FullScreenNotification extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+    static Link = Link;
 
     render() {
         const style = {

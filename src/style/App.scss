@@ -24,11 +24,8 @@ body {
     height: inherit;
     .App {
         height: inherit;
-        & > div {
-            height: inherit;
-            width: 100%;
-            overflow: auto; // 마진 겹침 현상 제거
-        }
+        width: 100%;
+        overflow: auto; // 마진 겹침 현상 제거
     }
 }
 
