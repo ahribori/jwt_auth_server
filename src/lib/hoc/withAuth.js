@@ -1,11 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import cookie from 'browser-cookies';
-import CircularProgress from 'material-ui/CircularProgress';
-import {
-    pinkA200 as loadingProgressColor,
-    pink50 as loadingFontColor,
-} from 'material-ui/styles/colors';
 import * as auth from '../../ducks/Auth';
 
 const mapStateToProps = (state) => {
@@ -30,7 +25,6 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     constructor(props) {
         super(props);
         this.state = {
-            pending: false,
             isLoggedIn: false,
         };
     }
@@ -96,14 +90,6 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             logout: this.logout,
         };
 
-        if (this.state.pending) {
-            return (
-                <div className="loading">
-                    <CircularProgress color={loadingProgressColor} size={150} thickness={7}/>
-                    <p style={{ color: loadingFontColor }}>로딩중...</p>
-                </div>
-            );
-        }
         return (
             <WrappedComponent {...newProps} {...this.props} />
         );
