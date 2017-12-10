@@ -5,6 +5,7 @@ const Join = asyncRoute(() => import('./Join'));
 const MyPage = asyncRoute(() => import('./MyPage'));
 const MyApplication = asyncRoute(() => import('./MyApplication'));
 const Users = asyncRoute(() => import('./Users'));
+const PageNotFound = asyncRoute(() => import('./PageNotFound'));
 
 export {
     Login,
@@ -12,4 +13,5 @@ export {
     MyPage,
     MyApplication,
     Users,
+    PageNotFound,
 };
