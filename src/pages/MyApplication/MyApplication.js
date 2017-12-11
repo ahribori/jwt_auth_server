@@ -16,7 +16,6 @@ class MyApplication extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            applicationList: [],
             registerModalOpen: false,
             modifyModalOpen: false,
         };
@@ -24,9 +23,6 @@ class MyApplication extends React.Component {
 
     async componentDidMount() {
         await this.props.fetchApplicationListRequest(this.props.auth.token);
-        this.setState({
-            applicationList: this.props.fetchApplicationListStore.response.data,
-        });
     }
 
     openRegisterModal = () => {
@@ -54,6 +50,8 @@ class MyApplication extends React.Component {
 
     handleRegisterRequest = async (user, name, origin, callback_url, token) => {
         await this.props.registerApplicationRequest(user, name, origin, callback_url, token);
+        await this.props.fetchApplicationListRequest(this.props.auth.token);
+        console.log('갱신');
         return this.props.registerApplicationStore;
     };
 
@@ -66,19 +64,22 @@ class MyApplication extends React.Component {
         />
     );
 
-    renderApplicationCards = () => this.state.applicationList.map(application => (
-        <div className="card-item" key={application._id}>
-            <Card>
-                <CardTitle
-                    title={application.name}
-                    subtitle={application.origin}
-                />
-                <CardText>
-                    <pre>{application._id}</pre>
-                </CardText>
-            </Card>
-        </div>
-    ));
+    renderApplicationCards = () => {
+        const applicationList = this.props.fetchApplicationListStore.response.data || [];
+        return applicationList.map(application => (
+            <div className="card-item" key={application._id}>
+                <Card>
+                    <CardTitle
+                        title={application.name}
+                        subtitle={application.origin}
+                    />
+                    <CardText>
+                        <pre>{application._id}</pre>
+                    </CardText>
+                </Card>
+            </div>
+        ));
+    };
 
     render() {
         return (

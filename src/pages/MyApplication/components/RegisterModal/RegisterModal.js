@@ -67,6 +67,10 @@ class RegisterModal extends React.Component {
                 name="name"
                 value={this.state.name}
                 onChange={this.handleChange}
+                ref={(ref) => {
+                    if (ref) ref.focus();
+                    this.nameRef = ref;
+                }}
             />
             <TextField
                 fullWidth
@@ -74,6 +78,9 @@ class RegisterModal extends React.Component {
                 name="origin"
                 value={this.state.origin}
                 onChange={this.handleChange}
+                ref={(ref) => {
+                    this.originRef = ref;
+                }}
             />
             <TextField
                 fullWidth
@@ -81,9 +88,12 @@ class RegisterModal extends React.Component {
                 name="callback_url"
                 value={this.state.callback_url}
                 onChange={this.handleChange}
+                ref={(ref) => {
+                    this.callbackUrlRef = ref;
+                }}
             />
         </div>
-    )
+    );
 
     renderActions = () => [
         <FlatButton
