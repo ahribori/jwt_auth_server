@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+    grey800 as fontColor,
+} from 'material-ui/styles/colors';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import * as application from '../../ducks/Application';
 import PageWithProfile from '../../templates/PageWithProfile';
 import RegisterModal from './components/RegisterModal';
-import Loading from '../../components/Loading';
+import { Loading, MessageInPage } from '../../templates';
 import './style/MyApplication.scss';
 import needLoggedIn from '../../lib/hoc/needLoggedIn';
 
@@ -51,7 +53,6 @@ class MyApplication extends React.Component {
     handleRegisterRequest = async (user, name, origin, callback_url, token) => {
         await this.props.registerApplicationRequest(user, name, origin, callback_url, token);
         await this.props.fetchApplicationListRequest(this.props.auth.token);
-        console.log('갱신');
         return this.props.registerApplicationStore;
     };
 
@@ -66,19 +67,21 @@ class MyApplication extends React.Component {
 
     renderApplicationCards = () => {
         const applicationList = this.props.fetchApplicationListStore.response.data || [];
-        return applicationList.map(application => (
-            <div className="card-item" key={application._id}>
-                <Card>
-                    <CardTitle
-                        title={application.name}
-                        subtitle={application.origin}
-                    />
-                    <CardText>
-                        <pre>{application._id}</pre>
-                    </CardText>
-                </Card>
-            </div>
-        ));
+        return applicationList.length === 0 ?
+            <MessageInPage message="어플리케이션이 없습니다" /> :
+            applicationList.map(app => (
+                <div className="card-item" key={app._id}>
+                    <Card>
+                        <CardTitle
+                            title={app.name}
+                            subtitle={app.origin}
+                        />
+                        <CardText>
+                            <pre>{app._id}</pre>
+                        </CardText>
+                    </Card>
+                </div>
+            ));
     };
 
     render() {
@@ -88,7 +91,7 @@ class MyApplication extends React.Component {
                     <FloatingActionButton onClick={this.openRegisterModal}>
                         <ContentAdd />
                     </FloatingActionButton>
-                    <b>내 어플리케이션 만들기</b>
+                    <b style={{ color: fontColor }}>내 어플리케이션 만들기</b>
                 </div>
                 {this.props.fetchApplicationListStore ? (
                     <div className="card-container">
