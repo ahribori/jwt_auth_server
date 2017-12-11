@@ -27,7 +27,7 @@ export const fetchList = token => helper.createThunk(FETCH_LIST.DEFAULT, {
 })();
 
 export const register = (user, name, origin, callback_url, token) => helper.createThunk(REGISTER.DEFAULT, {
-    url: '/api/v1.0/user',
+    url: '/api/v1.0/application',
     method: 'post',
     data: {
         user,

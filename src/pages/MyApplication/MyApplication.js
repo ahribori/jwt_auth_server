@@ -1,8 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Card, CardTitle, CardText } from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import * as application from '../../ducks/Application';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import PageWithProfile from '../../templates/PageWithProfile';
+import RegisterModal from './components/RegisterModal';
+import Loading from '../../components/Loading';
 import './style/MyApplication.scss';
 import needLoggedIn from '../../lib/hoc/needLoggedIn';
 
@@ -12,6 +17,8 @@ class MyApplication extends React.Component {
         super(props);
         this.state = {
             applicationList: [],
+            registerModalOpen: false,
+            modifyModalOpen: false,
         };
     }
 
@@ -22,26 +29,72 @@ class MyApplication extends React.Component {
         });
     }
 
+    openRegisterModal = () => {
+        this.setState({
+            registerModalOpen: true,
+        });
+    };
+    openModifyModal = () => {
+        this.setState({
+            registerModalOpen: true,
+        });
+    };
+
+    closeRegisterModal = () => {
+        this.setState({
+            registerModalOpen: false,
+        });
+    };
+
+    closeModifyModal = () => {
+        this.setState({
+            modifyModalOpen: false,
+        });
+    };
+
+    handleRegisterRequest = async (user, name, origin, callback_url, token) => {
+        await this.props.registerApplicationRequest(user, name, origin, callback_url, token);
+        return this.props.registerApplicationStore;
+    };
+
+    renderModals = () => (
+        <RegisterModal
+            open={this.state.registerModalOpen}
+            handleClose={this.closeRegisterModal}
+            handleRequest={this.handleRegisterRequest}
+            auth={this.props.auth}
+        />
+    );
+
     renderApplicationCards = () => this.state.applicationList.map(application => (
-        <Card key={application._id}>
-            <CardTitle
-                title={application.name}
-                subtitle={application.origin}
-            />
-            <CardText>
-                <pre>{application._id}</pre>
-            </CardText>
-        </Card>
+        <div className="card-item" key={application._id}>
+            <Card>
+                <CardTitle
+                    title={application.name}
+                    subtitle={application.origin}
+                />
+                <CardText>
+                    <pre>{application._id}</pre>
+                </CardText>
+            </Card>
+        </div>
     ));
 
     render() {
         return (
             <PageWithProfile {...this.props}>
-                <div className="center">
-                    <div className="flexContainer">
+                <div className="toolbar">
+                    <FloatingActionButton onClick={this.openRegisterModal}>
+                        <ContentAdd />
+                    </FloatingActionButton>
+                    <b>내 어플리케이션 만들기</b>
+                </div>
+                {this.props.fetchApplicationListStore ? (
+                    <div className="card-container">
                         {this.renderApplicationCards()}
                     </div>
-                </div>
+                ) : <Loading />}
+                {this.renderModals()}
             </PageWithProfile>
         );
     }

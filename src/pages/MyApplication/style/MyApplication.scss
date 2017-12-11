@@ -1,11 +1,30 @@
 @import '../../../style/responsive';
 
-.flexContainer {
+.toolbar {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    & > * {
+        margin-left: 15px;
+    }
+}
+
+.dialog {
+    max-width: 500px !important;
+    @include responsive(small) {
+        width: 95% !important;
+    }
+}
+
+.card-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: left;
 
-    & > div {
+    .card-item {
+        padding-bottom: 10px;
         @include responsive(small) {
             flex-basis: 100%;
         }
@@ -13,7 +32,11 @@
             flex-basis: 50%;
         }
         @include responsive(large) {
-            flex-basis: 33.3333%;
+            flex-basis: 33.333%;
+        }
+        & > div {
+            height: 100%;
+            margin: 5px;
         }
     }
 }
