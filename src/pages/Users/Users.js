@@ -81,7 +81,7 @@ class Users extends React.Component {
 
     render() {
         return (
-            <PageWithProfile size={1200} className="users-page" {...this.props}>
+            <PageWithProfile width={1200} className="users-page" {...this.props}>
                 {this.props.userList ? this.renderTable() : <Loading />}
             </PageWithProfile>
         );

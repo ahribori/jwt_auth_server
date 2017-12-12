@@ -136,7 +136,7 @@ class PageWithProfile extends React.Component {
             <Card
                 className={`container-large ${this.props.className}`}
                 style={{
-                    maxWidth: this.props.size,
+                    maxWidth: this.props.width,
                 }}
             >
                 {renderHeader()}
