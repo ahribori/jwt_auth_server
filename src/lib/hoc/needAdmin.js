@@ -43,11 +43,10 @@ export default WrappedComponent => withAuth(class needAdmin extends React.Compon
     }
 
     logout = () => {
-        this.props.clearToken();
+        this.props.logout();
         this.setState({
             isLoggedIn: false,
         });
-        this.props.logout();
     };
 
     render() {

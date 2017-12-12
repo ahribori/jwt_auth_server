@@ -110,6 +110,9 @@ class MyApplication extends React.Component {
                         <CardTitle
                             title={app.name}
                             subtitle={app.origin}
+                            titleStyle={{
+                                paddingRight: 20,
+                            }}
                         />
                         <CardText>
                             <pre>{app._id}</pre>

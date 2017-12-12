@@ -23,13 +23,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(class needLoggedIn extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoggedIn: false,
-        };
-    }
-
     getToken = () => {
         let token = null;
         if (window.localStorage) {
@@ -76,9 +69,6 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
 
     logout = () => {
         this.clearToken();
-        this.setState({
-            isLoggedIn: false,
-        });
         this.props.logout();
     };
 
@@ -93,7 +83,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         };
 
         return (
-            <WrappedComponent {...newProps} {...this.props} />
+            <WrappedComponent {...newProps} {...this.props} logout={this.logout} />
         );
     }
 });
