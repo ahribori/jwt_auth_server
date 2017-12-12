@@ -18,6 +18,7 @@ const mapDispatchToProps = (dispatch) => {
         loginRequest: (username, password) => dispatch(auth.login(username, password)),
         verifyRequest: token => dispatch(auth.verify(token)),
         getUserRequest: (_id, token) => dispatch(auth.getUser(_id, token)),
+        logout: () => dispatch(auth.logout()),
     };
 };
 
@@ -78,6 +79,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         this.setState({
             isLoggedIn: false,
         });
+        this.props.logout();
     };
 
     render() {

@@ -47,6 +47,7 @@ export default WrappedComponent => withAuth(class needAdmin extends React.Compon
         this.setState({
             isLoggedIn: false,
         });
+        this.props.logout();
     };
 
     render() {

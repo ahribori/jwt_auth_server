@@ -47,6 +47,7 @@ export default WrappedComponent => withAuth(class needLoggedIn extends React.Com
         this.setState({
             isLoggedIn: false,
         });
+        this.props.logout();
     };
 
     render() {

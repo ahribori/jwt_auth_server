@@ -7,6 +7,7 @@ const LOGIN = helper.createThunkTypes('auth/LOGIN');
 const JOIN = helper.createThunkTypes('auth/JOIN');
 const VERIFY = helper.createThunkTypes('auth/VERIFY');
 const GET_USER = helper.createThunkTypes('auth/GET_USER');
+const LOGOUT = 'auth/LOGOUT';
 
 // Action creators
 export const login = (username, password) => helper.createThunk(LOGIN.DEFAULT, {
@@ -51,6 +52,12 @@ export const getUser = (_id, token) => helper.createThunk(GET_USER.DEFAULT, {
     },
 })();
 
+export const logout = () => {
+    return {
+        type: LOGOUT,
+    };
+};
+
 // Initial state
 const initialState = fromJS({
     join: null,
@@ -77,5 +84,7 @@ export default handleActions({
     [GET_USER.REQUEST]: state => state,
     [GET_USER.SUCCESS]: (state, action) => state.set('user', action.payload),
     [GET_USER.FAILURE]: (state, action) => state.set('user', action.payload),
+
+    [LOGOUT]: state => state,
 
 }, initialState);
