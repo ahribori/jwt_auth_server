@@ -83,6 +83,23 @@ class ModifyModal extends React.Component {
         return null;
     };
 
+    remove = async () => {
+        this.setState({ pending: true });
+        const response = await this.props.handleRomoveRequest(this.props.data._id, this.props.auth.token);
+        this.setState({ pending: false });
+        if (response.success) {
+            this.setState({
+                name: '',
+                origin: '',
+                callback_url: '',
+            });
+            this.props.handleClose();
+        } else {
+            console.info(response.response.status);
+        }
+        this.props.handleClose();
+    };
+
     validateFields = () => {
         let success = true;
 
@@ -99,7 +116,7 @@ class ModifyModal extends React.Component {
                 return '도메인을 입력하세요';
             }
             if (!new RegExp(/(https?:\/\/)([\w]+\.|localhost)([\w]+)?(\.[\w]+)?(\.[\w]+)?(:\d{2,5})?/)
-                    .test(this.state.origin)) {
+                .test(this.state.origin)) {
                 success = false;
                 return '올바른 형식이 아닙니다';
             }
@@ -111,7 +128,7 @@ class ModifyModal extends React.Component {
                 return '콜백 URL을 입력하세요';
             }
             if (!new RegExp(/(https?:\/\/)([\w]+\.|localhost)([\w]+)?(\.[\w]+)?(\.[\w]+)?(:\d{2,5})?(\/\w*)+/)
-                    .test(this.state.callback_url)) {
+                .test(this.state.callback_url)) {
                 success = false;
                 return '올바른 형식이 아닙니다';
             }
@@ -177,8 +194,15 @@ class ModifyModal extends React.Component {
 
     renderActions = () => [
         <FlatButton
+            label="삭제"
+            style={{
+                position: 'absolute',
+                left: 7,
+            }}
+            onClick={this.remove}
+        />,
+        <FlatButton
             label="닫기"
-            primary
             onClick={this.props.handleClose}
         />,
         <FlatButton

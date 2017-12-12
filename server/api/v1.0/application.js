@@ -112,6 +112,7 @@ router.delete('/:id', async (req, res) => {
     try {
         const result = await Application.remove({
             _id: req.params.id,
+            user: req.payload._id,
         });
         if (result.result.n === 0) {
             return res.sendStatus(404);

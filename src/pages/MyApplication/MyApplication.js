@@ -67,7 +67,13 @@ class MyApplication extends React.Component {
         await this.props.modifyApplicationRequest(id, name, origin, callback_url, token);
         await this.props.fetchApplicationListRequest(this.props.auth.token);
         return this.props.modifyApplicationStore;
-    }
+    };
+
+    handleRemoveRequest = async (id, token) => {
+        await this.props.removeApplicationRequest(id, token);
+        await this.props.fetchApplicationListRequest(this.props.auth.token);
+        return this.props.removeApplicationStore;
+    };
 
     renderModals = () => (
         <div>
@@ -81,6 +87,7 @@ class MyApplication extends React.Component {
                 open={this.state.modifyModalOpen}
                 handleClose={this.closeModifyModal}
                 handleRequest={this.handleModifyRequest}
+                handleRomoveRequest={this.handleRemoveRequest}
                 auth={this.props.auth}
                 data={this.state.selectedApplication}
             />
