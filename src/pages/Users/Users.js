@@ -38,8 +38,6 @@ class Users extends React.Component {
                 </TableHeader>
                 <TableBody>
                     {this.renderUsers()}
-                    {this.renderUsers()}
-                    {this.renderUsers()}
                 </TableBody>
             </Table>
         );
