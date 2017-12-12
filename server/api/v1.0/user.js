@@ -123,7 +123,10 @@ router.get('/list', async (req, res) => {
     }
     try {
         const users = await User.find({});
-        res.json(users);
+        const usersWithLevelDetails = users.map(user => Object.assign({
+            level_details: levelSystem.getLevelByExp(user.exp),
+        }, user._doc));
+        res.json(usersWithLevelDetails);
     } catch (e) {
         logger.error(e);
         res.status(500).json('Something broke!');

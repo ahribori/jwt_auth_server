@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Card, CardTitle, CardActions, CardText, CardHeader } from 'material-ui/Card';
 import Badge from 'material-ui/Badge';
 import Avatar from 'material-ui/Avatar';
@@ -15,6 +16,14 @@ import LinearProgress from 'material-ui/LinearProgress';
 import './style/PageWithProfile.scss';
 
 class PageWithProfile extends React.Component {
+    static propTypes = {
+        width: PropTypes.number,
+    };
+
+    static defaultProps = {
+        width: 800,
+    };
+
     pushHistory(to) {
         const { pathname } = this.props.history.location;
         if (pathname !== to) {
@@ -124,7 +133,12 @@ class PageWithProfile extends React.Component {
         );
 
         return (
-            <Card className="container-large">
+            <Card
+                className={`container-large ${this.props.className}`}
+                style={{
+                    maxWidth: this.props.size,
+                }}
+            >
                 {renderHeader()}
                 {renderContents()}
             </Card>

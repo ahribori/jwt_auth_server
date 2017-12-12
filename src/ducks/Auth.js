@@ -7,6 +7,7 @@ const LOGIN = helper.createThunkTypes('auth/LOGIN');
 const JOIN = helper.createThunkTypes('auth/JOIN');
 const VERIFY = helper.createThunkTypes('auth/VERIFY');
 const GET_USER = helper.createThunkTypes('auth/GET_USER');
+const GET_USER_LIST = helper.createThunkTypes('auth/GET_USER_LIST');
 const LOGOUT = 'auth/LOGOUT';
 
 // Action creators
@@ -52,6 +53,14 @@ export const getUser = (_id, token) => helper.createThunk(GET_USER.DEFAULT, {
     },
 })();
 
+export const getUserList = token => helper.createThunk(GET_USER_LIST.DEFAULT, {
+    url: '/api/v1.0/user/list',
+    method: 'get',
+    headers: {
+        authorization: token,
+    },
+})();
+
 export const logout = () => {
     return {
         type: LOGOUT,
@@ -64,6 +73,7 @@ const initialState = fromJS({
     login: null,
     verify: null,
     user: null,
+    user_list: null,
 });
 
 // Reducer
@@ -84,6 +94,10 @@ export default handleActions({
     [GET_USER.REQUEST]: state => state,
     [GET_USER.SUCCESS]: (state, action) => state.set('user', action.payload),
     [GET_USER.FAILURE]: (state, action) => state.set('user', action.payload),
+
+    [GET_USER_LIST.REQUEST]: state => state,
+    [GET_USER_LIST.SUCCESS]: (state, action) => state.set('user_list', action.payload),
+    [GET_USER_LIST.FAILURE]: (state, action) => state.set('user_list', action.payload),
 
     [LOGOUT]: state => state,
 

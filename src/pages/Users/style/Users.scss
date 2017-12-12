@@ -1,0 +1,31 @@
+.users-grid {
+    background-color: transparent !important;
+    min-width: 500px;
+    .username {
+        width: 80px;
+    }
+    .nickname {
+        width: 80px;
+    }
+    .email {
+        width: 120px;
+    }
+    .level {
+        width: 150px;
+    }
+    .cash {
+        width: 60px;
+    }
+    .point {
+        width: 60px;
+    }
+    .last_login {
+        width: 220px;
+    }
+}
+
+.users-page {
+    & > div > div:nth-child(2) > div > div:nth-child(2) {
+        overflow: visible !important;
+    }
+}
