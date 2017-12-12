@@ -51,7 +51,6 @@ class RegisterModal extends React.Component {
         if (this.validateFields()) {
             this.setState({ pending: true });
             const response = await this.props.handleRequest(
-                this.props.auth.user._id,
                 this.state.name,
                 this.state.origin,
                 this.state.callback_url,
@@ -67,7 +66,7 @@ class RegisterModal extends React.Component {
                 });
                 this.props.handleClose();
             } else {
-                console.error(response.status);
+                console.info(response.response.status);
             }
             return response;
         }

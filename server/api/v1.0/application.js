@@ -53,15 +53,13 @@ router.get('/:id', async (req, res) => {
  ============================================ */
 router.post('/', async (req, res) => {
     const {
-        user,
         name,
         origin,
         callback_url,
     } = req.body;
-
     try {
         const newApplication = await new Application({
-            user,
+            user: req.payload._id,
             name,
             origin,
             callback_url,

@@ -76,7 +76,7 @@ class ModifyModal extends React.Component {
                 });
                 this.props.handleClose();
             } else {
-                console.error(response.status);
+                console.info(response.response.status);
             }
             return response;
         }
