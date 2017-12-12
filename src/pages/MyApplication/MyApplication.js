@@ -6,9 +6,11 @@ import {
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import * as application from '../../ducks/Application';
 import PageWithProfile from '../../templates/PageWithProfile';
 import RegisterModal from './components/RegisterModal';
+import ModifyModal from './components/ModifyModal';
 import { Loading, MessageInPage } from '../../templates';
 import './style/MyApplication.scss';
 import needLoggedIn from '../../lib/hoc/needLoggedIn';
@@ -20,6 +22,7 @@ class MyApplication extends React.Component {
         this.state = {
             registerModalOpen: false,
             modifyModalOpen: false,
+            selectedApplication: null,
         };
     }
 
@@ -32,9 +35,13 @@ class MyApplication extends React.Component {
             registerModalOpen: true,
         });
     };
-    openModifyModal = () => {
+
+    openModifyModal = (e) => {
+        const index = e.currentTarget.dataset.id;
+        const currentData = this.props.fetchApplicationListStore.response.data[index];
         this.setState({
-            registerModalOpen: true,
+            modifyModalOpen: true,
+            selectedApplication: currentData,
         });
     };
 
@@ -56,22 +63,43 @@ class MyApplication extends React.Component {
         return this.props.registerApplicationStore;
     };
 
+    handleModifyRequest = async (id, name, origin, callback_url, token) => {
+        await this.props.modifyApplicationRequest(id, name, origin, callback_url, token);
+        await this.props.fetchApplicationListRequest(this.props.auth.token);
+        return this.props.modifyApplicationStore;
+    }
+
     renderModals = () => (
-        <RegisterModal
-            open={this.state.registerModalOpen}
-            handleClose={this.closeRegisterModal}
-            handleRequest={this.handleRegisterRequest}
-            auth={this.props.auth}
-        />
+        <div>
+            <RegisterModal
+                open={this.state.registerModalOpen}
+                handleClose={this.closeRegisterModal}
+                handleRequest={this.handleRegisterRequest}
+                auth={this.props.auth}
+            />
+            <ModifyModal
+                open={this.state.modifyModalOpen}
+                handleClose={this.closeModifyModal}
+                handleRequest={this.handleModifyRequest}
+                auth={this.props.auth}
+                data={this.state.selectedApplication}
+            />
+        </div>
     );
 
     renderApplicationCards = () => {
         const applicationList = this.props.fetchApplicationListStore.response.data || [];
         return applicationList.length === 0 ?
             <MessageInPage message="어플리케이션이 없습니다" /> :
-            applicationList.map(app => (
+            applicationList.map((app, index) => (
                 <div className="card-item" key={app._id}>
                     <Card>
+                        <SettingsIcon
+                            data-id={index}
+                            className="settings-icon"
+                            style={{ color: fontColor }}
+                            onClick={this.openModifyModal}
+                        />
                         <CardTitle
                             title={app.name}
                             subtitle={app.origin}

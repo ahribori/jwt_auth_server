@@ -5,15 +5,17 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import Loading from '../../../../templates/Loading';
 
-class RegisterModal extends React.Component {
+class ModifyModal extends React.Component {
     static propTypes = {
         open: PropTypes.bool,
+        data: PropTypes.object,
         handleClose: PropTypes.func,
         handleRequest: PropTypes.func,
     };
 
     static defaultProps = {
         open: false,
+        data: null,
         handleClose: () => {
         },
         handleRequest: () => {
@@ -35,7 +37,14 @@ class RegisterModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const { open } = nextProps;
-        if (!open) {
+        if (open) {
+            const { name, origin, callback_url } = nextProps.data;
+            this.setState({
+                name,
+                origin,
+                callback_url,
+            });
+        } else {
             this.setState({
                 name: '',
                 origin: '',
@@ -51,7 +60,7 @@ class RegisterModal extends React.Component {
         if (this.validateFields()) {
             this.setState({ pending: true });
             const response = await this.props.handleRequest(
-                this.props.auth.user._id,
+                this.props.data._id,
                 this.state.name,
                 this.state.origin,
                 this.state.callback_url,
@@ -173,16 +182,16 @@ class RegisterModal extends React.Component {
             onClick={this.props.handleClose}
         />,
         <FlatButton
-            label="만들기"
+            label="적용"
             primary
             onClick={this.submit}
         />,
     ];
 
-    renderRegisterModal = () => (
+    renderModifyModal = () => (
         <Dialog
             modal
-            title="내 어플리케이션 만들기"
+            title="내 어플리케이션 설정"
             actions={this.renderActions()}
             open={this.props.open}
             contentClassName="dialog"
@@ -192,8 +201,8 @@ class RegisterModal extends React.Component {
     );
 
     render() {
-        return this.renderRegisterModal();
+        return this.renderModifyModal();
     }
 }
 
-export default RegisterModal;
+export default ModifyModal;

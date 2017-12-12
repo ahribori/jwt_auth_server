@@ -24,6 +24,7 @@
     justify-content: left;
 
     .card-item {
+        position: relative;
         padding-bottom: 10px;
         @include responsive(small) {
             flex-basis: 100%;
@@ -38,5 +39,22 @@
             height: 100%;
             margin: 5px;
         }
+    }
+
+    .settings-icon {
+        position: absolute;
+        top: 30px;
+        right: 18px;
+        width: 18px !important;
+        height: 18px !important;
+        opacity: 0.6;
+        cursor: pointer;
+        z-index: 300;
+        &:hover {
+            opacity: 1;
+        }
+    }
+    .settings-icon:hover {
+        color: red;
     }
 }
