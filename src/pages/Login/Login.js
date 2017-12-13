@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import * as auth from '../../ducks/Auth';
+import postMessage from '../../lib/postMessage';
 import withAuth from '../../lib/hoc/withAuth';
 import withApplication from '../../lib/hoc/withApplication';
 
@@ -24,6 +25,7 @@ class Login extends React.Component {
     }
 
     async componentDidMount() {
+        window.addEventListener('message', this.postMessageListener, false);
         const token = this.props.getToken();
         if (token) {
             const isLogin = await this.props.isLoggedIn();
@@ -40,6 +42,21 @@ class Login extends React.Component {
             });
         }
     }
+
+    componentWillUnmount() {
+        window.removeEventListener('message', this.postMessageListener);
+    }
+
+    postMessageListener = (event) => {
+        try {
+            const message = JSON.parse(event.data);
+            const { source, origin } = event;
+            console.log(message);
+            postMessage(source, { token: 'ㅇㅇㅇ' }, origin);
+        } catch (e) {
+
+        }
+    };
 
     login = async (username, password) => {
         if (username === '') {
