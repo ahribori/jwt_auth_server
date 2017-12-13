@@ -1,1 +1,3 @@
-console.log('sdk');
+import init from './core/init';
+
+init();

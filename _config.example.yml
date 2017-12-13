@@ -12,3 +12,5 @@ client:
 
 # SDK configuration
 sdk:
+  global_name:
+  server_origin:

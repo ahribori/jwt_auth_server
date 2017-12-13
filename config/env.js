@@ -89,7 +89,7 @@ function getClientEnvironment(publicUrl) {
   // _config.yml
   Object.keys(conf).map((key) => {
   	if (conf[key]) {
-        if (key === 'client') {
+        if (key !== 'server') {
             stringified['process.env'][key] = JSON.stringify(conf[key]);
         }
 	}
