@@ -1,19 +1,21 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import cookie from 'browser-cookies';
+import url from 'url';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
-import { connect } from 'react-redux';
 import * as auth from '../../ducks/Auth';
 import withAuth from '../../lib/hoc/withAuth';
+import withApplication from '../../lib/hoc/withApplication';
 
 @withAuth
+@withApplication
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoggedIn: false,
+            sdk: false,
             username: '',
             password: '',
             usernameErrorText: '',
@@ -28,8 +30,14 @@ class Login extends React.Component {
             if (isLogin) {
                 this.setState({
                     isLoggedIn: true,
+                    sdk: !!this.props.application,
                 });
             }
+        }
+        if (this.props.application) {
+            this.setState({
+                sdk: true,
+            });
         }
     }
 
@@ -132,7 +140,7 @@ class Login extends React.Component {
 
         return (
             <Card style={containerStyle} className="container-small">
-                <CardTitle title="로그인" subtitle="아리보리 계정 사용"/>
+                <CardTitle title="로그인" subtitle="아리보리 계정 사용" />
                 <CardText>
                     <TextField
                         type="text"
@@ -181,26 +189,17 @@ class Login extends React.Component {
 
     render() {
         if (this.state.isLoggedIn) {
-            return <Redirect to="/"/>;
+            if (this.state.sdk) {
+                const app = this.props.application.response.data;
+                const token = this.props.getToken();
+                const callbackUrl = `${app.callback_url}?t=${btoa(token)}`;
+                window.location.replace(callbackUrl);
+                return '';
+            }
+            return <Redirect to="/" />;
         }
         return this.renderLoginForm();
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        login: state.auth.get('login'),
-        verify: state.auth.get('verify'),
-        user: state.auth.get('user'),
-    };
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        loginRequest: (username, password) => dispatch(auth.login(username, password)),
-        verifyRequest: token => dispatch(auth.verify(token)),
-        getUserRequest: (_id, token) => dispatch(auth.getUser(_id, token)),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

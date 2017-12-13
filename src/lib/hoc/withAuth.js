@@ -22,7 +22,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(class needLoggedIn extends React.Component {
+export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(class withAuth extends React.Component {
     getToken = () => {
         let token = null;
         if (window.localStorage) {

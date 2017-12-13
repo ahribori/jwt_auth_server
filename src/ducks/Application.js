@@ -4,6 +4,7 @@ import helper from './helpers/thunkHelper';
 
 // Action types
 const FETCH = helper.createThunkTypes('application/FETCH');
+const FETCH_FOR_SDK = helper.createThunkTypes('application/FETCH_FOR_SDK');
 const FETCH_LIST = helper.createThunkTypes('application/FETCH_LIST');
 const REGISTER = helper.createThunkTypes('application/REGISTER');
 const MODIFY = helper.createThunkTypes('application/MODIFY');
@@ -15,6 +16,15 @@ export const fetch = (id, token) => helper.createThunk(FETCH.DEFAULT, {
     method: 'get',
     headers: {
         authorization: token,
+    },
+})();
+
+export const fetchForSdk = appKey => helper.createThunk(FETCH_FOR_SDK.DEFAULT, {
+    url: '/api/v1.0/sdk/application',
+    method: 'get',
+    headers: {
+        'x-origin': window.location.origin,
+        authorization: appKey,
     },
 })();
 
@@ -63,6 +73,7 @@ export const remove = (id, token) => helper.createThunk(REMOVE.DEFAULT, {
 // Initial state
 const initialState = fromJS({
     fetch: null,
+    fetch_for_sdk: null,
     fetch_list: null,
     register: null,
     modify: null,
@@ -75,6 +86,10 @@ export default handleActions({
     [FETCH.REQUEST]: state => state,
     [FETCH.SUCCESS]: (state, action) => state.set('fetch', action.payload),
     [FETCH.FAILURE]: (state, action) => state.set('fetch', action.payload),
+
+    [FETCH_FOR_SDK.REQUEST]: state => state,
+    [FETCH_FOR_SDK.SUCCESS]: (state, action) => state.set('fetch_for_sdk', action.payload),
+    [FETCH_FOR_SDK.FAILURE]: (state, action) => state.set('fetch_for_sdk', action.payload),
 
     [FETCH_LIST.REQUEST]: state => state,
     [FETCH_LIST.SUCCESS]: (state, action) => state.set('fetch_list', action.payload),
