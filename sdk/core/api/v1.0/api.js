@@ -7,10 +7,6 @@ const messageHandler = new MessageHandler();
 export default class API {
     constructor() {
         log.info('API 1.0 Initialized');
-        if (!window[conf.globalObjectName].messageHandler) {
-            defineProperties('messageHandler', messageHandler);
-            log.info('API 1.0 Message handler bind');
-        }
         return {
             getToken: this.getToken,
             setToken: this.setToken,

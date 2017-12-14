@@ -1,4 +1,4 @@
-import { log, postMessage, defineProperties } from '../../../helpers';
+import { log } from '../../../helpers';
 // Singleton Instance
 let instance = null;
 
