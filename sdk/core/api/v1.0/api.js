@@ -1,11 +1,13 @@
+import cookie from 'browser-cookies';
 import { request, defineProperties, log, conf } from '../../../helpers';
 import MessageHandler from './messageHandler';
+
+const messageHandler = new MessageHandler();
 
 export default class API {
     constructor() {
         log.info('API 1.0 Initialized');
         if (!window[conf.globalObjectName].messageHandler) {
-            const messageHandler = new MessageHandler();
             defineProperties('messageHandler', messageHandler);
             log.info('API 1.0 Message handler bind');
         }
@@ -44,14 +46,55 @@ export default class API {
                 window.location.href = requestUrl;
             }
         };
+        if (typeof success === 'function') {
+            messageHandler.setLoginSuccessCallback(success);
+        }
+        if (typeof fail === 'function') {
+            messageHandler.setLoginFailCallback(fail);
+        }
+        if (typeof always === 'function') {
+            messageHandler.setLoginAlwaysCallback(always);
+        }
         return null;
     };
 
     getToken = () => {
-        console.log('getToken');
+        let token = null;
+        if (window.localStorage) {
+            token = window.localStorage.getItem(conf.tokenStorageName);
+        }
+        if (!token) {
+            token = cookie.get(conf.tokenStorageName);
+        }
+        return token;
     };
 
-    setToken = () => {
-        console.log('setToken');
+    setToken = (token) => {
+        cookie.set(conf.tokenStorageName, token);
+        if (window.localStorage) {
+            window.localStorage.setItem(conf.tokenStorageName, token);
+        }
+    };
+
+    verifyToken = async (token) => {
+        const verify = await request('GET', `/auth/verify?token=${token}`);
+        console.log(verify);
+        return verify;
+    };
+
+    isLoggedIn = async () => {
+        const token = this.getToken();
+        if (!token) {
+            return false;
+        }
+        const verify = await this.verifyToken(token);
+        return verify.success;
+    };
+
+    clearToken = () => {
+        if (window.localStorage) {
+            window.localStorage.removeItem('access_token');
+        }
+        cookie.erase('access_token');
     };
 }

@@ -130,7 +130,7 @@ class Join extends React.Component {
         if (success) {
             this.props.setToken(token);
             if (this.props.sdk) {
-                this.props.postToken();
+                this.props.loginSuccessCallback();
             }
             this.setState({
                 isLoggedIn: true,

@@ -51,13 +51,16 @@ class Login extends React.Component {
         if (success) {
             this.props.setToken(token);
             if (this.props.sdk) {
-                this.props.postToken();
+                this.props.loginSuccessCallback();
             }
             this.setState({
                 isLoggedIn: true,
             });
         } else {
             const response = this.props.login.response.data;
+            if (this.props.sdk) {
+                this.props.loginFailureCallback(response);
+            }
             switch (response.errorCode) {
                 case 'AUTH_E0404':
                     this.setState({

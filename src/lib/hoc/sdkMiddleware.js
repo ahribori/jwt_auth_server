@@ -89,21 +89,28 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     postTokenAfterLoginCheck = async () => {
         const isLogin = await this.props.isLoggedIn();
         if (isLogin) {
-            postMessage(this.getOpener(), {
-                type: 'token',
-                token: this.props.getToken(),
-            }, this.state.origin);
-            return window.close();
+            this.loginSuccessCallback();
         }
         return this.setState({ pending: false });
     };
 
-    postToken = () => {
+    loginSuccessCallback = () => {
         postMessage(this.getOpener(), {
-            type: 'token',
-            token: this.props.getToken(),
+            type: 'login',
+            success: true,
+            auth: {
+                token: this.props.getToken(),
+            },
         }, this.state.origin);
         return window.close();
+    };
+
+    loginFailureCallback = (error) => {
+        postMessage(this.getOpener(), {
+            type: 'login',
+            success: false,
+            error,
+        }, this.state.origin);
     };
 
     render() {
@@ -120,7 +127,8 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             if (this.state.verify) { // application exist
                 const newProps = {
                     sdk: true,
-                    postToken: this.postToken,
+                    loginSuccessCallback: this.loginSuccessCallback,
+                    loginFailureCallback: this.loginFailureCallback,
                     postTokenAfterLoginCheck: this.postTokenAfterLoginCheck,
                 };
 
