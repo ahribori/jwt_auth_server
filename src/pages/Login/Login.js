@@ -1,22 +1,17 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import url from 'url';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
-import * as auth from '../../ducks/Auth';
-import postMessage from '../../lib/postMessage';
-import withAuth from '../../lib/hoc/withAuth';
-import withApplication from '../../lib/hoc/withApplication';
+import { withAuth, sdkMiddleWare } from '../../lib/hoc';
 
 @withAuth
-@withApplication
+@sdkMiddleWare
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoggedIn: false,
-            sdk: false,
             username: '',
             password: '',
             usernameErrorText: '',
@@ -25,38 +20,16 @@ class Login extends React.Component {
     }
 
     async componentDidMount() {
-        window.addEventListener('message', this.postMessageListener, false);
         const token = this.props.getToken();
         if (token) {
             const isLogin = await this.props.isLoggedIn();
             if (isLogin) {
                 this.setState({
                     isLoggedIn: true,
-                    sdk: !!this.props.application,
                 });
             }
         }
-        if (this.props.application) {
-            this.setState({
-                sdk: true,
-            });
-        }
     }
-
-    componentWillUnmount() {
-        window.removeEventListener('message', this.postMessageListener);
-    }
-
-    postMessageListener = (event) => {
-        try {
-            const message = JSON.parse(event.data);
-            const { source, origin } = event;
-            console.log(message);
-            postMessage(source, { token: 'ㅇㅇㅇ' }, origin);
-        } catch (e) {
-
-        }
-    };
 
     login = async (username, password) => {
         if (username === '') {
@@ -159,34 +132,37 @@ class Login extends React.Component {
             <Card style={containerStyle} className="container-small">
                 <CardTitle title="로그인" subtitle="아리보리 계정 사용" />
                 <CardText>
-                    <TextField
-                        type="text"
-                        name="username"
-                        value={this.state.username}
-                        onChange={this.handleChange}
-                        onKeyPress={this.handleKeyPress}
-                        floatingLabelText="계정"
-                        errorText={this.state.usernameErrorText}
-                        fullWidth
-                        style={inputStyle}
-                        ref={(ref) => {
-                            this.usernameInput = ref;
-                        }}
-                    />
-                    <TextField
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                        onKeyPress={this.handleKeyPress}
-                        floatingLabelText="패스워드"
-                        errorText={this.state.passwordErrorText}
-                        fullWidth
-                        style={inputStyle}
-                        ref={(ref) => {
-                            this.passwordInput = ref;
-                        }}
-                    />
+                    <form>
+                        <TextField
+                            type="text"
+                            name="username"
+                            value={this.state.username}
+                            onChange={this.handleChange}
+                            onKeyPress={this.handleKeyPress}
+                            floatingLabelText="계정"
+                            errorText={this.state.usernameErrorText}
+                            fullWidth
+                            style={inputStyle}
+                            ref={(ref) => {
+                                this.usernameInput = ref;
+                            }}
+                        />
+                        <TextField
+                            type="password"
+                            name="password"
+                            autoComplete="off"
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                            onKeyPress={this.handleKeyPress}
+                            floatingLabelText="패스워드"
+                            errorText={this.state.passwordErrorText}
+                            fullWidth
+                            style={inputStyle}
+                            ref={(ref) => {
+                                this.passwordInput = ref;
+                            }}
+                        />
+                    </form>
                 </CardText>
                 <CardActions>
                     <RaisedButton
@@ -206,7 +182,7 @@ class Login extends React.Component {
 
     render() {
         if (this.state.isLoggedIn) {
-            if (this.state.sdk) {
+            if (this.props.sdk) {
                 const app = this.props.application.response.data;
                 const token = this.props.getToken();
                 const callbackUrl = `${app.callback_url}?t=${btoa(token)}`;

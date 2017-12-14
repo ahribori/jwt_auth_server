@@ -6,7 +6,7 @@ import verifyTokenMiddleware from '../../middlewares/verify';
 
 const router = express.Router();
 
-router.post('/init', async (req, res) => {
+router.post('/verify', async (req, res) => {
     res.sendStatus(200);
 });
 

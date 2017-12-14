@@ -3,9 +3,10 @@ import { Link, Redirect } from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
-import withAuth from '../../lib/hoc/withAuth';
+import { withAuth, sdkMiddleWare } from '../../lib/hoc';
 
 @withAuth
+@sdkMiddleWare
 class Join extends React.Component {
     constructor(props) {
         super(props);
@@ -127,6 +128,9 @@ class Join extends React.Component {
         const token = this.props.login.response.data;
         if (success) {
             this.props.setToken(token);
+            if (this.props.sdk) {
+                // TODO sdk redirection
+            }
             this.setState({
                 isLoggedIn: true,
             });
@@ -179,78 +183,82 @@ class Join extends React.Component {
 
         return (
             <Card style={containerStyle} className="container-small">
-                <CardTitle title="계정 만들기" subtitle="아리보리 계정 만들기"/>
+                <CardTitle title="계정 만들기" subtitle="아리보리 계정 만들기" />
                 <CardText>
-                    <TextField
-                        type="text"
-                        name="username"
-                        value={this.state.username}
-                        onChange={this.handleChange}
-                        onKeyPress={this.handleKeyPress}
-                        floatingLabelText="계정"
-                        style={inputStyle}
-                        fullWidth
-                        ref={(ref) => {
-                            this.usernameInput = ref;
-                        }}
-                        errorText={this.state.usernameErrorText}
-                    />
-                    <TextField
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                        onKeyPress={this.handleKeyPress}
-                        floatingLabelText="패스워드"
-                        style={inputStyle}
-                        fullWidth
-                        ref={(ref) => {
-                            this.passwordInput = ref;
-                        }}
-                        errorText={this.state.passwordErrorText}
-                    />
-                    <TextField
-                        type="password"
-                        name="passwordConfirm"
-                        value={this.state.passwordConfirm}
-                        onChange={this.handleChange}
-                        onKeyPress={this.handleKeyPress}
-                        floatingLabelText="패스워드 확인"
-                        style={inputStyle}
-                        fullWidth
-                        ref={(ref) => {
-                            this.passwordConfirmInput = ref;
-                        }}
-                        errorText={this.state.passwordConfirmErrorText}
-                    />
-                    <TextField
-                        type="text"
-                        name="nickname"
-                        value={this.state.nickname}
-                        onChange={this.handleChange}
-                        onKeyPress={this.handleKeyPress}
-                        floatingLabelText="닉네임"
-                        style={inputStyle}
-                        fullWidth
-                        ref={(ref) => {
-                            this.nicknameInput = ref;
-                        }}
-                        errorText={this.state.nicknameErrorText}
-                    />
-                    <TextField
-                        type="email"
-                        name="email"
-                        value={this.state.email}
-                        onChange={this.handleChange}
-                        onKeyPress={this.handleKeyPress}
-                        floatingLabelText="이메일"
-                        style={inputStyle}
-                        fullWidth
-                        ref={(ref) => {
-                            this.emailInput = ref;
-                        }}
-                        errorText={this.state.emailErrorText}
-                    />
+                    <form>
+                        <TextField
+                            type="text"
+                            name="username"
+                            value={this.state.username}
+                            onChange={this.handleChange}
+                            onKeyPress={this.handleKeyPress}
+                            floatingLabelText="계정"
+                            style={inputStyle}
+                            fullWidth
+                            ref={(ref) => {
+                                this.usernameInput = ref;
+                            }}
+                            errorText={this.state.usernameErrorText}
+                        />
+                        <TextField
+                            type="password"
+                            name="password"
+                            autoComplete="off"
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                            onKeyPress={this.handleKeyPress}
+                            floatingLabelText="패스워드"
+                            style={inputStyle}
+                            fullWidth
+                            ref={(ref) => {
+                                this.passwordInput = ref;
+                            }}
+                            errorText={this.state.passwordErrorText}
+                        />
+                        <TextField
+                            type="password"
+                            name="passwordConfirm"
+                            autoComplete="off"
+                            value={this.state.passwordConfirm}
+                            onChange={this.handleChange}
+                            onKeyPress={this.handleKeyPress}
+                            floatingLabelText="패스워드 확인"
+                            style={inputStyle}
+                            fullWidth
+                            ref={(ref) => {
+                                this.passwordConfirmInput = ref;
+                            }}
+                            errorText={this.state.passwordConfirmErrorText}
+                        />
+                        <TextField
+                            type="text"
+                            name="nickname"
+                            value={this.state.nickname}
+                            onChange={this.handleChange}
+                            onKeyPress={this.handleKeyPress}
+                            floatingLabelText="닉네임"
+                            style={inputStyle}
+                            fullWidth
+                            ref={(ref) => {
+                                this.nicknameInput = ref;
+                            }}
+                            errorText={this.state.nicknameErrorText}
+                        />
+                        <TextField
+                            type="email"
+                            name="email"
+                            value={this.state.email}
+                            onChange={this.handleChange}
+                            onKeyPress={this.handleKeyPress}
+                            floatingLabelText="이메일"
+                            style={inputStyle}
+                            fullWidth
+                            ref={(ref) => {
+                                this.emailInput = ref;
+                            }}
+                            errorText={this.state.emailErrorText}
+                        />
+                    </form>
                 </CardText>
                 <CardActions>
                     <RaisedButton
@@ -271,7 +279,7 @@ class Join extends React.Component {
 
     render() {
         if (this.state.isLoggedIn) {
-            return <Redirect to="/"/>;
+            return <Redirect to="/" />;
         }
         return this.renderJoinForm();
     }

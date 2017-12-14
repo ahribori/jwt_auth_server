@@ -14,10 +14,10 @@ export default async (req, res, next) => {
         if (!app) {
             return res.sendStatus(404);
         }
-        if (requestOrigin !== app.origin &&
-            requestOrigin !== serverOrigin &&
-            !new RegExp(/(localhost|127.0.0.1)/).test(requestOrigin)) {
-            return res.sendStatus(403);
+        if (requestOrigin !== app.origin || requestOrigin !== serverOrigin) {
+            if (!new RegExp(/(localhost|127.0.0.1)/).test(requestOrigin)) {
+                return res.sendStatus(403);
+            }
         }
         req.payload = {
             app,
