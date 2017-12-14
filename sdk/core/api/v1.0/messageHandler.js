@@ -28,14 +28,9 @@ class MessageHandler {
     };
 
     popupOnLoadListener = (message, source) => {
-        console.log(message, source);
-        postMessage(source, {
-            message: '팝업 온로드 된거 확인 했어',
-        });
     };
 
     defaultListener = (message, source) => {
-        console.log(message, source);
     };
 }
 

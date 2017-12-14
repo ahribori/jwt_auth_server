@@ -32,12 +32,10 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             appKey: a,
             origin: o,
             verify: false,
-            isLoggedIn: false,
             errorMessage: '',
         };
     }
     async componentDidMount() {
-        console.log('sdk mount');
         if (this.state.appKey) {
             await this.props.getApplicationRequest(atob(this.state.appKey), this.state.origin);
             this.handleResponse();
@@ -48,7 +46,6 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     }
 
     componentWillUnmount() {
-        console.log('sdk unmount');
         window.removeEventListener('message', this.postMessageListener);
     }
 
@@ -57,10 +54,11 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     handleResponse() {
         const statusCode = this.props.application.response.status;
         if (statusCode === 200) {
-            this.setState({ pending: false, verify: true }); // appKey 인증됨
+            this.setState({ verify: true }); // appKey 인증됨
             postMessage(this.getOpener(), {
                 type: 'popupOnLoad',
-            }, this.props.application.response.data.origin);
+            }, this.state.origin);
+            this.postTokenAfterLoginCheck();
         } else {
             this.setState({ pending: false }); // appKey 인증되지 않음
             switch (statusCode) {
@@ -81,11 +79,31 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         try {
             const message = JSON.parse(event.data);
             const { source, origin } = event;
-            console.log(message);
-            postMessage(source, { token: 'ㅇㅇㅇ' }, origin);
+
+            // TODO Receive message
         } catch (e) {
             console.error(e);
         }
+    };
+
+    postTokenAfterLoginCheck = async () => {
+        const isLogin = await this.props.isLoggedIn();
+        if (isLogin) {
+            postMessage(this.getOpener(), {
+                type: 'token',
+                token: this.props.getToken(),
+            }, this.state.origin);
+            return window.close();
+        }
+        return this.setState({ pending: false });
+    };
+
+    postToken = () => {
+        postMessage(this.getOpener(), {
+            type: 'token',
+            token: this.props.getToken(),
+        }, this.state.origin);
+        return window.close();
     };
 
     render() {
@@ -98,12 +116,12 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             );
         }
         // ---------------- 로딩 끝 ----------------
-        console.log('async request finished');
         if (this.state.appKey) { // appKey exist
             if (this.state.verify) { // application exist
-                console.log('application exist');
                 const newProps = {
                     sdk: true,
+                    postToken: this.postToken,
+                    postTokenAfterLoginCheck: this.postTokenAfterLoginCheck,
                 };
 
                 return (
@@ -122,7 +140,6 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
                 </FullScreenNotification>
             );
         }
-        console.log('application not exist');
         // application not exist
         return (
             <WrappedComponent {...this.props} />

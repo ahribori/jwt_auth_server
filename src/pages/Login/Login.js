@@ -20,14 +20,11 @@ class Login extends React.Component {
     }
 
     async componentDidMount() {
-        const token = this.props.getToken();
-        if (token) {
-            const isLogin = await this.props.isLoggedIn();
-            if (isLogin) {
-                this.setState({
-                    isLoggedIn: true,
-                });
-            }
+        const isLogin = await this.props.isLoggedIn();
+        if (isLogin) {
+            this.setState({
+                isLoggedIn: true,
+            });
         }
     }
 
@@ -53,6 +50,9 @@ class Login extends React.Component {
         const token = this.props.login.response.data;
         if (success) {
             this.props.setToken(token);
+            if (this.props.sdk) {
+                this.props.postToken();
+            }
             this.setState({
                 isLoggedIn: true,
             });
@@ -128,6 +128,8 @@ class Login extends React.Component {
             marginTop: '2rem',
         };
 
+        const { search } = this.props.location;
+
         return (
             <Card style={containerStyle} className="container-small">
                 <CardTitle title="로그인" subtitle="아리보리 계정 사용" />
@@ -174,7 +176,7 @@ class Login extends React.Component {
                     />
                 </CardActions>
                 <div className="link">
-                    <Link to="/join">아직 계정이 없으신가요?</Link>
+                    <Link to={`/join${search && search}`}> 아직 계정이 없으신가요?</Link>
                 </div>
             </Card>
         );
@@ -182,13 +184,6 @@ class Login extends React.Component {
 
     render() {
         if (this.state.isLoggedIn) {
-            if (this.props.sdk) {
-                const app = this.props.application.response.data;
-                const token = this.props.getToken();
-                const callbackUrl = `${app.callback_url}?t=${btoa(token)}`;
-                window.location.replace(callbackUrl);
-                return '';
-            }
             return <Redirect to="/" />;
         }
         return this.renderLoginForm();

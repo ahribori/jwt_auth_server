@@ -120,6 +120,7 @@ class Join extends React.Component {
             if (this[`${field}Input`]) {
                 this[`${field}Input`].focus();
             }
+            return;
         }
 
         await this.props.loginRequest(username, password);
@@ -129,7 +130,7 @@ class Join extends React.Component {
         if (success) {
             this.props.setToken(token);
             if (this.props.sdk) {
-                // TODO sdk redirection
+                this.props.postToken();
             }
             this.setState({
                 isLoggedIn: true,
@@ -180,6 +181,8 @@ class Join extends React.Component {
         const buttonStyle = {
             marginTop: '2rem',
         };
+
+        const { search } = this.props.location;
 
         return (
             <Card style={containerStyle} className="container-small">
@@ -271,7 +274,7 @@ class Join extends React.Component {
                     />
                 </CardActions>
                 <div className="link">
-                    <Link to="/">이미 계정이 있으신가요?</Link>
+                    <Link to={`/login${search && search}`}>이미 계정이 있으신가요?</Link>
                 </div>
             </Card>
         );
