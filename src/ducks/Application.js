@@ -19,11 +19,11 @@ export const fetch = (id, token) => helper.createThunk(FETCH.DEFAULT, {
     },
 })();
 
-export const fetchForSdk = appKey => helper.createThunk(FETCH_FOR_SDK.DEFAULT, {
+export const fetchForSdk = (appKey, origin) => helper.createThunk(FETCH_FOR_SDK.DEFAULT, {
     url: '/api/v1.0/sdk/application',
     method: 'get',
     headers: {
-        'x-origin': window.location.origin,
+        'x-app-origin': origin,
         authorization: appKey,
     },
 })();

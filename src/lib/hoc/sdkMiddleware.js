@@ -18,7 +18,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getApplicationRequest: appKey => dispatch(application.fetchForSdk(appKey)),
+        getApplicationRequest: (appKey, origin) => dispatch(application.fetchForSdk(appKey, origin)),
     };
 };
 
@@ -39,8 +39,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     async componentDidMount() {
         console.log('sdk mount');
         if (this.state.appKey) {
-            await this.props.getApplicationRequest(atob(this.state.appKey));
-            console.log(this.props);
+            await this.props.getApplicationRequest(atob(this.state.appKey), this.state.origin);
             this.handleResponse();
         } else {
             this.setState({ pending: false });

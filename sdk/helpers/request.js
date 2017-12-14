@@ -7,6 +7,7 @@ export default (method = 'GET', path = '', data = {}) => new Promise((resolve, r
         url: `${conf.serverOrigin}/api/v1.0/sdk${path}`,
         headers: {
             Authorization: window[conf.globalObjectName].appKey || '',
+            'x-app-origin': window.location.origin,
         },
         method,
         data,

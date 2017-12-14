@@ -1,7 +1,10 @@
 import getApi from './api';
-import { conf, defineProperties } from '../helpers';
+import { conf, defineProperties, log, } from '../helpers';
 
 const init = (appKey, version = '1.0') => {
+    if (!new RegExp(/^[a-f\d]{24}$/).test(appKey)) {
+        return log.error('Invalid application key');
+    }
     defineProperties('appKey', appKey);
     const API = getApi(version);
     const api = new API();
