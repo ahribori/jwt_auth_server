@@ -26,13 +26,11 @@ class Join extends React.Component {
     }
 
     async componentDidMount() {
-        const token = this.props.getToken();
-        if (token) {
+        const { verify } = this.props;
+        if (!verify) {
             const isLogin = await this.props.isLoggedIn();
             if (isLogin) {
-                this.setState({
-                    isLoggedIn: true,
-                });
+                this.setState({ isLoggedIn: true });
             }
         }
     }
