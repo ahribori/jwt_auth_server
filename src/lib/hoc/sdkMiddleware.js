@@ -89,7 +89,11 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     postTokenAfterLoginCheck = async () => {
         const isLogin = await this.props.isLoggedIn();
         if (isLogin) {
+            // TODO JWT refresh needed
+            console.log(this.props.verify.response.data);
             this.loginSuccessCallback();
+        } else {
+            this.props.clearToken();
         }
         return this.setState({ pending: false });
     };
@@ -102,7 +106,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
                 token: this.props.getToken(),
             },
         }, this.state.origin);
-        return window.close();
+        // return window.close();
     };
 
     loginFailureCallback = (error) => {

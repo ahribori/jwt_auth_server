@@ -35,9 +35,10 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     };
 
     setToken = (token) => {
-        cookie.set('access_token', token);
         if (window.localStorage) {
             window.localStorage.setItem('access_token', token);
+        } else {
+            cookie.set('access_token', token);
         }
     };
 

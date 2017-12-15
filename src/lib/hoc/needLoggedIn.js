@@ -39,6 +39,7 @@ export default WrappedComponent => withAuth(class needLoggedIn extends React.Com
             this.setState({
                 pending: false,
             });
+            this.props.clearToken();
         }
     }
 

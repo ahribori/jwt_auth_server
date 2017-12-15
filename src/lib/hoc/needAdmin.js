@@ -39,6 +39,7 @@ export default WrappedComponent => withAuth(class needAdmin extends React.Compon
             this.setState({
                 pending: false,
             });
+            this.props.clearToken();
         }
     }
 

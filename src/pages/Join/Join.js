@@ -31,6 +31,8 @@ class Join extends React.Component {
             const isLogin = await this.props.isLoggedIn();
             if (isLogin) {
                 this.setState({ isLoggedIn: true });
+            } else {
+                this.props.clearToken();
             }
         }
     }
