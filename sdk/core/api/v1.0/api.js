@@ -1,5 +1,5 @@
 import cookie from 'browser-cookies';
-import { request, defineProperties, log, conf } from '../../../helpers';
+import { request, log, conf } from '../../../helpers';
 import MessageHandler from './messageHandler';
 
 const messageHandler = new MessageHandler();
@@ -8,9 +8,10 @@ export default class API {
     constructor() {
         log.info('API 1.0 Initialized');
         return {
-            getToken: this.getToken,
-            setToken: this.setToken,
             assignLoginButton: this.assignLoginButton,
+            getToken: this.getToken,
+            verifyToken: this.verifyToken,
+            clearToken: this.clearToken(),
         };
     }
 
@@ -22,7 +23,10 @@ export default class API {
         always,
         popup = true,
     }) => {
-        await request('GET', '/verify');
+        await request({
+            method: 'GET',
+            path: '/v1.0/sdk/verify',
+        });
         const _selector = selector || target;
         const element = document.querySelector(_selector);
         if (!element) {
@@ -65,26 +69,49 @@ export default class API {
         return token;
     };
 
-    setToken = (token) => {
-        cookie.set(conf.tokenStorageName, token);
-        if (window.localStorage) {
-            window.localStorage.setItem(conf.tokenStorageName, token);
+    verifyToken = async ({
+        token,
+        success,
+        fail,
+        always,
+    }) => {
+        const t = token || this.getToken();
+        if (!t) {
+            const result = {
+                success: false,
+                payload: {
+                    message: '검증할 토큰이 존재하지 않습니다',
+                },
+            };
+            if (typeof fail === 'function') { fail(result); }
+            if (typeof always === 'function') { always(result); }
+            return result;
         }
-    };
-
-    verifyToken = async (token) => {
-        const verify = await request('GET', `/auth/verify?token=${token}`);
-        console.log(verify);
-        return verify;
-    };
-
-    isLoggedIn = async () => {
-        const token = this.getToken();
-        if (!token) {
-            return false;
+        try {
+            const verify = await request({
+                method: 'GET',
+                path: '/v1.0/auth/verify',
+                authorization: t,
+                logging: false,
+            });
+            const result = {
+                success: true,
+                payload: verify.data,
+            };
+            if (typeof success === 'function') { success(result); }
+            if (typeof always === 'function') { always(result); }
+            return result;
+        } catch (e) {
+            const result = {
+                success: false,
+                payload: {
+                    message: e.data.message,
+                },
+            };
+            if (typeof fail === 'function') { fail(result); }
+            if (typeof always === 'function') { always(result); }
+            return result;
         }
-        const verify = await this.verifyToken(token);
-        return verify.success;
     };
 
     clearToken = () => {
