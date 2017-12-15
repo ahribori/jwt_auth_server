@@ -1,4 +1,5 @@
-import { log } from '../../../helpers';
+import cookie from 'browser-cookies';
+import { conf, log } from '../../../helpers';
 // Singleton Instance
 let instance = null;
 
@@ -13,6 +14,14 @@ class MessageHandler {
         this.loginAlwaysCallbackList = [];
         return instance;
     }
+
+    setToken = (token) => {
+        if (window.localStorage) {
+            window.localStorage.setItem(conf.tokenStorageName, token);
+        } else {
+            cookie.set(conf.tokenStorageName, token);
+        }
+    };
 
     setLoginSuccessCallback = (success) => {
         if (typeof success === 'function') {
@@ -57,6 +66,7 @@ class MessageHandler {
         const { success } = message;
         if (success) {
             const { auth } = message;
+            this.setToken(auth.token);
             this.loginSuccessCallbackList.map(callback => callback({ success, auth }));
             this.loginAlwaysCallbackList.map(callback => callback({ success, auth }));
         } else {
