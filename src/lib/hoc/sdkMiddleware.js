@@ -9,16 +9,19 @@ import {
 import FullScreenNotification from '../../templates/FullScreenNotification';
 import postMessage from '../../lib/postMessage';
 import * as application from '../../ducks/Application';
+import * as auth from '../../ducks/Auth';
 
 const mapStateToProps = (state) => {
     return {
         application: state.application.get('fetch_for_sdk'),
+        refresh: state.auth.get('refresh'),
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         getApplicationRequest: (appKey, origin) => dispatch(application.fetchForSdk(appKey, origin)),
+        refreshTokenRequest: token => dispatch(auth.refresh(token)),
     };
 };
 
@@ -80,7 +83,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             const message = JSON.parse(event.data);
             const { source, origin } = event;
 
-            // TODO Receive message
+            // Receive message here
         } catch (e) {
             console.error(e);
         }
@@ -89,8 +92,9 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     postTokenAfterLoginCheck = async () => {
         const isLogin = await this.props.isLoggedIn();
         if (isLogin) {
-            // TODO JWT refresh needed
-            console.log(this.props.verify.response.data);
+            await this.props.refreshTokenRequest(this.props.getToken());
+            const token = this.props.refresh.response.data;
+            this.props.setToken(token);
             this.loginSuccessCallback();
         } else {
             this.props.clearToken();
@@ -106,7 +110,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
                 token: this.props.getToken(),
             },
         }, this.state.origin);
-        // return window.close();
+        return window.close();
     };
 
     loginFailureCallback = (error) => {

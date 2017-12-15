@@ -6,6 +6,7 @@ import helper from './helpers/thunkHelper';
 const LOGIN = helper.createThunkTypes('auth/LOGIN');
 const JOIN = helper.createThunkTypes('auth/JOIN');
 const VERIFY = helper.createThunkTypes('auth/VERIFY');
+const REFRESH = helper.createThunkTypes('auth/REFRESH');
 const GET_USER = helper.createThunkTypes('auth/GET_USER');
 const GET_USER_LIST = helper.createThunkTypes('auth/GET_USER_LIST');
 const LOGOUT = 'auth/LOGOUT';
@@ -45,6 +46,14 @@ export const verify = token => helper.createThunk(VERIFY.DEFAULT, {
     },
 })();
 
+export const refresh = token => helper.createThunk(REFRESH.DEFAULT, {
+    url: '/api/v1.0/auth/refresh',
+    method: 'get',
+    headers: {
+        authorization: token,
+    },
+})();
+
 export const getUser = (_id, token) => helper.createThunk(GET_USER.DEFAULT, {
     url: `/api/v1.0/user/${_id}`,
     method: 'get',
@@ -72,6 +81,7 @@ const initialState = fromJS({
     join: null,
     login: null,
     verify: null,
+    refresh: null,
     user: null,
     user_list: null,
 });
@@ -90,6 +100,10 @@ export default handleActions({
     [VERIFY.REQUEST]: state => state,
     [VERIFY.SUCCESS]: (state, action) => state.set('verify', action.payload),
     [VERIFY.FAILURE]: (state, action) => state.set('verify', action.payload),
+
+    [REFRESH.REQUEST]: state => state,
+    [REFRESH.SUCCESS]: (state, action) => state.set('refresh', action.payload),
+    [REFRESH.FAILURE]: (state, action) => state.set('refresh', action.payload),
 
     [GET_USER.REQUEST]: state => state,
     [GET_USER.SUCCESS]: (state, action) => state.set('user', action.payload),

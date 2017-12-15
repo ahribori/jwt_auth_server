@@ -72,4 +72,34 @@ router.get('/verify', async (req, res) => {
     res.json(req.payload);
 });
 
+router.get('/refresh', verifyTokenMiddleware);
+router.get('/refresh', async (req, res) => {
+    // TODO 보안에 대한 고민 필요. verified token을 탈취당하면 계속 refresh 할수있음
+    const { username } = req.payload;
+    try {
+        const user = await User.findOneByUsername(username);
+        const token = jwt.sign(
+            {
+                _id: user._id,
+                username: user.username,
+                nickname: user.nickname,
+                admin: user.admin,
+            },
+            conf.server.secret,
+            {
+                expiresIn: tokenConfig.expiresIn || '1d',
+                issuer: tokenConfig.issuer || 'jwt_auth_server',
+                subject: 'user',
+            },
+        );
+        const levelInfo = levelSystem.getLevelByExp(user.exp);
+        user.level = levelInfo.level;
+        user.last_login = new Date();
+        user.save();
+        return res.json(token);
+    } catch (e) {
+        log.error(e);
+        res.sendStatus(500);
+    }
+});
 export default router;
