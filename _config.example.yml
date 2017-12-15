@@ -6,7 +6,12 @@ server:
   mongo_uri:
   # Secret Key
   secret:
-
+  token:
+    # JWT token expires. default 1d.
+    # ex) 1d or 3h or 20m...
+    expiresIn:
+    # JWT token issuer
+    issuer:
 # Client configuration
 client:
 

@@ -13,9 +13,9 @@ winston.configure({
         new (winston.transports.File)({
             name: 'error-file',
             filename: path.resolve(appPath.LOG_PATH, 'error.log'),
-            level: 'error'
-        })
-    ]
+            level: 'error',
+        }),
+    ],
 });
 
 export default winston;
