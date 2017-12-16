@@ -49,6 +49,7 @@ module.exports = {
   appSrc: resolveApp('src'),
   sdkSrc: resolveApp('sdk'),
   sdkIndexJs: resolveApp('sdk/index.js'),
+  clbIndexJs: resolveApp('sdk/clb/index.js'),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),

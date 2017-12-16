@@ -43,6 +43,10 @@ module.exports = {
             require.resolve('./polyfills'),
             paths.sdkIndexJs,
         ],
+        clb: [
+            require.resolve('./polyfills'),
+            paths.clbIndexJs,
+        ],
     },
     output: {
         // Next line is not used in dev but WebpackDevServer crashes without it:
@@ -238,7 +242,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             inject: true,
             template: paths.appHtml,
-            excludeChunks: ['sdk']
+            excludeChunks: ['sdk', 'clb']
         }),
         // Add module names to factory functions so they appear in browser profiler.
         new webpack.NamedModulesPlugin(),
