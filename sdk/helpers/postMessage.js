@@ -3,10 +3,10 @@ import log from './log';
 
 const { serverOrigin } = conf;
 
-export default (targetWindow, messageObject) => {
+export default (targetWindow, messageObject, origin) => {
     try {
         const stringifyObject = JSON.stringify(messageObject);
-        targetWindow.postMessage(stringifyObject, serverOrigin);
+        targetWindow.postMessage(stringifyObject, origin || serverOrigin);
     } catch (e) {
         log.error(e);
     }

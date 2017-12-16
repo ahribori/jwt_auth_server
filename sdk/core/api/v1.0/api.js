@@ -7,13 +7,50 @@ const messageHandler = new MessageHandler();
 export default class API {
     constructor() {
         log.info('API 1.0 Initialized');
+        this.verify = false;
         return {
+            createLoginButton: this.createLoginButton,
             assignLoginButton: this.assignLoginButton,
             getToken: this.getToken,
             verifyToken: this.verifyToken,
-            clearToken: this.clearToken(),
+            clearToken: this.clearToken,
         };
     }
+
+    verifySDK = async () => {
+        if (!this.verify) {
+            await request({
+                method: 'GET',
+                path: '/v1.0/sdk/verify',
+            });
+        }
+        this.verify = true;
+    };
+
+    createLoginButton = async ({
+        container,
+        size,
+        success,
+        fail,
+        always,
+        popup = true,
+    }) => {
+        await this.verifySDK();
+        const $container = document.querySelector(container);
+        if (!$container) {
+            return log.error(`셀렉터 ${container} 와 일치하는 엘리먼트가 존재하지 않습니다`);
+        }
+        const iFrame =
+            '<iframe ' +
+            `id="__${conf.globalObjectName}_LOGIN_BUTTON__" ` +
+            `src="${conf.serverOrigin}/api/v1.0/sdk/createLoginButton?size=${size}" ` +
+            '/>';
+        $container.innerHTML = iFrame;
+        const $frame = document.querySelector(`${container} > iframe`);
+        $frame.width = 0;
+        $frame.height = 0;
+        $frame.style.border = 0;
+    };
 
     assignLoginButton = async ({
         selector,
@@ -23,10 +60,7 @@ export default class API {
         always,
         popup = true,
     }) => {
-        await request({
-            method: 'GET',
-            path: '/v1.0/sdk/verify',
-        });
+        await this.verifySDK();
         const _selector = selector || target;
         const element = document.querySelector(_selector);
         if (!element) {
@@ -116,8 +150,8 @@ export default class API {
 
     clearToken = () => {
         if (window.localStorage) {
-            window.localStorage.removeItem('access_token');
+            window.localStorage.removeItem(conf.tokenStorageName);
         }
-        cookie.erase('access_token');
+        cookie.erase(conf.tokenStorageName);
     };
 }

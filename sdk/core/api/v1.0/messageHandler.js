@@ -1,5 +1,5 @@
 import cookie from 'browser-cookies';
-import { conf, log } from '../../../helpers';
+import { conf, log, postMessage } from '../../../helpers';
 // Singleton Instance
 let instance = null;
 
@@ -47,11 +47,17 @@ class MessageHandler {
             const { source, origin } = event;
             switch (message.type) {
                 case 'popupOnLoad': // 로그인 버튼 클릭해서 팝업창 떴을 때
-                    return this.popupOnLoadListener(message, source);
+                    return this.popupOnLoadListener(message, source, origin);
+                case 'clbOnLoad':
+                    return this.clbOnLoadListener(message, source, origin);
+                case 'buttonSize':
+                    return this.buttonSizeListener(message, source, origin);
                 case 'login':
-                    return this.loginListener(message, source);
+                    return this.loginListener(message, source, origin);
+                case 'logout':
+                    return this.logoutListener(message, source, origin);
                 default:
-                    return this.defaultListener(message, source);
+                    return this.defaultListener(message, source, origin);
             }
         } catch (e) {
             log.error(e);
@@ -59,10 +65,38 @@ class MessageHandler {
         return null;
     };
 
-    popupOnLoadListener = (message, source) => {
+    popupOnLoadListener = (message, source, origin) => {
     };
 
-    loginListener = (message, source) => {
+    clbOnLoadListener = async (message, source, origin) => {
+        const api = window[conf.globalObjectName];
+        const token = api.getToken();
+        if (token) {
+            postMessage(source, { type: 'tokenExist' }, origin);
+            const isLoggedIn = await api.verifyToken({ token });
+            if (!isLoggedIn.success) {
+                api.clearToken();
+            }
+            postMessage(source, {
+                type: 'isLoggedIn',
+                isLoggedIn,
+            }, origin);
+        }
+        postMessage(source, {
+            type: 'clbOnLoadConfirm',
+            appKey: window[conf.globalObjectName].appKey,
+        }, origin);
+    };
+
+    buttonSizeListener = (message, source, origin) => {
+        const iFrame = document.querySelector(`#__${conf.globalObjectName}_LOGIN_BUTTON__`);
+        if (iFrame) {
+            iFrame.width = message.width;
+            iFrame.height = message.height;
+        }
+    };
+
+    loginListener = (message, source, origin) => {
         const { success } = message;
         if (success) {
             const { auth } = message;
@@ -76,7 +110,11 @@ class MessageHandler {
         }
     };
 
-    defaultListener = (message, source) => {
+    logoutListener = (message, source, origin) => {
+        window[conf.globalObjectName].clearToken();
+    };
+
+    defaultListener = (message, source, origin) => {
     };
 }
 

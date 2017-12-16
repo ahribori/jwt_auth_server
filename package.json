@@ -81,6 +81,7 @@
 		"start": "node scripts/start.js",
 		"build": "node scripts/build.js",
 		"boot": "cross-env NODE_ENV=production ./node_modules/.bin/nodemon --watch server --exec babel-node ./server/server.js --plugins=transform-class-properties --presets=env",
+		"dev": "cross-env NODE_ENV=development ./node_modules/.bin/nodemon --watch server --exec babel-node ./server/server.js --plugins=transform-class-properties --presets=env",
 		"test": "node scripts/test.js --env=jsdom"
 	},
 	"jest": {
@@ -126,5 +127,9 @@
 	"eslintConfig": {
 		"extends": "react-app"
 	},
-	"proxy": "http://localhost:8088"
+	"proxy": {
+		"/api": {
+			"target" : "http://localhost:8088"
+		}
+	}
 }

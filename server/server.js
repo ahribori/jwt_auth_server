@@ -42,11 +42,25 @@ app.use(morgan('dev'));
 const buildPath = path.resolve(__dirname, '../build');
 app.use('/', express.static(buildPath));
 
-app.use('/sdk.js', (req, res) => {
+app.use('/static/js/sdk.js', (req, res) => {
     const buildPathExist = fs.existsSync(buildPath);
     if (buildPathExist) {
         const assetManifest = require(`${buildPath}/asset-manifest.json`);
         const sdkPath = `${buildPath}/${assetManifest['sdk.js']}`;
+        const sdkExist = fs.existsSync(sdkPath);
+        if (!sdkExist) {
+            return res.sendStatus(404);
+        }
+        return res.sendFile(sdkPath);
+    }
+    return res.sendStatus(404);
+});
+
+app.use('/static/js/clb.js', (req, res) => {
+    const buildPathExist = fs.existsSync(buildPath);
+    if (buildPathExist) {
+        const assetManifest = require(`${buildPath}/asset-manifest.json`);
+        const sdkPath = `${buildPath}/${assetManifest['clb.js']}`;
         const sdkExist = fs.existsSync(sdkPath);
         if (!sdkExist) {
             return res.sendStatus(404);

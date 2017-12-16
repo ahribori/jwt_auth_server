@@ -58,9 +58,13 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         const statusCode = this.props.application.response.status;
         if (statusCode === 200) {
             this.setState({ verify: true }); // appKey 인증됨
-            postMessage(this.getOpener(), {
-                type: 'popupOnLoad',
-            }, this.state.origin);
+
+            const { opener } = window;
+            if (opener) {
+                postMessage(this.getOpener(), {
+                    type: 'popupOnLoad',
+                }, opener.location.origin);
+            }
             this.postTokenAfterLoginCheck();
         } else {
             this.setState({ pending: false }); // appKey 인증되지 않음
@@ -103,13 +107,16 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     };
 
     loginSuccessCallback = () => {
-        postMessage(this.getOpener(), {
-            type: 'login',
-            success: true,
-            auth: {
-                token: this.props.getToken(),
-            },
-        }, this.state.origin);
+        const { opener } = window;
+        if (opener) {
+            postMessage(this.getOpener(), {
+                type: 'login',
+                success: true,
+                auth: {
+                    token: this.props.getToken(),
+                },
+            }, opener.location.origin);
+        }
         return window.close();
     };
 
