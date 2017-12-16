@@ -36,10 +36,12 @@ export default class API {
         popup = true,
     }) => {
         await this.verifySDK();
+
         const $container = document.querySelector(container);
         if (!$container) {
             return log.error(`셀렉터 ${container} 와 일치하는 엘리먼트가 존재하지 않습니다`);
         }
+
         const iFrame =
             '<iframe ' +
             `id="__${conf.globalObjectName}_LOGIN_BUTTON__" ` +
@@ -50,6 +52,17 @@ export default class API {
         $frame.width = 0;
         $frame.height = 0;
         $frame.style.border = 0;
+
+        if (typeof success === 'function') {
+            messageHandler.setLoginSuccessCallback(success);
+        }
+        if (typeof fail === 'function') {
+            messageHandler.setLoginFailCallback(fail);
+        }
+        if (typeof always === 'function') {
+            messageHandler.setLoginAlwaysCallback(always);
+        }
+        return null;
     };
 
     assignLoginButton = async ({
