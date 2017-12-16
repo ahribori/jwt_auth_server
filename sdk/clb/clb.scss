@@ -1,3 +1,8 @@
+* {
+    font-family: Roboto, sans-serif;
+    box-sizing: border-box;
+}
+
 html, body {
     padding: 0;
     margin: 0;
@@ -5,13 +10,42 @@ html, body {
 }
 
 button {
-    width: 100px;
-    height: 36px;
     border: 1px solid rgb(233, 30, 99);
     background-color: white;
     color: rgb(233, 30, 99);
     cursor: pointer;
+    transition-property: color, background-color;
+    transition-duration: 0.2s;
     &:focus {
         outline: 0;
+    }
+    &:hover {
+        background-color: rgb(233, 30, 99);
+        color: white;
+    }
+    &.xs {
+        font-size: 0.7rem;
+        width: 60px;
+        height: 25px;
+    }
+    &.sm {
+        font-size: 0.75rem;
+        width: 70px;
+        height: 30px;
+    }
+    &.md {
+        font-size: 0.85rem;
+        width: 100px;
+        height: 36px;
+    }
+    &.lg {
+        font-size: 0.9rem;
+        width: 120px;
+        height: 38px;
+    }
+    &.xl {
+        font-size: 0.95rem;
+        width: 150px;
+        height: 40px;
     }
 }

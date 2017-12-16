@@ -8,12 +8,12 @@ let parentWindowOrigin = null;
 let visibleState = 'LOGIN';
 
 const setVisibleLogout = () => {
-    button.innerHTML = '<i class="privacy icon"></i>로그아웃';
+    button.innerHTML = '로그아웃';
     visibleState = 'LOGOUT';
 };
 
 const setVisibleLogin = () => {
-    button.innerHTML = '<i class="privacy icon"></i>로그인';
+    button.innerHTML = '로그인';
     visibleState = 'LOGIN';
 };
 

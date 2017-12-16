@@ -29,7 +29,7 @@ export default class API {
 
     createLoginButton = async ({
         container,
-        size,
+        size = 'md',
         success,
         fail,
         always,

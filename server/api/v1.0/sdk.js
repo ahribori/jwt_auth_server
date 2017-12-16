@@ -24,9 +24,13 @@ router.get('/application', async (req, res) => {
 
 router.get('/createLoginButton', (req, res) => {
     const htmlPath = path.resolve('sdk/clb/clb.html');
+    const { size } = req.query;
+    const className = new RegExp(/^(xs|sm|md|lg|xl)$/).test(size) ? size : 'md';
+
     fs.readFile(htmlPath, 'utf8', (err, file) => {
         const clbJsUrl = `${conf.sdk.server_origin}/static/js/clb.js`;
         const loginButton = file
+            .replace('{{{className}}}', `${className}`)
             .replace('{{{clbJS}}}', clbJsUrl);
         if (err) {
             return res.sendStatus(500);
