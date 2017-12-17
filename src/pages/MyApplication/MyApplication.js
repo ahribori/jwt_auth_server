@@ -115,7 +115,11 @@ class MyApplication extends React.Component {
                             }}
                         />
                         <CardText>
-                            <pre>{app._id}</pre>
+                            <pre style={{
+                                fontSize: '0.7rem',
+                            }}
+                            >{app._id}
+                            </pre>
                         </CardText>
                     </Card>
                 </div>
