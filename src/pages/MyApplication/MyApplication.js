@@ -57,14 +57,14 @@ class MyApplication extends React.Component {
         });
     };
 
-    handleRegisterRequest = async (name, origin, callback_url, token) => {
-        await this.props.registerApplicationRequest(name, origin, callback_url, token);
+    handleRegisterRequest = async (name, origin, token) => {
+        await this.props.registerApplicationRequest(name, origin, token);
         await this.props.fetchApplicationListRequest(this.props.auth.token);
         return this.props.registerApplicationStore;
     };
 
-    handleModifyRequest = async (id, name, origin, callback_url, token) => {
-        await this.props.modifyApplicationRequest(id, name, origin, callback_url, token);
+    handleModifyRequest = async (id, name, origin, token) => {
+        await this.props.modifyApplicationRequest(id, name, origin, token);
         await this.props.fetchApplicationListRequest(this.props.auth.token);
         return this.props.modifyApplicationStore;
     };
@@ -156,10 +156,10 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchApplicationRequest: (id, token) => dispatch(application.fetch(id, token)),
         fetchApplicationListRequest: token => dispatch(application.fetchList(token)),
-        registerApplicationRequest: (name, origin, callback_url, token) =>
-            dispatch(application.register(name, origin, callback_url, token)),
-        modifyApplicationRequest: (id, name, origin, callback_url, token) =>
-            dispatch(application.modify(id, name, origin, callback_url, token)),
+        registerApplicationRequest: (name, origin, token) =>
+            dispatch(application.register(name, origin, token)),
+        modifyApplicationRequest: (id, name, origin, token) =>
+            dispatch(application.modify(id, name, origin, token)),
         removeApplicationRequest: (id, token) => dispatch(application.remove(id, token)),
     };
 };

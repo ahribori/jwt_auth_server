@@ -26,10 +26,8 @@ class RegisterModal extends React.Component {
             pending: false,
             name: '',
             origin: '',
-            callback_url: '',
             nameErrorText: '',
             originErrorText: '',
-            callbackUrlErrorText: '',
         };
     }
 
@@ -39,10 +37,8 @@ class RegisterModal extends React.Component {
             this.setState({
                 name: '',
                 origin: '',
-                callback_url: '',
                 nameErrorText: '',
                 originErrorText: '',
-                callbackUrlErrorText: '',
             });
         }
     }
@@ -53,7 +49,6 @@ class RegisterModal extends React.Component {
             const response = await this.props.handleRequest(
                 this.state.name,
                 this.state.origin,
-                this.state.callback_url,
                 this.props.auth.token,
             );
             this.setState({ pending: false });
@@ -62,7 +57,6 @@ class RegisterModal extends React.Component {
                 this.setState({
                     name: '',
                     origin: '',
-                    callback_url: '',
                 });
                 this.props.handleClose();
             } else {
@@ -89,28 +83,16 @@ class RegisterModal extends React.Component {
                 return '도메인을 입력하세요';
             }
             if (!new RegExp(/(https?:\/\/)([\w]+\.|localhost)([\w]+)?(\.[\w]+)?(\.[\w]+)?(:\d{2,5})?/)
-                    .test(this.state.origin)) {
+                .test(this.state.origin)) {
                 success = false;
                 return '올바른 형식이 아닙니다';
             }
             return '';
         };
-        const validateCallbackUrl = () => {
-            if (this.state.callback_url === '') {
-                success = false;
-                return '콜백 URL을 입력하세요';
-            }
-            if (!new RegExp(/(https?:\/\/)([\w]+\.|localhost)([\w]+)?(\.[\w]+)?(\.[\w]+)?(:\d{2,5})?(\/\w*)+/)
-                    .test(this.state.callback_url)) {
-                success = false;
-                return '올바른 형식이 아닙니다';
-            }
-            return '';
-        };
+
         const localState = {
             nameErrorText: validateName(),
             originErrorText: validateOrigin(),
-            callbackUrlErrorText: validateCallbackUrl(),
         };
 
         this.setState(localState);
@@ -148,18 +130,6 @@ class RegisterModal extends React.Component {
                 onChange={this.handleChange}
                 ref={(ref) => {
                     this.originRef = ref;
-                }}
-            />
-            <TextField
-                fullWidth
-                floatingLabelText="콜백 URL"
-                hintText="https://my.domain.com/callback_path"
-                errorText={this.state.callbackUrlErrorText}
-                name="callback_url"
-                value={this.state.callback_url}
-                onChange={this.handleChange}
-                ref={(ref) => {
-                    this.callbackUrlRef = ref;
                 }}
             />
         </div>

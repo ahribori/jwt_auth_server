@@ -28,30 +28,25 @@ class ModifyModal extends React.Component {
             pending: false,
             name: '',
             origin: '',
-            callback_url: '',
             nameErrorText: '',
             originErrorText: '',
-            callbackUrlErrorText: '',
         };
     }
 
     componentWillReceiveProps(nextProps) {
         const { open } = nextProps;
         if (open) {
-            const { name, origin, callback_url } = nextProps.data;
+            const { name, origin } = nextProps.data;
             this.setState({
                 name,
                 origin,
-                callback_url,
             });
         } else {
             this.setState({
                 name: '',
                 origin: '',
-                callback_url: '',
                 nameErrorText: '',
                 originErrorText: '',
-                callbackUrlErrorText: '',
             });
         }
     }
@@ -63,7 +58,6 @@ class ModifyModal extends React.Component {
                 this.props.data._id,
                 this.state.name,
                 this.state.origin,
-                this.state.callback_url,
                 this.props.auth.token,
             );
             this.setState({ pending: false });
@@ -72,7 +66,6 @@ class ModifyModal extends React.Component {
                 this.setState({
                     name: '',
                     origin: '',
-                    callback_url: '',
                 });
                 this.props.handleClose();
             } else {
@@ -91,7 +84,6 @@ class ModifyModal extends React.Component {
             this.setState({
                 name: '',
                 origin: '',
-                callback_url: '',
             });
             this.props.handleClose();
         } else {
@@ -122,22 +114,9 @@ class ModifyModal extends React.Component {
             }
             return '';
         };
-        const validateCallbackUrl = () => {
-            if (this.state.callback_url === '') {
-                success = false;
-                return '콜백 URL을 입력하세요';
-            }
-            if (!new RegExp(/(https?:\/\/)([\w]+\.|localhost)([\w]+)?(\.[\w]+)?(\.[\w]+)?(:\d{2,5})?(\/\w*)+/)
-                .test(this.state.callback_url)) {
-                success = false;
-                return '올바른 형식이 아닙니다';
-            }
-            return '';
-        };
         const localState = {
             nameErrorText: validateName(),
             originErrorText: validateOrigin(),
-            callbackUrlErrorText: validateCallbackUrl(),
         };
 
         this.setState(localState);
@@ -175,18 +154,6 @@ class ModifyModal extends React.Component {
                 onChange={this.handleChange}
                 ref={(ref) => {
                     this.originRef = ref;
-                }}
-            />
-            <TextField
-                fullWidth
-                floatingLabelText="콜백 URL"
-                hintText="https://my.domain.com/callback_path"
-                errorText={this.state.callbackUrlErrorText}
-                name="callback_url"
-                value={this.state.callback_url}
-                onChange={this.handleChange}
-                ref={(ref) => {
-                    this.callbackUrlRef = ref;
                 }}
             />
         </div>

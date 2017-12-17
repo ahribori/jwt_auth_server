@@ -36,26 +36,24 @@ export const fetchList = token => helper.createThunk(FETCH_LIST.DEFAULT, {
     },
 })();
 
-export const register = (name, origin, callback_url, token) => helper.createThunk(REGISTER.DEFAULT, {
+export const register = (name, origin, token) => helper.createThunk(REGISTER.DEFAULT, {
     url: '/api/v1.0/application',
     method: 'post',
     data: {
         name,
         origin,
-        callback_url,
     },
     headers: {
         authorization: token,
     },
 })();
 
-export const modify = (id, name, origin, callback_url, token) => helper.createThunk(MODIFY.DEFAULT, {
+export const modify = (id, name, origin, token) => helper.createThunk(MODIFY.DEFAULT, {
     url: `/api/v1.0/application/${id}`,
     method: 'PUT',
     data: {
         name,
         origin,
-        callback_url,
     },
     headers: {
         authorization: token,

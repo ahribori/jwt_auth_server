@@ -48,21 +48,18 @@ router.get('/:id', async (req, res) => {
  user,
  name,
  origin,
- callback_url,
  }
  ============================================ */
 router.post('/', async (req, res) => {
     const {
         name,
         origin,
-        callback_url,
     } = req.body;
     try {
         const newApplication = await new Application({
             user: req.payload._id,
             name,
             origin,
-            callback_url,
         }).save();
         return res.json(newApplication);
     } catch (e) {
@@ -75,14 +72,12 @@ router.post('/', async (req, res) => {
  {
  name,
  origin,
- callback_url,
  }
  ============================================ */
 router.put('/:id', async (req, res) => {
     const {
         name,
         origin,
-        callback_url,
     } = req.body;
 
     try {
@@ -91,7 +86,6 @@ router.put('/:id', async (req, res) => {
         }, {
             name,
             origin,
-            callback_url,
         });
         if (result.n === 0) {
             return res.sendStatus(404);
