@@ -7,9 +7,6 @@ json web token based authentication server & easy authentication javascript sdk.
 - Mongodb 3.4↑
 - git
 
-
-
-
 ## 1. installation
 
 ```
@@ -23,6 +20,7 @@ npm install
 ```
 
 ## 2. configuration
+create file _config.yml into project root.
 ```yml
 # Server Configuration
 server:
