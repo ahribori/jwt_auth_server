@@ -13,6 +13,8 @@ import {
     PageNotFound,
 } from './pages';
 
+import AgGridExample from './pages/AgGridExample';
+
 export default (
     <Switch>
         <Route exact path="/" component={MyPage} />
@@ -20,6 +22,7 @@ export default (
         <Route exact path="/join" component={Join} />
         <Route exact path="/application" component={MyApplication} />
         <Route exact path="/users" component={Users} />
+        <Route exact path="/agGrid" component={AgGridExample} />
         <Route component={PageNotFound} />
     </Switch>
 );
