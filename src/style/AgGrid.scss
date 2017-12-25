@@ -1,0 +1,21 @@
+@import '../style/index';
+
+.ag-theme-material {
+    background-color: transparent;
+    .ag-row-selected {
+        .ag-icon {
+            color: $pinkA400;
+        }
+        color: white;
+        background-color: $pink300;
+        &:hover {
+            background-color: $pinkA400 !important;
+        }
+    }
+    .ag-cell {
+        border: none;
+    }
+    .ag-row:hover {
+        background-color: $grey300;
+    }
+}

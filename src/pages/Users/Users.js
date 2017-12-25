@@ -1,18 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from 'material-ui/Table';
-import LinearProgress from 'material-ui/LinearProgress';
+import { AgGridReact, AgGridColumn } from 'ag-grid-react';
+import 'ag-grid/src/styles/ag-grid.scss';
+import 'ag-grid/src/styles/ag-theme-material.scss';
+
 import PageWithProfile from '../../templates/PageWithProfile';
 import * as auth from '../../ducks/Auth';
 import './style/Users.scss';
-import { Loading, MessageInPage } from '../../templates';
+import '../../style/AgGrid.scss';
+import { Loading } from '../../templates';
+import LevelRenderer from './components/LevelRenderer';
 import needAdmin from '../../lib/hoc/needAdmin';
 
 @needAdmin
@@ -21,66 +18,66 @@ class Users extends React.Component {
         await this.props.getUserListRequest(this.props.auth.token);
     }
 
-
-    renderTable() {
-        return (
-            <Table
-                className="users-grid"
-            >
-                <TableHeader>
-                    <TableRow>
-                        <TableHeaderColumn className="username">닉네임(계정)</TableHeaderColumn>
-                        <TableHeaderColumn className="level">레벨</TableHeaderColumn>
-                        <TableHeaderColumn className="cash">캐시</TableHeaderColumn>
-                        <TableHeaderColumn className="point">포인트</TableHeaderColumn>
-                        <TableHeaderColumn className="last_login">마지막 로그인</TableHeaderColumn>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {this.renderUsers()}
-                </TableBody>
-            </Table>
-        );
-    }
-
-    renderUsers() {
+    renderGrid = () => {
+        const data = [];
         const users = this.props.userList.response.data;
-        return users.map((user, index) => (
-            <TableRow key={user._id}>
-                <TableRowColumn className="username">
-                    <b>{user.nickname}</b>
-                    <div>({user.username})</div>
-                </TableRowColumn>
-                <TableRowColumn className="level">
-                    <b>Lv. {user.level}</b>
-                    <LinearProgress
-                        mode="determinate"
-                        value={user.level_details && user.level_details.progress}
-                        style={{
-                            height: 4,
-                            width: 100,
-                        }}
+        users.map(user => data.push({
+            username: `${user.username}(${user.nickname})`,
+            level: { level: user.level, level_details: user.level_details },
+            cash: user.cash,
+            point: user.point,
+            last_login: new Date(user.last_login).toLocaleString(),
+        }));
+
+        const containerStyle = {
+            height: 620,
+            width: '100%',
+        };
+
+        return (
+            <div style={containerStyle} className="ag-theme-material">
+                <AgGridReact
+                    rowData={data}
+                    rowSelection="multiple"
+                    pagination
+                    paginationPageSize={10}
+                    onGridReady={this.onGridReady}
+                >
+
+                    {/* column definitions */}
+                    <AgGridColumn
+                        field="username"
+                        headerName="계정(닉네임)"
                     />
-                    <span style={{ fontSize: '0.7rem' }}>
-                        {user.level_details.expInCurrentLevel}/
-                        {user.level_details.expRequireInCurrentLevel} ({user.level_details.progress}%)
-                    </span>
-                </TableRowColumn>
-                <TableRowColumn className="cash">
-                    {user.cash}
-                </TableRowColumn>
-                <TableRowColumn className="point">
-                    {user.point}
-                </TableRowColumn>
-                <TableRowColumn className="last_login">{new Date(user.last_login).toLocaleString()}</TableRowColumn>
-            </TableRow>
-        ));
-    }
+                    <AgGridColumn
+                        field="level"
+                        headerName="레벨"
+                        cellRendererFramework={LevelRenderer}
+                        width={150}
+                    />
+                    <AgGridColumn
+                        field="cash"
+                        headerName="캐쉬"
+                        width={120}
+                    />
+                    <AgGridColumn
+                        field="point"
+                        headerName="포인트"
+                        width={120}
+                    />
+                    <AgGridColumn
+                        field="last_login"
+                        headerName="마지막 로그인"
+                    />
+                </AgGridReact>
+            </div>
+        );
+    };
 
     render() {
         return (
             <PageWithProfile width={1200} className="users-page" {...this.props}>
-                {this.props.userList ? this.renderTable() : <Loading />}
+                {this.props.userList ? this.renderGrid() : <Loading />}
             </PageWithProfile>
         );
     }
