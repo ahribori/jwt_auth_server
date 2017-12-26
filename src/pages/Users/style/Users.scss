@@ -1,31 +1,31 @@
-.users-grid {
-    background-color: transparent !important;
-    min-width: 500px;
-    .username {
-        width: 80px;
-    }
-    .nickname {
-        width: 80px;
-    }
-    .email {
-        width: 120px;
-    }
-    .level {
-        width: 150px;
-    }
-    .cash {
-        width: 60px;
-    }
-    .point {
-        width: 60px;
-    }
-    .last_login {
-        width: 220px;
-    }
-}
+@import '../../../style/index';
 
 .users-page {
-    & > div > div:nth-child(2) > div > div:nth-child(2) {
-        overflow: visible !important;
+    position: relative;
+    .toolbox {
+        position: absolute;
+        top: -110px;
+        right: 100px;
+        display: flex;
+        flex-direction: row-reverse;
+        @include responsive(small) {
+            position: fixed;
+            top: auto;
+            bottom: 20px;
+            right: 20px;
+        }
+        .user-remove-btn {
+            button {
+                background-color: $red700 !important;
+            }
+        }
+        .user-modify-btn {
+            button {
+                background-color: $amber700 !important;
+            }
+        }
+        & > div {
+            margin: 5px;
+        }
     }
 }
