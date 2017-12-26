@@ -45,6 +45,12 @@ class Users extends React.Component {
     };
 
     handleRemoveButtonClick = () => {
+        const count = this.state.selectedRow.length;
+        if (count > 1) {
+            console.log(`${this.state.selectedRow[0].username}계정을 포함한 ${count}개의 계정을 삭제하시겠습니까?`);
+        } else {
+            console.log(`${this.state.selectedRow[0].username}계정을 삭제하시겠습니까?`);
+        }
     };
 
     openModifyModal = () => {
@@ -80,17 +86,17 @@ class Users extends React.Component {
     renderGrid = () => {
         const data = [];
         const users = this.props.userList.response.data;
-        users.map(user => data.push({
-            _id: user._id,
-            profile_image: user.profile_image,
-            username: user.username,
-            nickname: user.nickname,
-            level: { level: user.level, level_details: user.level_details },
-            cash: user.cash,
-            point: user.point,
-            email: user.email,
-            email_verified: user.email_verified ? '인증됨' : '인증되지 않음',
-            last_login: new Date(user.last_login).toLocaleString(),
+        users.map(usr => data.push({
+            _id: usr._id,
+            profile_image: usr.profile_image,
+            username: usr.username,
+            nickname: usr.nickname,
+            level: { level: usr.level, level_details: usr.level_details },
+            cash: usr.cash,
+            point: usr.point,
+            email: usr.email,
+            email_verified: usr.email_verified ? '인증됨' : '인증되지 않음',
+            last_login: new Date(usr.last_login).toLocaleString(),
         }));
 
         const containerStyle = {
@@ -178,6 +184,10 @@ class Users extends React.Component {
                     open={this.state.modifyModalOpen}
                     handleClose={this.closeModifyModal}
                     data={this.state.selectedRow[0]}
+                    auth={this.props.auth}
+                    modifyUserRequest={this.props.modifyUserRequest}
+                    modifyUser={this.props.modifyUser}
+                    getUserListRequest={this.props.getUserListRequest}
                 />
             </div>
         );
@@ -195,12 +205,14 @@ class Users extends React.Component {
 const mapStateToProps = (state) => {
     return {
         userList: state.user.get('user_list'),
+        modifyUser: state.user.get('modify'),
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         getUserListRequest: token => dispatch(user.getUserList(token)),
+        modifyUserRequest: (userObject, token) => dispatch(user.modifyUser(userObject, token)),
     };
 };
 

@@ -41,35 +41,50 @@ class ModifyModal extends React.Component {
     }
 
     submit = async () => {
-        if (this.validateFields()) {
-            this.setState({ pending: true });
-            const response = await this.props.handleRequest(
-                this.props.data._id,
-                this.state.name,
-                this.state.origin,
-                this.props.auth.token,
-            );
-            this.setState({ pending: false });
+        const {
+            _id,
+            nickname,
+            password,
+            email,
+            cash,
+            point,
+            exp,
+        } = this.state;
 
-            if (response.success) {
+        this.setState({ pending: true });
+        await this.props.modifyUserRequest({
+            _id,
+            nickname,
+            password,
+            email,
+            cash,
+            point,
+            exp,
+        }, this.props.auth.token);
+        this.setState({ pending: false });
+
+        const { success } = this.props.modifyUser;
+        if (!success) {
+            const { field, message } = this.props.modifyUser.response.data;
+            if (field) {
                 this.setState({
-                    name: '',
-                    origin: '',
+                    [field]: '',
+                    [`${field}ErrorText`]: message,
                 });
-                this.props.handleClose();
-            } else {
-                console.info(response.response.status);
+                this[`${field}Ref`].focus();
             }
-            return response;
+        } else {
+            this.setState({ pending: true });
+            await this.props.getUserListRequest(this.props.auth.token);
+            this.setState({ pending: false });
+            this.props.handleClose();
         }
-        return null;
     };
 
     validateFields = () => {
     };
 
     handleChange = (e) => {
-        console.log(e.target.name, e.target.value);
         this.setState({
             [e.target.name]: e.target.value,
         });
@@ -83,7 +98,9 @@ class ModifyModal extends React.Component {
                 hintText="닉네임을 입력하세요"
                 name="nickname"
                 value={this.state.nickname}
+                errorText={this.state.nicknameErrorText}
                 onChange={this.handleChange}
+                ref={(ref) => { this.nicknameRef = ref; }}
             />
             <TextField
                 fullWidth
@@ -92,7 +109,9 @@ class ModifyModal extends React.Component {
                 hintText="패스워드를 입력하세요"
                 name="password"
                 value={this.state.password}
+                errorText={this.state.passwordErrorText}
                 onChange={this.handleChange}
+                ref={(ref) => { this.passwordRef = ref; }}
             />
             <TextField
                 fullWidth
@@ -100,7 +119,9 @@ class ModifyModal extends React.Component {
                 hintText="이메일을 입력하세요"
                 name="email"
                 value={this.state.email}
+                errorText={this.state.emailErrorText}
                 onChange={this.handleChange}
+                ref={(ref) => { this.emailRef = ref; }}
             />
             <TextField
                 fullWidth
@@ -108,7 +129,9 @@ class ModifyModal extends React.Component {
                 hintText="캐쉬를 입력하세요"
                 name="cash"
                 value={this.state.cash}
+                errorText={this.state.cashErrorText}
                 onChange={this.handleChange}
+                ref={(ref) => { this.cashRef = ref; }}
             />
             <TextField
                 fullWidth
@@ -116,7 +139,9 @@ class ModifyModal extends React.Component {
                 hintText="포인트를 입력하세요"
                 name="point"
                 value={this.state.point}
+                errorText={this.state.pointErrorText}
                 onChange={this.handleChange}
+                ref={(ref) => { this.pointRef = ref; }}
             />
             <TextField
                 fullWidth
@@ -124,7 +149,9 @@ class ModifyModal extends React.Component {
                 hintText="경험치를 입력하세요"
                 name="exp"
                 value={this.state.exp}
+                errorText={this.state.expErrorText}
                 onChange={this.handleChange}
+                ref={(ref) => { this.expRef = ref; }}
             />
         </div>
     );

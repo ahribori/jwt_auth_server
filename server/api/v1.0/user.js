@@ -209,11 +209,73 @@ router.put('/:id', async (req, res) => {
             }
             updateObject.nickname = nickname;
         }
-        if (email !== null && email !== undefined) {
+        if (email !== null && email !== undefined && email !== '') {
             if (!field.email.regex.test(email)) {
                 return res.status(400).json(field.email.errorResponse);
             }
             updateObject.email = email;
+        }
+        if (password !== null && password !== undefined && password !== '') {
+            if (!req.payload.admin) {
+                return res.status(403).json({
+                    message: __('error.USER_E0402'),
+                    errorCode: 'USER_E0402',
+                });
+            }
+            if (!field.nickname.regex.test(password)) {
+                return res.status(400).json(field.password.errorResponse);
+            }
+            updateObject.password = crypto.createHmac('sha1', conf.server.secret).update(password).digest('base64');
+        }
+        if (cash !== null && cash !== undefined) {
+            if (!req.payload.admin) {
+                return res.status(403).json({
+                    message: __('error.USER_E0402'),
+                    errorCode: 'USER_E0402',
+                });
+            }
+            if (Number.isNaN(Number(cash))) {
+                return res.status(400).json({
+                    message: __('error.USER_E0405'),
+                    field: 'cash',
+                    errorCode: 'USER_E0405',
+                });
+            }
+            updateObject.cash = cash;
+        }
+        if (point !== null && point !== undefined) {
+            if (!req.payload.admin) {
+                return res.status(403).json({
+                    message: __('error.USER_E0402'),
+                    errorCode: 'USER_E0402',
+                });
+            }
+            if (Number.isNaN(Number(point))) {
+                return res.status(400).json({
+                    message: __('error.USER_E0405'),
+                    field: 'point',
+                    errorCode: 'USER_E0405',
+                });
+            }
+            updateObject.point = point;
+        }
+        if (exp !== null && exp !== undefined) {
+            if (!req.payload.admin) {
+                return res.status(403).json({
+                    message: __('error.USER_E0402'),
+                    errorCode: 'USER_E0402',
+                });
+            }
+            if (Number.isNaN(Number(exp))) {
+                return res.status(400).json({
+                    message: __('error.USER_E0405'),
+                    field: 'exp',
+                    errorCode: 'USER_E0405',
+                });
+            }
+            const levelInfo = levelSystem.getLevelByExp(exp);
+            updateObject.exp = exp;
+            updateObject.level = levelInfo.level;
         }
         const updateResult = await User.update({ _id: req.params.id }, updateObject);
         res.json(updateResult);
