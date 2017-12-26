@@ -2,6 +2,7 @@ import express from 'express';
 import crypto from 'crypto';
 import logger from '../../logger';
 import User from '../../mongodb/models/user';
+import Application from '../../mongodb/models/application';
 import conf from '../../conf';
 import i18n from '../../i18n';
 import verifyTokenMiddleware from '../../middlewares/verify';
@@ -283,6 +284,56 @@ router.put('/:id', async (req, res) => {
         logger.error(e);
         res.status(500).json('Something broke!');
     }
+});
+
+/* =========================================
+ DELETE /user
+  {
+ bulk
+ }
+ ============================================ */
+router.delete('/', verifyTokenMiddleware); // JWT Token Check Middleware
+router.delete('/', async (req, res) => {
+    const { bulk } = req.body;
+    if (!req.payload.admin) {
+        return res.status(403).json({
+            message: __('error.USER_E0402'),
+            errorCode: 'USER_E0402',
+        });
+    }
+    if (!bulk || !Array.isArray(bulk)) {
+        return res.sendStatus(400);
+    }
+    const user$or = [];
+    const application$or = [];
+    bulk.map((id) => {
+        user$or.push({ _id: id });
+        application$or.push({ user: id });
+        return null;
+    });
+    const userRemoveResult = await User.remove({ $or: user$or });
+    const applicationRemoveResult = await Application.remove({ $or: application$or });
+    return res.json({
+        userRemoveResult,
+        applicationRemoveResult,
+    });
+});
+
+/* =========================================
+ DELETE /user/:id
+ ============================================ */
+router.delete('/:id', verifyTokenMiddleware); // JWT Token Check Middleware
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+    if (!new RegExp(/^[a-f\d]{24}$/i).test(id)) {
+        return res.sendStatus(400);
+    }
+    const userRemoveResult = await User.remove({ _id: id });
+    const applicationRemoveResult = await Application.remove({ user: id });
+    return res.json({
+        userRemoveResult,
+        applicationRemoveResult,
+    });
 });
 
 /* =========================================

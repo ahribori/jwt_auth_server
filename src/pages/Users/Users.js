@@ -20,6 +20,7 @@ import needAdmin from '../../lib/hoc/needAdmin';
 @needAdmin
 class Users extends React.Component {
     state = {
+        pending: false,
         modifyModalOpen: false,
         selectedRow: [],
     };
@@ -44,12 +45,23 @@ class Users extends React.Component {
         this.openModifyModal();
     };
 
-    handleRemoveButtonClick = () => {
+    handleRemoveButtonClick = async () => {
         const count = this.state.selectedRow.length;
+        const bulk = [];
+        this.state.selectedRow.map((row) => {
+            bulk.push(row._id);
+        });
+        let message;
         if (count > 1) {
-            console.log(`${this.state.selectedRow[0].username}계정을 포함한 ${count}개의 계정을 삭제하시겠습니까?`);
+            message = `${this.state.selectedRow[0].username}계정을 포함한 ${count}개의 계정을 삭제하시겠습니까?`;
         } else {
-            console.log(`${this.state.selectedRow[0].username}계정을 삭제하시겠습니까?`);
+            message = `${this.state.selectedRow[0].username}계정을 삭제하시겠습니까?`;
+        }
+        if (confirm(message)) {
+            this.setState({ pending: true });
+            await this.props.removeUserBulkRequest(bulk, this.props.auth.token);
+            await this.props.getUserListRequest(this.props.auth.token);
+            this.setState({ pending: false });
         }
     };
 
@@ -196,7 +208,7 @@ class Users extends React.Component {
     render() {
         return (
             <PageWithProfile width={1200} className="users-page" {...this.props}>
-                {this.props.userList ? this.renderGrid() : <Loading />}
+                {this.props.userList && !this.state.pending ? this.renderGrid() : <Loading />}
             </PageWithProfile>
         );
     }
@@ -206,6 +218,7 @@ const mapStateToProps = (state) => {
     return {
         userList: state.user.get('user_list'),
         modifyUser: state.user.get('modify'),
+        removeUserBulk: state.user.get('remove_bulk'),
     };
 };
 
@@ -213,6 +226,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getUserListRequest: token => dispatch(user.getUserList(token)),
         modifyUserRequest: (userObject, token) => dispatch(user.modifyUser(userObject, token)),
+        removeUserBulkRequest: (bulk, token) => dispatch(user.removeUserBulk(bulk, token)),
     };
 };
 

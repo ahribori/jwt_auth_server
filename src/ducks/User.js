@@ -7,6 +7,8 @@ const JOIN = helper.createThunkTypes('user/JOIN');
 const GET_USER = helper.createThunkTypes('user/GET_USER');
 const GET_USER_LIST = helper.createThunkTypes('user/GET_USER_LIST');
 const MODIFY = helper.createThunkTypes('user/MODIFY');
+const REMOVE = helper.createThunkTypes('user/REMOVE');
+const REMOVE_BULK = helper.createThunkTypes('user/REMOVE_BULK');
 
 // Action creators
 export const join = (username, password, nickname, email) => helper.createThunk(JOIN.DEFAULT, {
@@ -48,12 +50,33 @@ export const modifyUser = (user, token) => helper.createThunk(MODIFY.DEFAULT, {
     data: user,
 })();
 
+export const removeUser = (_id, token) => helper.createThunk(REMOVE.DEFAULT, {
+    url: `/api/v1.0/user/${_id}`,
+    method: 'delete',
+    headers: {
+        authorization: token,
+    },
+})();
+
+export const removeUserBulk = (bulk, token) => helper.createThunk(REMOVE_BULK.DEFAULT, {
+    url: '/api/v1.0/user',
+    method: 'delete',
+    headers: {
+        authorization: token,
+    },
+    data: {
+        bulk,
+    },
+})();
+
 // Initial state
 const initialState = fromJS({
     join: null,
     user: null,
     user_list: null,
     modify: null,
+    remove: null,
+    remove_bulk: null,
 });
 
 // Reducer
@@ -74,5 +97,13 @@ export default handleActions({
     [MODIFY.REQUEST]: state => state,
     [MODIFY.SUCCESS]: (state, action) => state.set('modify', action.payload),
     [MODIFY.FAILURE]: (state, action) => state.set('modify', action.payload),
+
+    [REMOVE.REQUEST]: state => state,
+    [REMOVE.SUCCESS]: (state, action) => state.set('remove', action.payload),
+    [REMOVE.FAILURE]: (state, action) => state.set('remove', action.payload),
+
+    [REMOVE_BULK.REQUEST]: state => state,
+    [REMOVE_BULK.SUCCESS]: (state, action) => state.set('remove_bulk', action.payload),
+    [REMOVE_BULK.FAILURE]: (state, action) => state.set('removej_bulk', action.payload),
 
 }, initialState);
