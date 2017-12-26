@@ -18,7 +18,7 @@ const User = new Schema({
     cash: { type: Number, default: 0 },
     point: { type: Number, default: 0 },
     social_id: String,
-    thumbnail_image: String,
+    profile_image: String,
     admin: { type: Boolean, default: false },
     reg_date: { type: Date, default: Date.now },
     last_login: { type: Date, default: Date.now },

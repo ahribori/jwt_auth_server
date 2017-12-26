@@ -47,8 +47,8 @@ class PageWithProfile extends React.Component {
                     right: 15,
                 }}
             >
-                {my.thumbnail_image ?
-                    <Avatar size={65} src={my.thumbnail_image} /> :
+                {my.profile_image ?
+                    <Avatar size={65} src={my.profile_image} /> :
                     <Avatar size={65} icon={<FaceIcon />} />
                 }
             </Badge>

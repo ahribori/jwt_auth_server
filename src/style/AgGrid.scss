@@ -3,13 +3,10 @@
 .ag-theme-material {
     background-color: transparent;
     .ag-row-selected {
-        .ag-icon {
-            color: $pinkA400;
-        }
         color: white;
-        background-color: $pink300;
+        background-color: $blueGrey500;
         &:hover {
-            background-color: $pinkA400 !important;
+            background-color: $blueGrey500 !important;
         }
     }
     .ag-cell {

@@ -152,7 +152,7 @@ router.get('/:id', async (req, res) => {
                 cash: true,
                 point: true,
                 social_id: true,
-                thumbnail_image: true,
+                profile_image: true,
                 admin: true,
                 reg_date: true,
                 last_login: true,
