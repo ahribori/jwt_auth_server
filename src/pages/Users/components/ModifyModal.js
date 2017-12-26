@@ -31,11 +31,13 @@ class ModifyModal extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const data = { ...nextProps.data };
-        this.setState({
-            ...data,
-            exp: data.level.level_details.exp,
-        });
+        if (nextProps.data) {
+            const data = { ...nextProps.data };
+            this.setState({
+                ...data,
+                exp: data.level.level_details.exp,
+            });
+        }
     }
 
     submit = async () => {

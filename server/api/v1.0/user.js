@@ -195,7 +195,11 @@ router.put('/:id', async (req, res) => {
     try {
         const {
             nickname,
+            password,
             email,
+            cash,
+            point,
+            exp,
         } = req.body;
         const updateObject = {};
 

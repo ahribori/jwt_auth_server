@@ -8,7 +8,7 @@ import 'ag-grid/src/styles/ag-grid.scss';
 import 'ag-grid/src/styles/ag-theme-material.scss';
 
 import PageWithProfile from '../../templates/PageWithProfile';
-import * as auth from '../../ducks/Auth';
+import * as user from '../../ducks/User';
 import './style/Users.scss';
 import '../../style/AgGrid.scss';
 import { Loading } from '../../templates';
@@ -194,13 +194,13 @@ class Users extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        userList: state.auth.get('user_list'),
+        userList: state.user.get('user_list'),
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getUserListRequest: token => dispatch(auth.getUserList(token)),
+        getUserListRequest: token => dispatch(user.getUserList(token)),
     };
 };
 

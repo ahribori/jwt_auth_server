@@ -2,22 +2,23 @@ import React from 'react';
 import { connect } from 'react-redux';
 import cookie from 'browser-cookies';
 import * as auth from '../../ducks/Auth';
+import * as user from '../../ducks/User';
 
 const mapStateToProps = (state) => {
     return {
-        join: state.auth.get('join'),
+        join: state.user.get('join'),
         login: state.auth.get('login'),
         verify: state.auth.get('verify'),
-        user: state.auth.get('user'),
+        user: state.user.get('user'),
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        joinRequest: (username, password, nickname, email) => dispatch(auth.join(username, password, nickname, email)),
+        joinRequest: (username, password, nickname, email) => dispatch(user.join(username, password, nickname, email)),
         loginRequest: (username, password) => dispatch(auth.login(username, password)),
         verifyRequest: token => dispatch(auth.verify(token)),
-        getUserRequest: (_id, token) => dispatch(auth.getUser(_id, token)),
+        getUserRequest: (_id, token) => dispatch(user.getUser(_id, token)),
         logout: () => dispatch(auth.logout()),
     };
 };
