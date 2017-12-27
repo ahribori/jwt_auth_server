@@ -4,6 +4,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import { SocialLogin } from './components';
+import { Loading } from '../../templates';
 import { withAuth, sdkMiddleWare } from '../../lib/hoc';
 
 const {
@@ -18,6 +19,7 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            pending: false,
             isLoggedIn: false,
             username: '',
             password: '',
@@ -91,6 +93,35 @@ class Login extends React.Component {
         }
     };
 
+    socialLogin = async (result) => {
+        const { vendor } = result;
+        const { id, nickname, thumbnailImage } = result.profile;
+        this.setState({ pending: true });
+        await this.props.socialLoginRequest(
+            vendor,
+            id,
+            nickname,
+            thumbnailImage,
+        );
+        this.setState({ pending: false });
+        const { success } = this.props.social_login;
+        if (success) {
+            const token = this.props.social_login.response.data;
+            this.props.setToken(token);
+            if (this.props.sdk) {
+                this.props.loginSuccessCallback();
+            }
+            this.setState({
+                isLoggedIn: true,
+            });
+        } else {
+            const response = this.props.login.response.data;
+            if (this.props.sdk) {
+                this.props.loginFailureCallback(response);
+            }
+        }
+    };
+
     handleChange = (e) => {
         switch (e.target.name) {
             case 'username':
@@ -146,39 +177,41 @@ class Login extends React.Component {
         return (
             <Card style={containerStyle} className="container-small">
                 <CardTitle title="로그인" subtitle="아리보리 계정 사용" />
-                <CardText>
-                    <form>
-                        <TextField
-                            type="text"
-                            name="username"
-                            value={this.state.username}
-                            onChange={this.handleChange}
-                            onKeyPress={this.handleKeyPress}
-                            floatingLabelText="계정"
-                            errorText={this.state.usernameErrorText}
-                            fullWidth
-                            style={inputStyle}
-                            ref={(ref) => {
-                                this.usernameInput = ref;
-                            }}
-                        />
-                        <TextField
-                            type="password"
-                            name="password"
-                            autoComplete="off"
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            onKeyPress={this.handleKeyPress}
-                            floatingLabelText="패스워드"
-                            errorText={this.state.passwordErrorText}
-                            fullWidth
-                            style={inputStyle}
-                            ref={(ref) => {
-                                this.passwordInput = ref;
-                            }}
-                        />
-                    </form>
-                </CardText>
+                {!this.state.pending ? (
+                    <CardText>
+                        <form>
+                            <TextField
+                                type="text"
+                                name="username"
+                                value={this.state.username}
+                                onChange={this.handleChange}
+                                onKeyPress={this.handleKeyPress}
+                                floatingLabelText="계정"
+                                errorText={this.state.usernameErrorText}
+                                fullWidth
+                                style={inputStyle}
+                                ref={(ref) => {
+                                    this.usernameInput = ref;
+                                }}
+                            />
+                            <TextField
+                                type="password"
+                                name="password"
+                                autoComplete="off"
+                                value={this.state.password}
+                                onChange={this.handleChange}
+                                onKeyPress={this.handleKeyPress}
+                                floatingLabelText="패스워드"
+                                errorText={this.state.passwordErrorText}
+                                fullWidth
+                                style={inputStyle}
+                                ref={(ref) => {
+                                    this.passwordInput = ref;
+                                }}
+                            />
+                        </form>
+                    </CardText>
+                ) : <Loading />}
                 <CardActions>
                     <RaisedButton
                         onClick={this.handleSubmit}
@@ -192,6 +225,7 @@ class Login extends React.Component {
                     kakaoKey={kakaoKey}
                     facebookKey={facebookKey}
                     googleKey={googleKey}
+                    onLoginSuccess={this.socialLogin}
                 />
                 <div className="link">
                     <Link to={`/join${search && search}`}> 아직 계정이 없으신가요?</Link>

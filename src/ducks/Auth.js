@@ -4,6 +4,7 @@ import helper from './helpers/thunkHelper';
 
 // Action types
 const LOGIN = helper.createThunkTypes('auth/LOGIN');
+const SOCIAL_LOGIN = helper.createThunkTypes('auth/SOCIAL_LOGIN');
 const VERIFY = helper.createThunkTypes('auth/VERIFY');
 const REFRESH = helper.createThunkTypes('auth/REFRESH');
 const LOGOUT = 'auth/LOGOUT';
@@ -16,10 +17,19 @@ export const login = (username, password) => helper.createThunk(LOGIN.DEFAULT, {
         username,
         password,
     },
-    headers: {
-        authorization: '',
-    },
 })();
+
+export const socialLogin = (account_type, social_id, nickname, profile_image) =>
+    helper.createThunk(SOCIAL_LOGIN.DEFAULT, {
+        url: '/api/v1.0/auth/social_login',
+        method: 'post',
+        data: {
+            account_type,
+            social_id,
+            nickname,
+            profile_image,
+        },
+    })();
 
 export const verify = token => helper.createThunk(VERIFY.DEFAULT, {
     url: '/api/v1.0/auth/verify',
@@ -46,6 +56,7 @@ export const logout = () => {
 // Initial state
 const initialState = fromJS({
     login: null,
+    social_login: null,
     verify: null,
     refresh: null,
 });
@@ -56,6 +67,10 @@ export default handleActions({
     [LOGIN.REQUEST]: state => state,
     [LOGIN.SUCCESS]: (state, action) => state.set('login', action.payload),
     [LOGIN.FAILURE]: (state, action) => state.set('login', action.payload),
+
+    [SOCIAL_LOGIN.REQUEST]: state => state,
+    [SOCIAL_LOGIN.SUCCESS]: (state, action) => state.set('social_login', action.payload),
+    [SOCIAL_LOGIN.FAILURE]: (state, action) => state.set('social_login', action.payload),
 
     [VERIFY.REQUEST]: state => state,
     [VERIFY.SUCCESS]: (state, action) => state.set('verify', action.payload),

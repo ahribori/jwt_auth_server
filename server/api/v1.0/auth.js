@@ -60,6 +60,73 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
+/* =========================================
+ POST /auth/oauth (oAuth save)
+ {
+ account_type
+ social_id
+ nickname
+ thumbnail_image
+ }
+ ============================================ */
+router.post('/social_login', async (req, res) => {
+    const {
+        account_type,
+        social_id,
+        nickname,
+        profile_image,
+    } = req.body;
+
+    if (!new RegExp(/^(kakao|facebook|google)$/).test(account_type)) {
+        return res.sendStatus(400);
+    }
+    if (!social_id || social_id === undefined || social_id === null) {
+        return res.sendStatus(400);
+    }
+    if (!nickname || nickname === undefined || nickname === null) {
+        return res.sendStatus(400);
+    }
+
+    try {
+        let user = await User.findOne({ account_type, social_id });
+        if (!user) {
+            user = await new User({
+                account_type,
+                social_id,
+                nickname,
+                profile_image,
+            }).save();
+        }
+
+        const levelInfo = levelSystem.getLevelByExp(user.exp);
+        user.level = levelInfo.level;
+        user.last_login = new Date();
+        user.save();
+
+        const token = jwt.sign(
+            {
+                _id: user._id,
+                account_type: user.account_type,
+                social_id: user.social_id,
+                nickname: user.nickname,
+                admin: user.admin,
+            },
+            conf.server.secret,
+            {
+                expiresIn: tokenConfig.expiresIn || '1d',
+                issuer: tokenConfig.issuer || 'jwt_auth_server',
+                subject: 'user',
+            },
+        );
+
+        return res.json(token);
+    } catch (e) {
+        log.error(e);
+        return res.sendStatus(500);
+    }
+});
+
 /* =========================================
  POST /auth/verify
  {
@@ -92,10 +159,12 @@ router.get('/refresh', async (req, res) => {
                 subject: 'user',
             },
         );
+
         const levelInfo = levelSystem.getLevelByExp(user.exp);
         user.level = levelInfo.level;
         user.last_login = new Date();
         user.save();
+
         return res.json(token);
     } catch (e) {
         log.error(e);

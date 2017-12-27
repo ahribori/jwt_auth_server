@@ -44,6 +44,9 @@ class FacebookLogin extends React.Component {
                 fields="name,email,picture"
                 language="ko_KR"
                 callback={this.callback}
+                containerStyle={{
+                    opacity: 'none',
+                }}
             />
         );
     }

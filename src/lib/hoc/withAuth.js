@@ -8,6 +8,7 @@ const mapStateToProps = (state) => {
     return {
         join: state.user.get('join'),
         login: state.auth.get('login'),
+        social_login: state.auth.get('social_login'),
         verify: state.auth.get('verify'),
         user: state.user.get('user'),
     };
@@ -16,6 +17,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         joinRequest: (username, password, nickname, email) => dispatch(user.join(username, password, nickname, email)),
+        socialLoginRequest: (account_type, social_id, nickname, profile_image) =>
+            dispatch(auth.socialLogin(account_type, social_id, nickname, profile_image)),
         loginRequest: (username, password) => dispatch(auth.login(username, password)),
         verifyRequest: token => dispatch(auth.verify(token)),
         getUserRequest: (_id, token) => dispatch(user.getUser(_id, token)),

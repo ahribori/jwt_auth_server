@@ -7,55 +7,61 @@ import GoogleLogin from './GoogleLogin';
 
 class SocialLogin extends React.Component {
     static propTypes = {
-        success: PropTypes.func,
         kakaoKey: PropTypes.string,
         facebookKey: PropTypes.number,
         googleKey: PropTypes.string,
+        onLoginSuccess: PropTypes.func,
+        onLoginFailure: PropTypes.func,
     };
 
     static defaultProps = {
-        success: () => {},
         kakaoKey: null,
         facebookKey: null,
         googleKey: null,
+        onLoginSuccess: () => {},
+        onLoginFailure: () => {},
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
     onKakaoSuccess = (result) => {
-        this.props.success({
+        this.props.onLoginSuccess({
             vendor: 'kakao',
             ...result,
         });
     };
 
     onFacebookSuccess = (result) => {
-        this.props.success({
+        this.props.onLoginSuccess({
             vendor: 'facebook',
             ...result,
         });
     };
 
     onGoogleSuccess = (result) => {
-        this.props.success({
+        this.props.onLoginSuccess({
             vendor: 'google',
             ...result,
         });
     };
 
     onKakaoFailure = (error) => {
-        console.error(error);
+        this.props.onLoginFailure({
+            vendor: 'kakao',
+            ...error,
+        });
     };
 
-    onFacebookFailure = (result) => {
-        console.error(result);
+    onFacebookFailure = (error) => {
+        this.props.onLoginFailure({
+            vendor: 'facebook',
+            ...error,
+        });
     };
 
     onGoogleFailure = (error) => {
-        console.error(error);
+        this.props.onLoginFailure({
+            vendor: 'google',
+            ...error,
+        });
     };
 
     render() {
