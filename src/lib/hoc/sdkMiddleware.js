@@ -29,11 +29,12 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
     constructor(props) {
         super(props);
         const { query } = url.parse(window.location.href, window.location.search);
-        const { a, o } = query || {};
+        const { a, o, clb } = query || {};
         this.state = {
             pending: true,
             appKey: a,
             origin: o,
+            clb,
             verify: false,
             errorMessage: '',
         };
@@ -63,7 +64,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             if (opener) {
                 postMessage(this.getOpener(), {
                     type: 'popupOnLoad',
-                }, opener.location.origin);
+                }, this.state.clb ? opener.location.origin : this.state.origin);
             }
             this.postTokenAfterLoginCheck();
         } else {
@@ -113,7 +114,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
                 auth: {
                     token: this.props.getToken(),
                 },
-            }, opener.location.origin);
+            }, this.state.clb ? opener.location.origin : this.state.origin);
         }
         window.self.opener = window.self;
         return window.self.close();

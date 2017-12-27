@@ -30,7 +30,7 @@ const clbOnLoadConfirmListener = (message, source, origin) => {
         if (visibleState === 'LOGIN') {
             const requestUrl = `${serverOrigin}/login?` +
                 `a=${btoa(appKey)}&` +
-                `o=${encodeURIComponent(origin)}`;
+                `o=${encodeURIComponent(origin)}&clb=1`;
             window.open(
                 requestUrl, 'targetWindow',
                 'toolbar=no, location=no, status=no, menubar=no, scrollbars=no, ' +
