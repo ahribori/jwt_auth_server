@@ -115,7 +115,8 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
                 },
             }, opener.location.origin);
         }
-        return window.close();
+        window.self.opener = window.self;
+        return window.self.close();
     };
 
     loginFailureCallback = (error) => {
