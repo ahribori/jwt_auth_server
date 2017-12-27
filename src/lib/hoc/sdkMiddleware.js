@@ -88,9 +88,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             const { source, origin } = event;
 
             // Receive message here
-        } catch (e) {
-            console.error(e);
-        }
+        } catch (e) {}
     };
 
     postTokenAfterLoginCheck = async () => {
