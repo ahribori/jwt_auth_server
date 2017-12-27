@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
+import SocialLoginButtons from './components/SocialLoginButtons';
 import { withAuth, sdkMiddleWare } from '../../lib/hoc';
 
 @withAuth
@@ -181,6 +182,7 @@ class Login extends React.Component {
                         style={buttonStyle}
                     />
                 </CardActions>
+                <SocialLoginButtons/>
                 <div className="link">
                     <Link to={`/join${search && search}`}> 아직 계정이 없으신가요?</Link>
                 </div>
