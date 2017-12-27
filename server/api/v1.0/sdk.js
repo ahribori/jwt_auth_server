@@ -7,7 +7,7 @@ import sdkVerifyMiddleware from '../../middlewares/sdk';
 const router = express.Router();
 
 router.use('/verify', sdkVerifyMiddleware);
-router.post('/verify', async (req, res) => {
+router.get('/verify', async (req, res) => {
     res.sendStatus(200);
 });
 
