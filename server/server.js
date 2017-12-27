@@ -40,7 +40,9 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(morgan('dev'));
 
 const buildPath = path.resolve(__dirname, '../build');
+const publicPath = path.resolve(__dirname, '../public');
 app.use('/', express.static(buildPath));
+app.use('/', express.static(publicPath));
 
 app.use('/static/js/sdk.js', (req, res) => {
     const buildPathExist = fs.existsSync(buildPath);
