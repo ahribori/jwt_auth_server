@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
 
 
 /* =========================================
- POST /auth/oauth (oAuth save)
+ POST /auth/social_login (oAuth save)
  {
  account_type
  social_id
@@ -97,6 +97,10 @@ router.post('/social_login', async (req, res) => {
                 nickname,
                 profile_image,
             }).save();
+        }
+
+        if (user.profile_image !== profile_image) {
+            user.profile_image = profile_image;
         }
 
         const levelInfo = levelSystem.getLevelByExp(user.exp);
