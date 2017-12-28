@@ -69,7 +69,7 @@ class NaverLogin extends React.Component {
     handleClick = () => {
         const url = window.naverLogin.generateAuthorizeUrl();
         window.open(
-            url, 'targetWindow',
+            url, 'nilWindow',
             'toolbar=no, location=no, status=no, menubar=no, scrollbars=no, ' +
             'resizable=no, width=800, height=700',
         );

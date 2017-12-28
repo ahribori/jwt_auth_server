@@ -54,7 +54,7 @@ class SocialLogin extends React.Component {
     };
 
     onNaverFailure = (result) => {
-        this.props.onLoginSuccess({
+        this.props.onLoginFailure({
             vendor: 'naver',
             ...result,
         });
