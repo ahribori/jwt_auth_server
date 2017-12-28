@@ -31,6 +31,19 @@ class ModifyModal extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        const { open } = nextProps;
+        if (!open) {
+            const newState = {};
+            const keys = Object.keys(this.state);
+            keys.map((key) => {
+                if (new RegExp(/ErrorText$/).test(key)) {
+                    newState[key] = '';
+                }
+                return null;
+            });
+            this.setState(newState);
+        }
+
         if (nextProps.data) {
             const data = { ...nextProps.data };
             this.setState({
