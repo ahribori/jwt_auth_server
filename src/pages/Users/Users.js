@@ -12,6 +12,7 @@ import * as user from '../../ducks/User';
 import './style/Users.scss';
 import '../../style/AgGrid.scss';
 import { Loading } from '../../templates';
+import AccountRenderer from './components/AccountRenderer';
 import LevelRenderer from './components/LevelRenderer';
 import ProfileImageRenderer from './components/ProfileImageRenderer';
 import ModifyModal from './components/ModifyModal';
@@ -101,7 +102,7 @@ class Users extends React.Component {
         users.map(usr => data.push({
             _id: usr._id,
             profile_image: usr.profile_image,
-            username: usr.username,
+            username: { username: usr.username, account_type: usr.account_type },
             nickname: usr.nickname,
             level: { level: usr.level, level_details: usr.level_details },
             cash: usr.cash,
@@ -150,6 +151,14 @@ class Users extends React.Component {
                         />
                         <AgGridColumn
                             field="username"
+                            cellRendererFramework={AccountRenderer}
+                            comparator={(a, b) => {
+                                const valueA = a.account_type ? `_${a.account_type}` : a.username;
+                                const valueB = b.account_type ? `_${b.account_type}` : b.username;
+                                if (valueA < valueB) return -1;
+                                if (valueA > valueB) return 1;
+                                return 0;
+                            }}
                             headerName="계정"
                             width={130}
                         />
@@ -162,7 +171,7 @@ class Users extends React.Component {
                             field="level"
                             headerName="레벨"
                             cellRendererFramework={LevelRenderer}
-                            comparator={(r1, r2) => r1.level_details.exp - r2.level_details.exp}
+                            comparator={(a, b) => a.level_details.exp - b.level_details.exp}
                             width={150}
                         />
                         <AgGridColumn
