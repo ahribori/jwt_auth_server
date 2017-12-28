@@ -73,6 +73,8 @@ class SocialLogin extends React.Component {
         };
 
         const itemStyle = {
+            display: 'flex',
+            justifyContent: 'center',
             flexBasis: 90,
         };
 

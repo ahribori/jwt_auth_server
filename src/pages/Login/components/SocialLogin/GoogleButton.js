@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import googleLogo from './styles/google_sqare_icon.png';
+import googleLogo from './styles/google_logo.png';
 import './styles/Style.scss';
 
 class KakaoButton extends React.Component {

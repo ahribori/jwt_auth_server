@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import kakaoLogo from './styles/kakao_sqare_icon.png';
+import kakaoLogo from './styles/kakao_logo.png';
 import './styles/Style.scss';
 
 class KakaoButton extends React.Component {
