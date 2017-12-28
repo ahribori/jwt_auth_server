@@ -78,8 +78,8 @@ router.post('/social_login', async (req, res) => {
         profile_image,
     } = req.body;
 
-    if (!new RegExp(/^(kakao|facebook|google)$/).test(account_type)) {
-        return res.sendStatus(400);
+    if (!new RegExp(/^(naver|kakao|facebook|google)$/).test(account_type)) {
+        return res.status(400).json('account type must be one of naver, kakao, facebook, google');
     }
     if (!social_id || social_id === undefined || social_id === null) {
         return res.sendStatus(400);

@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import NaverLogin from './NaverLogin';
 import KakaoLogin from './KakaoLogin';
 import FacebookLogin from './FacebookLogin';
-import './styles/Style.scss';
 import GoogleLogin from './GoogleLogin';
+import './styles/Style.scss';
+import NaverButton from './NaverButton';
 
 class SocialLogin extends React.Component {
     static propTypes = {
@@ -22,6 +24,14 @@ class SocialLogin extends React.Component {
         onLoginFailure: () => {},
     };
 
+    onNaverSuccess = (result) => {
+        this.props.onLoginSuccess({
+            vendor: 'naver',
+            ...result,
+        });
+    };
+
+
     onKakaoSuccess = (result) => {
         this.props.onLoginSuccess({
             vendor: 'kakao',
@@ -39,6 +49,13 @@ class SocialLogin extends React.Component {
     onGoogleSuccess = (result) => {
         this.props.onLoginSuccess({
             vendor: 'google',
+            ...result,
+        });
+    };
+
+    onNaverFailure = (result) => {
+        this.props.onLoginSuccess({
+            vendor: 'naver',
             ...result,
         });
     };
@@ -80,6 +97,17 @@ class SocialLogin extends React.Component {
 
         return (
             <div style={containerStyle} className="social-login-container">
+                <span style={itemStyle} className="social-login-item">
+                    {
+                        this.props.naverKey
+                        &&
+                        <NaverLogin
+                            naverKey={this.props.naverKey}
+                            onSuccess={this.onNaverSuccess}
+                            onFailure={this.onNaverFailure}
+                        />
+                    }
+                </span>
                 <span style={itemStyle} className="social-login-item">
                     {
                         this.props.kakaoKey

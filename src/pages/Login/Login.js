@@ -8,6 +8,7 @@ import { Loading } from '../../templates';
 import { withAuth, sdkMiddleWare } from '../../lib/hoc';
 
 const {
+    naverKey,
     kakaoKey,
     facebookKey,
     googleKey,
@@ -222,6 +223,7 @@ class Login extends React.Component {
                     />
                 </CardActions>
                 <SocialLogin
+                    naverKey={naverKey}
                     kakaoKey={kakaoKey}
                     facebookKey={facebookKey}
                     googleKey={googleKey}

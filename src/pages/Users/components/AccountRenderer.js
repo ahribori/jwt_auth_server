@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Avatar from 'material-ui/Avatar';
 
+import naverLogo from '../../Login/components/SocialLogin/styles/naver_logo.png';
 import kakaoLogo from '../../Login/components/SocialLogin/styles/kakao_logo.png';
 import facebookLogo from '../../Login/components/SocialLogin/styles/facebook_logo.png';
 import googleLogo from '../../Login/components/SocialLogin/styles/google_logo.png';
@@ -20,6 +20,7 @@ class AccountRenderer extends React.Component {
         const { username, account_type } = this.props.value;
         if (account_type) {
             const logoType = {
+                naver: naverLogo,
                 kakao: kakaoLogo,
                 facebook: facebookLogo,
                 google: googleLogo,
