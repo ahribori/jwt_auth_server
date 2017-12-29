@@ -153,27 +153,32 @@ router.get('/refresh', async (req, res) => {
             social_id,
             username,
         });
-        const token = jwt.sign(
-            {
-                _id: user._id,
-                username: user.username,
-                nickname: user.nickname,
-                admin: user.admin,
-            },
-            conf.server.secret,
-            {
-                expiresIn: tokenConfig.expiresIn || '1d',
-                issuer: tokenConfig.issuer || 'jwt_auth_server',
-                subject: 'user',
-            },
-        );
+        if (user) {
+            const token = jwt.sign(
+                {
+                    _id: user._id,
+                    username: user.username,
+                    nickname: user.nickname,
+                    account_type,
+                    social_id,
+                    admin: user.admin,
+                },
+                conf.server.secret,
+                {
+                    expiresIn: tokenConfig.expiresIn || '1d',
+                    issuer: tokenConfig.issuer || 'jwt_auth_server',
+                    subject: 'user',
+                },
+            );
 
-        const levelInfo = levelSystem.getLevelByExp(user.exp);
-        user.level = levelInfo.level;
-        user.last_login = new Date();
-        user.save();
+            const levelInfo = levelSystem.getLevelByExp(user.exp);
+            user.level = levelInfo.level;
+            user.last_login = new Date();
+            user.save();
 
-        return res.json(token);
+            return res.json(token);
+        }
+        return res.sendStatus(404);
     } catch (e) {
         log.error(e);
         res.sendStatus(500);
