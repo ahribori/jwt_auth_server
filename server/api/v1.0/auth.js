@@ -146,9 +146,13 @@ router.get('/verify', async (req, res) => {
 router.get('/refresh', verifyTokenMiddleware);
 router.get('/refresh', async (req, res) => {
     // TODO 보안에 대한 고민 필요. verified token을 탈취당하면 계속 refresh 할수있음
-    const { username } = req.payload;
+    const { username, social_id, account_type } = req.payload;
     try {
-        const user = await User.findOneByUsername(username);
+        const user = await User.findOne({
+            account_type,
+            social_id,
+            username,
+        });
         const token = jwt.sign(
             {
                 _id: user._id,
