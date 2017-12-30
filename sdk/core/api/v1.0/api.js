@@ -1,6 +1,7 @@
 import cookie from 'browser-cookies';
 import { request, log, conf } from '../../../helpers';
 import MessageHandler from './messageHandler';
+import './clb.scss';
 
 const messageHandler = new MessageHandler();
 
@@ -10,6 +11,7 @@ export default class API {
         this.verify = false;
         return {
             createLoginButton: this.createLoginButton,
+            createSimpleLoginButton: this.createSimpleLoginButton,
             assignLoginButton: this.assignLoginButton,
             getToken: this.getToken,
             verifyToken: this.verifyToken,
@@ -27,7 +29,18 @@ export default class API {
         this.verify = true;
     };
 
-    createLoginButton = async ({
+    popupLogin = () => {
+        const requestUrl = `${conf.serverOrigin}/login?` +
+            `a=${btoa(window[conf.globalObjectName].appKey)}&` +
+            `o=${encodeURIComponent(window.location.origin)}`;
+        return window.open(
+            requestUrl, 'targetWindow',
+            'toolbar=no, location=no, status=no, menubar=no, scrollbars=no, ' +
+            'resizable=no, width=800, height=700',
+        );
+    };
+
+    createSimpleLoginButton = async ({
         container,
         size = 'md',
         success,
@@ -65,6 +78,41 @@ export default class API {
         return null;
     };
 
+    createLoginButton = async ({
+        container,
+        size = 'md',
+        success,
+        fail,
+        always,
+        popup = true,
+    }) => {
+        await this.verifySDK();
+
+        const $container = document.querySelector(container);
+        if (!$container) {
+            return log.error(`셀렉터 ${container} 와 일치하는 엘리먼트가 존재하지 않습니다`);
+        }
+
+        $container.innerHTML = '<button id="__CREATE_LOGIN_BUTTON__">로그인</button>';
+        const $button = document.querySelector(`${container} > #__CREATE_LOGIN_BUTTON__`);
+        $button.className += size;
+
+        $button.onclick = () => {
+            const popupWindow = this.popupLogin();
+        };
+
+        if (typeof success === 'function') {
+            messageHandler.setLoginSuccessCallback(success);
+        }
+        if (typeof fail === 'function') {
+            messageHandler.setLoginFailCallback(fail);
+        }
+        if (typeof always === 'function') {
+            messageHandler.setLoginAlwaysCallback(always);
+        }
+        return null;
+    };
+
     assignLoginButton = async ({
         selector,
         target,
@@ -80,19 +128,9 @@ export default class API {
             return log.error(`셀렉터 ${_selector} 와 일치하는 엘리먼트가 존재하지 않습니다`);
         }
         element.onclick = () => {
-            const requestUrl = `${conf.serverOrigin}/login?` +
-                `a=${btoa(window[conf.globalObjectName].appKey)}&` +
-                `o=${encodeURIComponent(window.location.origin)}`;
-            if (popup) {
-                window.open(
-                    requestUrl, 'targetWindow',
-                    'toolbar=no, location=no, status=no, menubar=no, scrollbars=no, ' +
-                    'resizable=no, width=800, height=700',
-                );
-            } else {
-                window.location.href = requestUrl;
-            }
+            const popupWindow = this.popupLogin();
         };
+
         if (typeof success === 'function') {
             messageHandler.setLoginSuccessCallback(success);
         }
