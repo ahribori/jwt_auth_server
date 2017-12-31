@@ -9,6 +9,7 @@ export default class API {
     constructor() {
         log.info('API 1.0 Initialized');
         this.verify = false;
+        this.loginStatus = false;
         return {
             createLoginButton: this.createLoginButton,
             createSimpleLoginButton: this.createSimpleLoginButton,
@@ -18,6 +19,14 @@ export default class API {
             clearToken: this.clearToken,
         };
     }
+
+    setStatusLoggedIn = () => {
+        this.loginStatus = true;
+    };
+
+    setStatusNotLoggedIn = () => {
+        this.loginStatus = false;
+    };
 
     verifySDK = async () => {
         if (!this.verify) {
@@ -93,16 +102,37 @@ export default class API {
             return log.error(`셀렉터 ${container} 와 일치하는 엘리먼트가 존재하지 않습니다`);
         }
 
-        $container.innerHTML = '<button id="__CREATE_LOGIN_BUTTON__">로그인</button>';
+        const token = this.getToken();
+        if (token) {
+            this.setStatusLoggedIn();
+        }
+
+        const isLoggedIn = await this.verifyToken({ token });
+        if (!isLoggedIn.success) {
+            this.setStatusNotLoggedIn();
+            this.clearToken();
+        }
+
+        $container.innerHTML = `<button id="__CREATE_LOGIN_BUTTON__">${this.loginStatus ? '로그아웃' : '로그인'}</button>`;
         const $button = document.querySelector(`${container} > #__CREATE_LOGIN_BUTTON__`);
         $button.className += size;
 
         $button.onclick = () => {
-            const popupWindow = this.popupLogin();
+            if (!this.loginStatus) {
+                const popupWindow = this.popupLogin();
+            } else {
+                this.clearToken();
+                this.setStatusNotLoggedIn();
+                $button.innerHTML = '로그인';
+            }
         };
 
         if (typeof success === 'function') {
-            messageHandler.setLoginSuccessCallback(success);
+            messageHandler.setLoginSuccessCallback((result) => {
+                this.setStatusLoggedIn();
+                $button.innerHTML = '로그아웃';
+                success(result);
+            });
         }
         if (typeof fail === 'function') {
             messageHandler.setLoginFailCallback(fail);
