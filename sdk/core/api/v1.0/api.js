@@ -136,7 +136,13 @@ export default class API {
             messageHandler.setLoginFailCallback(fail);
         }
         if (typeof always === 'function') {
-            messageHandler.setLoginAlwaysCallback(always);
+            messageHandler.setLoginAlwaysCallback((result) => {
+                if (result.success) {
+                    this.setStatusLoggedIn();
+                    $button.innerHTML = '로그아웃';
+                }
+                always(result);
+            });
         }
         return null;
     };
