@@ -39,6 +39,7 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             errorMessage: '',
         };
     }
+
     async componentDidMount() {
         if (this.state.appKey) {
             await this.props.getApplicationRequest(atob(this.state.appKey), this.state.origin);
@@ -47,6 +48,14 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             this.setState({ pending: false });
         }
         window.addEventListener('message', this.postMessageListener, false);
+        const { opener } = window;
+        if (opener) {
+            window.addEventListener('beforeunload', () => {
+                postMessage(this.getOpener(), {
+                    type: 'popupClosed',
+                }, this.state.origin);
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -70,13 +79,17 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
         } else {
             this.setState({ pending: false }); // appKey 인증되지 않음
             switch (statusCode) {
-                case 400: this.setState({ errorMessage: '어플리케이션 키의 형식이 올바르지 않습니다' });
+                case 400:
+                    this.setState({ errorMessage: '어플리케이션 키의 형식이 올바르지 않습니다' });
                     break;
-                case 404: this.setState({ errorMessage: '어플리케이션을 찾을 수 없습니다' });
+                case 404:
+                    this.setState({ errorMessage: '어플리케이션을 찾을 수 없습니다' });
                     break;
-                case 403: this.setState({ errorMessage: '등록된 어플리케이션 도메인의 요청이 아닙니다' });
+                case 403:
+                    this.setState({ errorMessage: '등록된 어플리케이션 도메인의 요청이 아닙니다' });
                     break;
-                case 500: this.setState({ errorMessage: '알 수 없는 문제가 발생했습니다' });
+                case 500:
+                    this.setState({ errorMessage: '알 수 없는 문제가 발생했습니다' });
                     break;
                 default:
             }
@@ -89,7 +102,8 @@ export default WrappedComponent => connect(mapStateToProps, mapDispatchToProps)(
             const { source, origin } = event;
 
             // Receive message here
-        } catch (e) {}
+        } catch (e) {
+        }
     };
 
     postTokenAfterLoginCheck = async () => {

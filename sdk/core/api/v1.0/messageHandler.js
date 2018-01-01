@@ -56,6 +56,8 @@ class MessageHandler {
                     return this.loginListener(message, source, origin);
                 case 'logout':
                     return this.logoutListener(message, source, origin);
+                case 'popupClosed':
+                    return this.popupClosedListener(message, source, origin);
                 default:
                     return this.defaultListener(message, source, origin);
             }
@@ -112,6 +114,15 @@ class MessageHandler {
 
     logoutListener = (message, source, origin) => {
         window[conf.globalObjectName].clearToken();
+    };
+
+    popupClosedListener = (message, source, origin) => {
+        const success = false;
+        const error = {
+            message: 'Login popup closed',
+        };
+        this.loginFailCallbackList.map(callback => callback({ success, error }));
+        this.loginAlwaysCallbackList.map(callback => callback({ success, error }));
     };
 
     defaultListener = (message, source, origin) => {

@@ -12,7 +12,7 @@ export default class API {
         this.loginStatus = false;
         return {
             createLoginButton: this.createLoginButton,
-            createSimpleLoginButton: this.createSimpleLoginButton,
+            createLoginButtonSSR: this.createLoginButtonSSR,
             assignLoginButton: this.assignLoginButton,
             getToken: this.getToken,
             verifyToken: this.verifyToken,
@@ -49,13 +49,12 @@ export default class API {
         );
     };
 
-    createSimpleLoginButton = async ({
+    createLoginButtonSSR = async ({
         container,
         size = 'md',
         success,
         fail,
         always,
-        popup = true,
     }) => {
         await this.verifySDK();
 
@@ -93,7 +92,6 @@ export default class API {
         success,
         fail,
         always,
-        popup = true,
     }) => {
         await this.verifySDK();
 
@@ -119,7 +117,7 @@ export default class API {
 
         $button.onclick = () => {
             if (!this.loginStatus) {
-                const popupWindow = this.popupLogin();
+                this.popupLogin();
             } else {
                 this.clearToken();
                 this.setStatusNotLoggedIn();
@@ -158,7 +156,7 @@ export default class API {
             return log.error(`셀렉터 ${_selector} 와 일치하는 엘리먼트가 존재하지 않습니다`);
         }
         element.onclick = () => {
-            const popupWindow = this.popupLogin();
+            this.popupLogin();
         };
 
         if (typeof success === 'function') {
