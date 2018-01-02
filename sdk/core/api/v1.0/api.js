@@ -5,11 +5,24 @@ import './clb.scss';
 
 const messageHandler = new MessageHandler();
 
-export default class API {
+
+export default
+/**
+ * JWT 인증 소프트웨어 개발 도구
+ * @class AUTH_SDK
+ * @param {string} APPLICATION_KEY 어플리케이션을 만들 때 발급받은 어플리케이션 키
+ */
+class API {
     constructor() {
         log.info('API 1.0 Initialized');
         this.verify = false;
         this.loginStatus = false;
+        this.createLoginButton = this.createLoginButton.bind(this);
+        this.createLoginButtonSSR = this.createLoginButtonSSR.bind(this);
+        this.assignLoginButton = this.assignLoginButton.bind(this);
+        this.getToken = this.getToken.bind(this);
+        this.verifyToken = this.verifyToken.bind(this);
+        this.clearToken = this.clearToken.bind(this);
         return {
             createLoginButton: this.createLoginButton,
             createLoginButtonSSR: this.createLoginButtonSSR,
@@ -49,50 +62,47 @@ export default class API {
         );
     };
 
-    createLoginButtonSSR = async ({
+    /**
+     * 컨테이너 요소 내부에 로그인 버튼을 만듭니다.
+     *
+     * @example
+     * var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');
+     *
+     * auth.createLoginButton({
+     *     container: '#YOUR DIV ID',
+     *     size: 'md',
+     *     success: function(authObject) {
+     *
+     *     },
+     *     fail: function(errorObject) {
+     *
+     *     },
+     *     always: function(authOrErrorObject) {
+     *
+     *     },
+     *     logout: function() {
+     *
+     *     }
+     * });
+     *
+     * @method
+     * @name createLoginButton
+     * @param settings {Object} 로그인 버튼을 생성하기 위한 설정
+     * @param settings.container {string} 로그인버튼이 삽입될 컨테이너 셀렉터
+     * @param settings.size {string} 삽입할 버튼의 사이즈 (xs | sm | md | lg | xl)
+     * @param settings.success {function} 로그인 성공 콜백 함수
+     * @param settings.fail {function} 로그인 실패 콜백 함수
+     * @param settings.always {function} 성공 실패 유무에 관계없는 콜백
+     * @param settings.logout {function} 로그아웃하고 나서 콜백
+     * @memberof AUTH_SDK
+     */
+    async createLoginButton({
         container,
         size = 'md',
         success,
         fail,
         always,
-    }) => {
-        await this.verifySDK();
-
-        const $container = document.querySelector(container);
-        if (!$container) {
-            return log.error(`셀렉터 ${container} 와 일치하는 엘리먼트가 존재하지 않습니다`);
-        }
-
-        const iFrame =
-            '<iframe ' +
-            `id="__${conf.globalObjectName}_LOGIN_BUTTON__" ` +
-            `src="${conf.serverOrigin}/api/v1.0/sdk/createLoginButton?size=${size}" ` +
-            '/>';
-        $container.innerHTML = iFrame;
-        const $frame = document.querySelector(`${container} > iframe`);
-        $frame.width = 0;
-        $frame.height = 0;
-        $frame.style.border = 0;
-
-        if (typeof success === 'function') {
-            messageHandler.setLoginSuccessCallback(success);
-        }
-        if (typeof fail === 'function') {
-            messageHandler.setLoginFailCallback(fail);
-        }
-        if (typeof always === 'function') {
-            messageHandler.setLoginAlwaysCallback(always);
-        }
-        return null;
-    };
-
-    createLoginButton = async ({
-        container,
-        size = 'md',
-        success,
-        fail,
-        always,
-    }) => {
+    }) {
         await this.verifySDK();
 
         const $container = document.querySelector(container);
@@ -147,14 +157,114 @@ export default class API {
         return null;
     };
 
-    assignLoginButton = async ({
+    /**
+     * 컨테이너 요소 내부에 로그인 버튼을 만듭니다.
+     * createLoginButton과 같은 기능이지만 서버사이드에서 버튼을 렌더링합니다.
+     *
+     * @example
+     * var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');
+     *
+     * auth.createLoginButton({
+     *     container: '#YOUR DIV ID',
+     *     size: 'md',
+     *     success: function(authObject) {
+     *
+     *     },
+     *     fail: function(errorObject) {
+     *
+     *     },
+     *     always: function(authOrErrorObject) {
+     *
+     *     },
+     *     logout: function() {
+     *
+     *     }
+     * });
+     *
+     * @method
+     * @name createLoginButtonSSR
+     * @param settings {Object} 로그인 버튼을 생성하기 위한 설정
+     * @param settings.container {string} 로그인버튼이 삽입될 컨테이너 셀렉터
+     * @param settings.size {string} 삽입할 버튼의 사이즈 (xs | sm | md | lg | xl)
+     * @param settings.success {function} 로그인 성공 콜백 함수
+     * @param settings.fail {function} 로그인 실패 콜백 함수
+     * @param settings.always {function} 성공 실패 유무에 관계없는 콜백
+     * @param settings.logout {function} 로그아웃하고 나서 콜백
+     * @memberof AUTH_SDK
+     */
+    async createLoginButtonSSR({
+        container,
+        size = 'md',
+        success,
+        fail,
+        always,
+    }) {
+        await this.verifySDK();
+
+        const $container = document.querySelector(container);
+        if (!$container) {
+            return log.error(`셀렉터 ${container} 와 일치하는 엘리먼트가 존재하지 않습니다`);
+        }
+
+        const iFrame =
+            '<iframe ' +
+            `id="__${conf.globalObjectName}_LOGIN_BUTTON__" ` +
+            `src="${conf.serverOrigin}/api/v1.0/sdk/createLoginButton?size=${size}" ` +
+            '/>';
+        $container.innerHTML = iFrame;
+        const $frame = document.querySelector(`${container} > iframe`);
+        $frame.width = 0;
+        $frame.height = 0;
+        $frame.style.border = 0;
+
+        if (typeof success === 'function') {
+            messageHandler.setLoginSuccessCallback(success);
+        }
+        if (typeof fail === 'function') {
+            messageHandler.setLoginFailCallback(fail);
+        }
+        if (typeof always === 'function') {
+            messageHandler.setLoginAlwaysCallback(always);
+        }
+        return null;
+    };
+
+    /**
+     * 컨테이너 요소 내부에 로그인 버튼을 만듭니다.
+     *
+     * @example
+     * var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');
+     *
+     * auth.assignLoginButton({
+     *     target: '#YOUR BUTTON ID',
+     *     success: function(authObject) {
+     *
+     *     },
+     *     fail: function(errorObject) {
+     *
+     *     },
+     *     always: function(authOrErrorObject) {
+     *
+     *     },
+     * });
+     *
+     * @method
+     * @name assignLoginButton
+     * @param settings {Object} 로그인 버튼을 생성하기 위한 설정
+     * @param settings.selector {string} 로그인 버튼 셀렉터
+     * @param settings.target {string} 로그인 버튼 셀렉터
+     * @param settings.success {function} 로그인 성공 콜백 함수
+     * @param settings.fail {function} 로그인 실패 콜백 함수
+     * @param settings.always {function} 성공 실패 유무에 관계없는 콜백
+     * @memberof AUTH_SDK
+     */
+    async assignLoginButton({
         selector,
         target,
         success,
         fail,
         always,
-        popup = true,
-    }) => {
+    }) {
         await this.verifySDK();
         const _selector = selector || target;
         const element = document.querySelector(_selector);
@@ -177,7 +287,19 @@ export default class API {
         return null;
     };
 
-    getToken = () => {
+    /**
+     * 스토리지에 저장된 토큰을 꺼내옵니다. 토큰이 존재하지 않으면 null을 return합니다.
+     *
+     * @example
+     * var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');
+     *
+     * var token = auth.getToken();
+     *
+     * @method
+     * @name getToken
+     * @memberof AUTH_SDK
+     */
+    getToken() {
         let token = null;
         if (window.localStorage) {
             token = window.localStorage.getItem(conf.tokenStorageName);
@@ -188,12 +310,34 @@ export default class API {
         return token;
     };
 
-    verifyToken = async ({
+    /**
+     * 토큰이 유효한지 검증하고 JWT의 payload를 확인합니다.
+     *
+     * @example
+     * var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');
+     *
+     * auth.verifyToken({
+     *     token: auth.getToken(),
+     *     success: function(result) {
+     *          console.log(result);
+     *     },
+     * });
+     *
+     * @method
+     * @name verifyToken
+     * @param settings {Object} 로그인 버튼을 생성하기 위한 설정
+     * @param settings.token {string} 검증할 토큰
+     * @param settings.success {function} 토큰 검증 성공 콜백 함수
+     * @param settings.fail {function} 토큰 검증 실패 콜백 함수
+     * @param settings.always {function} 성공 실패 유무에 관계없는 콜백
+     * @memberof AUTH_SDK
+     */
+    async verifyToken({
         token,
         success,
         fail,
         always,
-    }) => {
+    }) {
         const t = token || this.getToken();
         if (!t) {
             const result = {
@@ -233,7 +377,19 @@ export default class API {
         }
     };
 
-    clearToken = () => {
+    /**
+     * 스토리지에 저장된 토큰을 삭제합니다.
+     *
+     * @example
+     * var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');
+     *
+     * auth.clearToken();
+     *
+     * @method
+     * @name getToken
+     * @memberof AUTH_SDK
+     */
+    clearToken() {
         if (window.localStorage) {
             window.localStorage.removeItem(conf.tokenStorageName);
         }

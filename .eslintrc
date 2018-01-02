@@ -23,6 +23,7 @@
         "requireReturnForObjectLiteral": true
       }
     ],
+    "class-methods-use-this": "off",
     "react/jsx-indent": [
       1,
       4
