@@ -1,6 +1,8 @@
 # JWT AUTH SERVER
 json web token based authentication server & easy authentication javascript sdk.
 
+> [Javascript SDK Documentation](https://ahribori.github.io/jwt_auth_server/)
+
 ## 0. required
 >
 - Node.js 6↑
