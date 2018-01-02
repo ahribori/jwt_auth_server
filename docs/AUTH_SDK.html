@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AUTH_SDK.html">AUTH_SDK</a><ul class='methods'><li data-type='method'><a href="AUTH_SDK.html#.createLoginButton">createLoginButton</a></li><li data-type='method'><a href="AUTH_SDK.html#.createLoginButtonSSR">createLoginButtonSSR</a></li><li data-type='method'><a href="AUTH_SDK.html#.assignLoginButton">assignLoginButton</a></li><li data-type='method'><a href="AUTH_SDK.html#.getToken">getToken</a></li><li data-type='method'><a href="AUTH_SDK.html#.verifyToken">verifyToken</a></li><li data-type='method'><a href="AUTH_SDK.html#.getToken">getToken</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AUTH_SDK.html">AUTH_SDK</a><ul class='methods'><li data-type='method'><a href="AUTH_SDK.html#.createLoginButton">createLoginButton</a></li><li data-type='method'><a href="AUTH_SDK.html#.createLoginButtonSSR">createLoginButtonSSR</a></li><li data-type='method'><a href="AUTH_SDK.html#.assignLoginButton">assignLoginButton</a></li><li data-type='method'><a href="AUTH_SDK.html#.getUser">getUser</a></li><li data-type='method'><a href="AUTH_SDK.html#.getToken">getToken</a></li><li data-type='method'><a href="AUTH_SDK.html#.verifyToken">verifyToken</a></li><li data-type='method'><a href="AUTH_SDK.html#.getToken">getToken</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -305,7 +305,7 @@
 
             
 
-            <td class="description last"><p>로그인 버튼을 생성하기 위한 설정</p>
+            <td class="description last"><p>createLoginButton 설정</p>
                 <h6>Properties</h6>
                 
 
@@ -603,7 +603,7 @@ createLoginButton과 같은 기능이지만 서버사이드에서 버튼을 렌�
 
             
 
-            <td class="description last"><p>로그인 버튼을 생성하기 위한 설정</p>
+            <td class="description last"><p>createLoginButtonSSR 설정</p>
                 <h6>Properties</h6>
                 
 
@@ -900,7 +900,7 @@ createLoginButton과 같은 기능이지만 서버사이드에서 버튼을 렌�
 
             
 
-            <td class="description last"><p>로그인 버튼을 생성하기 위한 설정</p>
+            <td class="description last"><p>assignLoginButton 설정</p>
                 <h6>Properties</h6>
                 
 
@@ -1012,6 +1012,257 @@ createLoginButton과 같은 기능이지만 서버사이드에서 버튼을 렌�
             
 
             <td class="description last"><p>로그인 실패 콜백 함수</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>always</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>성공 실패 유무에 관계없는 콜백</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getUser"><span class="type-signature">(static) </span>getUser<span class="signature">(settings)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>엑세스 토큰으로 유저 정보를 가져옵니다.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');auth.getUser({    token: auth.getToken(),    success: function(result) {         console.log(result);    },});</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>settings</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>getUser 설정</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>token</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>엑세스 토큰</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>success</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>사용자 정보 가져오기 성공 콜백 함수</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fail</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>사용자 정보 가져오기 실패 콜백 함수</p></td>
         </tr>
 
     
@@ -1258,7 +1509,7 @@ createLoginButton과 같은 기능이지만 서버사이드에서 버튼을 렌�
 
             
 
-            <td class="description last"><p>로그인 버튼을 생성하기 위한 설정</p>
+            <td class="description last"><p>verifyToken 설정</p>
                 <h6>Properties</h6>
                 
 
@@ -1500,7 +1751,7 @@ createLoginButton과 같은 기능이지만 서버사이드에서 버튼을 렌�
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 02 2018 11:14:10 GMT+0900 (대한민국 표준시) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 02 2018 14:25:56 GMT+0900 (대한민국 표준시) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

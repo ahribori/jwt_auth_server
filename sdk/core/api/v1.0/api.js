@@ -27,6 +27,7 @@ class API {
             createLoginButton: this.createLoginButton,
             createLoginButtonSSR: this.createLoginButtonSSR,
             assignLoginButton: this.assignLoginButton,
+            getUser: this.getUser,
             getToken: this.getToken,
             verifyToken: this.verifyToken,
             clearToken: this.clearToken,
@@ -87,7 +88,7 @@ class API {
      *
      * @method
      * @name createLoginButton
-     * @param settings {Object} 로그인 버튼을 생성하기 위한 설정
+     * @param settings {Object} createLoginButton 설정
      * @param settings.container {string} 로그인버튼이 삽입될 컨테이너 셀렉터
      * @param settings.size {string} 삽입할 버튼의 사이즈 (xs | sm | md | lg | xl)
      * @param settings.success {function} 로그인 성공 콜백 함수
@@ -183,7 +184,7 @@ class API {
      *
      * @method
      * @name createLoginButtonSSR
-     * @param settings {Object} 로그인 버튼을 생성하기 위한 설정
+     * @param settings {Object} createLoginButtonSSR 설정
      * @param settings.container {string} 로그인버튼이 삽입될 컨테이너 셀렉터
      * @param settings.size {string} 삽입할 버튼의 사이즈 (xs | sm | md | lg | xl)
      * @param settings.success {function} 로그인 성공 콜백 함수
@@ -250,7 +251,7 @@ class API {
      *
      * @method
      * @name assignLoginButton
-     * @param settings {Object} 로그인 버튼을 생성하기 위한 설정
+     * @param settings {Object} assignLoginButton 설정
      * @param settings.selector {string} 로그인 버튼 셀렉터
      * @param settings.target {string} 로그인 버튼 셀렉터
      * @param settings.success {function} 로그인 성공 콜백 함수
@@ -285,6 +286,73 @@ class API {
             messageHandler.setLoginAlwaysCallback(always);
         }
         return null;
+    };
+
+    /**
+     * 엑세스 토큰으로 유저 정보를 가져옵니다.
+     *
+     * @example
+     * var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');
+     *
+     * auth.getUser({
+     *     token: auth.getToken(),
+     *     success: function(result) {
+     *          console.log(result);
+     *     },
+     * });
+     *
+     * @method
+     * @name getUser
+     * @param settings {Object} getUser 설정
+     * @param settings.token {string} 엑세스 토큰
+     * @param settings.success {function} 사용자 정보 가져오기 성공 콜백 함수
+     * @param settings.fail {function} 사용자 정보 가져오기 실패 콜백 함수
+     * @param settings.always {function} 성공 실패 유무에 관계없는 콜백
+     * @memberof AUTH_SDK
+     */
+    async getUser({
+        token,
+        success,
+        fail,
+        always,
+    }) {
+        try {
+            const t = token || this.getToken();
+            if (!t) {
+                const result = {
+                    success: false,
+                    payload: {
+                        message: '검증할 토큰이 존재하지 않습니다',
+                    },
+                };
+                if (typeof fail === 'function') { fail(result); }
+                if (typeof always === 'function') { always(result); }
+                return result;
+            }
+            const user = await request({
+                method: 'GET',
+                path: '/v1.0/user',
+                authorization: t,
+                logging: false,
+            });
+            const result = {
+                success: true,
+                user: user.data,
+            };
+            if (typeof success === 'function') { success(result); }
+            if (typeof always === 'function') { always(result); }
+            return result;
+        } catch (e) {
+            const result = {
+                success: false,
+                payload: {
+                    message: e.data.message,
+                },
+            };
+            if (typeof fail === 'function') { fail(result); }
+            if (typeof always === 'function') { always(result); }
+            return result;
+        }
     };
 
     /**
@@ -325,7 +393,7 @@ class API {
      *
      * @method
      * @name verifyToken
-     * @param settings {Object} 로그인 버튼을 생성하기 위한 설정
+     * @param settings {Object} verifyToken 설정
      * @param settings.token {string} 검증할 토큰
      * @param settings.success {function} 토큰 검증 성공 콜백 함수
      * @param settings.fail {function} 토큰 검증 실패 콜백 함수

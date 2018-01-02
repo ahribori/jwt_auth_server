@@ -135,6 +135,44 @@ router.get('/list', async (req, res) => {
 });
 
 /* =========================================
+ GET /user
+ ============================================ */
+router.get('/', verifyTokenMiddleware); // JWT Token Check Middleware
+router.get('/', async (req, res) => {
+    try {
+        const user = await User.findById(req.payload._id, {
+            account_type: true,
+            username: true,
+            nickname: true,
+            email: true,
+            email_verified: true,
+            level: true,
+            exp: true,
+            cash: true,
+            point: true,
+            social_id: true,
+            profile_image: true,
+            admin: true,
+            reg_date: true,
+            last_login: true,
+            blocked: true,
+        });
+        if (user) {
+            const userResponse = Object.assign({}, user._doc);
+            userResponse.level_details = levelSystem.getLevelByExp(user.exp);
+            return res.json(userResponse);
+        }
+        return res.status(404).json({
+            message: __('error.USER_E0404'),
+            errorCode: 'USER_E0404',
+        });
+    } catch (e) {
+        logger.error(e);
+        res.status(500).json('Something broke!');
+    }
+});
+
+/* =========================================
  GET /user/:id
  ============================================ */
 router.get('/:id', verifyTokenMiddleware); // JWT Token Check Middleware
