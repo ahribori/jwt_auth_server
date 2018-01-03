@@ -165,7 +165,7 @@ class API {
      * @example
      * var auth = new AUTH_SDK('YOUR_APPLICATION_KEY');
      *
-     * auth.createLoginButton({
+     * auth.createLoginButtonSSR({
      *     container: '#YOUR DIV ID',
      *     size: 'md',
      *     success: function(authObject) {
