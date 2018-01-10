@@ -68,4 +68,31 @@ User.methods.assignAdmin = function () {
     return this.save();
 };
 
+User.methods.addExp = function (exp) {
+    if (!Number.isNaN(Number(exp))) {
+        this.exp = this.exp + Number(exp);
+        const levelInfo = levelSystem.getLevelByExp(this.exp);
+        this.level = levelInfo.level;
+        return this.save();
+    }
+    throw new Error('exp is not a number');
+};
+
+User.methods.addPoint = function (point) {
+    if (!Number.isNaN(Number(point))) {
+        this.point = this.point + Number(point);
+        return this.save();
+    }
+    throw new Error('point is not a number');
+};
+
+User.methods.addCash = function (cash) {
+    if (!Number.isNaN(Number(cash))) {
+        this.point = this.point + Number(cash);
+        return this.save();
+    }
+    throw new Error('cash is not a number');
+};
+
+
 export default mongoose.model('User', User);

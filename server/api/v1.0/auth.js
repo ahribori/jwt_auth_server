@@ -49,9 +49,12 @@ router.post('/login', async (req, res) => {
                 subject: 'user',
             },
         );
-        const levelInfo = levelSystem.getLevelByExp(user.exp);
-        user.level = levelInfo.level;
-        user.last_login = new Date();
+        const now = new Date();
+        const diff = now - user.last_login;
+        if (diff > 1000 * 60 * 60 * 24) {
+            user.addExp('50');
+        }
+        user.last_login = now;
         user.save();
         return res.json(token);
     } catch (e) {
