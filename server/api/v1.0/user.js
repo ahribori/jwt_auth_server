@@ -218,6 +218,56 @@ router.get('/:id', async (req, res) => {
 });
 
 /* =========================================
+ PUT /user
+  {
+ nickname,
+ email,
+ }
+ ============================================ */
+router.put('/', verifyTokenMiddleware); // JWT Token Check Middleware
+router.put('/', async (req, res) => {
+    try {
+        const {
+            nickname,
+            password,
+            email,
+        } = req.body;
+        const updateObject = {};
+
+        if (nickname !== null && nickname !== undefined) {
+            if (!field.nickname.regex.test(nickname)) {
+                return res.status(400).json(field.nickname.errorResponse);
+            }
+            updateObject.nickname = nickname;
+        }
+        if (email !== null && email !== undefined && email !== '') {
+            if (!field.email.regex.test(email)) {
+                return res.status(400).json(field.email.errorResponse);
+            }
+            updateObject.email = email;
+            updateObject.email_verified = false;
+        }
+        if (password !== null && password !== undefined && password !== '') {
+            if (!req.payload.admin) {
+                return res.status(403).json({
+                    message: __('error.USER_E0402'),
+                    errorCode: 'USER_E0402',
+                });
+            }
+            if (!field.nickname.regex.test(password)) {
+                return res.status(400).json(field.password.errorResponse);
+            }
+            updateObject.password = crypto.createHmac('sha1', conf.server.secret).update(password).digest('base64');
+        }
+        const updateResult = await User.update({ _id: req.payload._id }, updateObject);
+        res.json(updateResult);
+    } catch (e) {
+        logger.error(e);
+        res.status(500).json('Something broke!');
+    }
+});
+
+/* =========================================
  PUT /user/:id
   {
  nickname,
