@@ -12,13 +12,32 @@ const Message = new Schema({
 });
 
 // create new User document
-Message.statics.send = function (message, receiver, sender) {
+Message.statics.send = function send(message, receiver, sender) {
     const msg = new this({
         message,
         receiver,
         sender,
     });
     return msg.save();
+};
+
+Message.statics.sendSystemMessage = function send(message, receiver) {
+    const msg = new this({
+        message,
+        receiver,
+    });
+    return msg.save();
+};
+
+Message.statics.findMessagesByUser = function findMessagesByUser(userId) {
+    return this.find({ receiver: userId }).sort({ reg_date: -1 });
+};
+
+Message.statics.read = async function read(messageId) {
+    const message = await this.findOne({ _id: messageId });
+    message.read = true;
+    await message.save();
+    return message;
 };
 
 export default mongoose.model('Message', Message);

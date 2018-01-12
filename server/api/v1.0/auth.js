@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import conf from '../../conf';
 import log from '../../logger';
 import User from '../../mongodb/models/user';
+import Message from '../../mongodb/models/message';
 import i18n from '../../i18n';
 import verifyTokenMiddleware from '../../middlewares/verify';
 import { levelSystem } from '../../helpers';
@@ -11,6 +12,21 @@ import { levelSystem } from '../../helpers';
 const router = express.Router();
 const __ = i18n.__;
 const tokenConfig = conf.server ? conf.server.token : undefined;
+
+const doThisIfAuthenticated = async (user) => {
+    const newUser = user;
+    const now = new Date();
+    const levelInfo = levelSystem.getLevelByExp(newUser.exp);
+    const diff = now - newUser.last_login;
+    if (diff > 1000 * 60 * 60 * 24) {
+        newUser.addExp('50');
+        Message.sendSystemMessage('일일 로그인 경험치 50 획득', newUser._id);
+    }
+    newUser.level = levelInfo.level;
+    newUser.last_login = now;
+    const result = await newUser.save();
+    return result;
+};
 
 /* =========================================
  POST /auth/login
@@ -49,13 +65,7 @@ router.post('/login', async (req, res) => {
                 subject: 'user',
             },
         );
-        const now = new Date();
-        const diff = now - user.last_login;
-        if (diff > 1000 * 60 * 60 * 24) {
-            user.addExp('50');
-        }
-        user.last_login = now;
-        user.save();
+        await doThisIfAuthenticated(user);
         return res.json(token);
     } catch (e) {
         log.error(e);
@@ -106,11 +116,6 @@ router.post('/social_login', async (req, res) => {
             user.profile_image = profile_image;
         }
 
-        const levelInfo = levelSystem.getLevelByExp(user.exp);
-        user.level = levelInfo.level;
-        user.last_login = new Date();
-        user.save();
-
         const token = jwt.sign(
             {
                 _id: user._id,
@@ -126,7 +131,7 @@ router.post('/social_login', async (req, res) => {
                 subject: 'user',
             },
         );
-
+        await doThisIfAuthenticated(user);
         return res.json(token);
     } catch (e) {
         log.error(e);
@@ -187,4 +192,5 @@ router.get('/refresh', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
 export default router;
